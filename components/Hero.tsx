@@ -7,7 +7,7 @@ const Hero = () => {
     <section className="w-full max-w-7xl mx-auto px-6 py-12 md:py-20 bg-white">
       
       {/* --- Top Headings --- */}
-      <div className="text-center md:text-left mb-12">
+      <div className="text-center md:text-center mb-12">
         <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">
           DDW. Precision. Wellness.
         </h1>
@@ -51,30 +51,38 @@ const Hero = () => {
             </p>
           </div>
 
-          {/* Product Logos Area */}
+          {/* Product Logos Area - Only Images, Larger */}
           <div className="flex flex-col space-y-8 mt-4">
             
-            {/* Logo 1: DDW+ */}
-            <div className="flex flex-col items-start">
-              <h2 className="text-4xl font-light text-[#009FE3]">
-                d.d.w<sup className="text-xl">+</sup>
-              </h2>
-              <span className="text-sm text-[#009FE3] tracking-wider uppercase">
-                Deuterium Depleted Water
-              </span>
+            {/* Logo 1: DDW+ Logo Only */}
+            <div className="flex items-center">
+              <div className="relative w-48 h-48 md:w-56 md:h-56">
+                <Image 
+                  src="/images/ddw-logo.png"
+                  alt="Deutronix DDW+ Logo"
+                  width={224}
+                  height={224}
+                  className="object-contain w-full h-full"
+                  priority
+                />
+              </div>
             </div>
 
             {/* Separator Line */}
             <div className="w-16 h-[1px] bg-gray-300"></div>
 
-            {/* Logo 2: DDW+ EasyMove Gel */}
-            <div className="flex flex-col items-start">
-              <h2 className="text-4xl font-light text-[#009FE3]">
-                d.d.w<sup className="text-xl">+</sup>
-              </h2>
-              <span className="text-xl text-[#009FE3] font-medium">
-                EasyMove Gel
-              </span>
+            {/* Logo 2: EasyMove Logo Only */}
+            <div className="flex items-center">
+              <div className="relative w-48 h-48 md:w-56 md:h-56">
+                <Image 
+                  src="/images/EasyMove-logo.png"
+                  alt="EasyMove Gel Logo"
+                  width={224}
+                  height={224}
+                  className="object-contain w-full h-full"
+                  priority
+                />
+              </div>
             </div>
           </div>
 
