@@ -5,10 +5,14 @@ const Footer = () => {
   return (
     <footer className="bg-white py-12 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Brand Section */}
+        {/* Brand Section with Logo */}
         <div className="mb-8">
-          <div className="font-bold text-gray-900 text-2xl">
-            Deutronix™
+          <div className="font-bold text-gray-900">
+            <img 
+              src="/images/deutronix-logo.png" 
+              alt="Deutronix" 
+              className="h-6 w-auto" // Adjust height as needed
+            />
           </div>
         </div>
 

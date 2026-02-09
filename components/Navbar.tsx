@@ -27,7 +27,6 @@ const Navbar = () => {
 
   return (
     <nav className="w-full bg-white border-b border-gray-100 py-3 px-4 sm:py-4 sm:px-6 flex justify-between items-center sticky top-0 z-50 overflow-visible">
-      {/* Logo Area with Image */}
       <div className="flex items-center flex-shrink-0">
         <Link href="/" className="flex items-center">
           <Image 
