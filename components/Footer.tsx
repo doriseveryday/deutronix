@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import Image from 'next/image';
 
 const Footer = () => {
   return (
