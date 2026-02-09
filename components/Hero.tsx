@@ -54,12 +54,9 @@ const Hero = () => {
   const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // -- NEW HERO REFS --
-  const heroContainerRef = useRef<HTMLElement>(null);
-  const heroBottleRef = useRef<HTMLDivElement>(null);
-  const heroDetailsRef = useRef<HTMLDivElement>(null);
-  const heroProductImageRef = useRef<HTMLDivElement>(null);
   const heroDescriptionRef = useRef<HTMLDivElement>(null);
   const heroCompanyDescRef = useRef<HTMLDivElement>(null);
+  const heroProductImageRef = useRef<HTMLDivElement>(null);
 
   // -- OTHER REFS --
   const scienceSectionRef = useRef<HTMLElement>(null);
@@ -104,14 +101,9 @@ const Hero = () => {
     return () => window.removeEventListener('resize', updateCounter);
   }, []);
 
-  // Auto-scroll testimonials with reset on user interaction
+  // Auto-scroll logic
   const startAutoScroll = () => {
-    // Clear existing interval
-    if (autoScrollIntervalRef.current) {
-      clearInterval(autoScrollIntervalRef.current);
-    }
-
-    // Set up new interval
+    if (autoScrollIntervalRef.current) clearInterval(autoScrollIntervalRef.current);
     autoScrollIntervalRef.current = setInterval(() => {
       if (scrollContainerRef.current) {
         const container = scrollContainerRef.current;
@@ -130,26 +122,17 @@ const Hero = () => {
     }, 3000);
   };
 
-  const resetAutoScroll = () => {
-    startAutoScroll(); // Restart the timer when user interacts
-  };
+  const resetAutoScroll = () => startAutoScroll();
 
   useEffect(() => {
-    // Start auto-scroll on mount
     startAutoScroll();
-
-    // Add event listeners to reset timer on user interaction
     const container = scrollContainerRef.current;
     if (container) {
       container.addEventListener('scroll', resetAutoScroll);
       container.addEventListener('mousedown', resetAutoScroll);
     }
-
-    // Cleanup
     return () => {
-      if (autoScrollIntervalRef.current) {
-        clearInterval(autoScrollIntervalRef.current);
-      }
+      if (autoScrollIntervalRef.current) clearInterval(autoScrollIntervalRef.current);
       if (container) {
         container.removeEventListener('scroll', resetAutoScroll);
         container.removeEventListener('mousedown', resetAutoScroll);
@@ -159,142 +142,52 @@ const Hero = () => {
 
   // --- GSAP ANIMATIONS ---
   useGSAP(() => {
-
-    // ============================================
-    // 1. HERO TEXT (Fade In)
-    // ============================================
+    // 1. Hero Text
     if (heroDescriptionRef.current) {
-      gsap.fromTo(heroDescriptionRef.current, 
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
-      );
+      gsap.fromTo(heroDescriptionRef.current, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
     }
-
     if (heroCompanyDescRef.current) {
-      gsap.fromTo(heroCompanyDescRef.current, 
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 1.2, delay: 0.5, ease: "power3.out" }
-      );
+      gsap.fromTo(heroCompanyDescRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1.2, delay: 0.5, ease: "power3.out" });
     }
-
-    // ============================================
-    // 2. HERO PRODUCT IMAGE (Floating & Glow)
-    // ============================================
+    // 2. Hero Image Float
     if (heroProductImageRef.current) {
-      gsap.to(heroProductImageRef.current, {
-        y: -10,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
-      
-      // Add subtle scale pulse for shine effect
-      gsap.to(heroProductImageRef.current, {
-        filter: "drop-shadow(0 0 8px rgba(0, 159, 227, 0.4))",
-        duration: 1.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.3
-      });
+      gsap.to(heroProductImageRef.current, { y: -10, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+      gsap.to(heroProductImageRef.current, { filter: "drop-shadow(0 0 8px rgba(0, 159, 227, 0.4))", duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.3 });
     }
-
-    // ============================================
-    // 2. SCIENCE SECTION (Entrance + Pin & Reveal)
-    // ============================================
+    // 3. Science Section
     const sciSection = scienceSectionRef.current;
     const sciBg = scienceBgRef.current;
     const sciContent = scienceContentRef.current;
-
     if (sciSection && sciBg && sciContent) {
       gsap.fromTo('.gsap-reveal', 
         { y: 100, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out",
-          scrollTrigger: {
-            trigger: sciSection,
-            start: "top 70%",
-            toggleActions: "play none none reverse",
-          }
-        }
+        { y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: sciSection, start: "top 70%", toggleActions: "play none none reverse" } }
       );
-
-      const pinTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: sciSection,
-          start: "top top",
-          end: "+=300%",
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1
-        }
-      });
-
+      const pinTimeline = gsap.timeline({ scrollTrigger: { trigger: sciSection, start: "top top", end: "+=300%", pin: true, scrub: 1, anticipatePin: 1 } });
       pinTimeline
         .to(sciContent, { y: -500, opacity: 0, scale: 0.80, duration: 0.8 }, 0)
         .to(sciBg, { scale: 1.2, duration: 0.8 }, 0)
         .to(sciBg, { scale: 1.2, duration: 2.2 }, 0.8);
     }
-
-    // ============================================
-    // 3. PRODUCTS SECTION (Card Pop & Slide)
-    // ============================================
-    const prodSection = productsSectionRef.current;
-    if (prodSection) {
+    // 4. Products Section
+    if (productsSectionRef.current) {
       const cards = gsap.utils.toArray('.product-card');
-      cards.forEach((card: any, index) => {
+      cards.forEach((card: any) => {
         const image = card.querySelector('.product-image');
         const text = card.querySelector('.product-text');
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%", 
-            toggleActions: "play reverse play reverse",
-          }
-        });
-
-        tl.fromTo(image, 
-          { scale: 0.5, opacity: 0, y: 50 },
-          { scale: 1, opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" }
-        )
-        .fromTo(text, 
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, 
-          "-=0.4"
-        );
+        const tl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 85%", toggleActions: "play reverse play reverse" } });
+        tl.fromTo(image, { scale: 0.5, opacity: 0, y: 50 }, { scale: 1, opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)" })
+          .fromTo(text, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.4");
       });
     }
-
-    // ============================================
-    // 4. CERTS SECTION (Shine & Lift)
-    // ============================================
+    // 5. Certs Section
     if (certsContainerRef.current) {
       const certItems = gsap.utils.toArray('.cert-item');
       certItems.forEach((item: any, index) => {
-        gsap.fromTo(item,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1, y: 0, duration: 0.8, delay: index * 0.1, ease: "power3.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 85%",
-              toggleActions: "play none none none"
-            }
-          }
-        );
+        gsap.fromTo(item, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, delay: index * 0.1, ease: "power3.out", scrollTrigger: { trigger: item, start: "top 85%", toggleActions: "play none none none" } });
       });
-      gsap.to(certsContainerRef.current, {
-        opacity: 1,
-        scrollTrigger: {
-          trigger: certsContainerRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse"
-        }
-      });
+      gsap.to(certsContainerRef.current, { opacity: 1, scrollTrigger: { trigger: certsContainerRef.current, start: "top 80%", toggleActions: "play none none reverse" } });
     }
-
   }, { scope: undefined });
 
 
@@ -303,34 +196,40 @@ const Hero = () => {
   // ==========================
   return (
     <div className="w-full flex flex-col font-sans text-gray-700 bg-white">
-        {/* 2. HERO SECTION */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-8 md:py-20 z-10 relative bg-gray-50/40 rounded-2xl">
-        <div className="text-center mb-12">
+      
+      {/* 2. HERO SECTION */}
+      <section className="w-full max-w-7xl mx-auto px-6 py-8 md:py-20 z-10 relative bg-gray-50/40 rounded-2xl mt-4">
+        {/* Main Title - Centered for both views */}
+        <div className="text-center mb-10 md:mb-16">
           <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">DDW. Precision. Wellness.</h1>
-          <p ref={heroDescriptionRef} className="text-lg md:text-xl text-gray-600 font-medium">Advanced wellness solutions built on Deuterium-Depleted Water science.</p>
+          <p ref={heroDescriptionRef} className="text-lg md:text-2xl text-gray-600 font-medium">Advanced wellness solutions built on Deuterium-Depleted Water science.</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-10 gap-10 items-center">
-          <div className="md:col-span-5 relative flex justify-center md:justify-start">
-            <div ref={heroProductImageRef} className="w-40 md:w-48 lg:w-54">
+        {/* Content Grid: Switched to md:grid-cols-2 (50/50 split) for better balance on PC */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          
+          {/* Image Column: Centered in its half */}
+          <div className="relative flex justify-center">
+            <div ref={heroProductImageRef} className="w-40 md:w-64 lg:w-72">
               <Image 
                 src="/images/product01.png" 
                 alt="Deutronix Products" 
-                width={300} 
-                height={300} 
+                width={400} 
+                height={400} 
                 className="object-contain w-full h-auto" 
                 priority 
               />
             </div> 
           </div>
           
-          <div className="md:col-span-7 flex flex-col space-y-8">
-            <p ref={heroCompanyDescRef} className="text-gray-600 leading-relaxed text-lg text-justify">
+          {/* Text Column: Left aligned relative to the image */}
+          <div className="flex flex-col space-y-6 md:space-y-8 text-center md:text-left">
+            <p ref={heroCompanyDescRef} className="text-gray-600 leading-relaxed text-lg text-justify md:text-left">
               Deutronix is a science-driven wellness company focused on precision-formulated solutions using <span className="font-semibold text-[#009FE3]">Deuterium-Depleted Water (DDW)</span>. Our platform applies DDW technology across hydration and mobility, supporting everyday wellness through thoughtful formulation and responsible science.
             </p>
             
-            <div className="flex flex-row items-center justify-center gap-4 md:gap-8 mt-4">
-              <div className="relative w-28 h-14 md:w-36 md:h-18">
+            <div className="flex flex-row items-center justify-center md:justify-start gap-4 md:gap-8 mt-2">
+              <div className="relative w-28 h-14 md:w-32 md:h-16">
                 <Image 
                   src="/images/ddw-logo.png" 
                   alt="DDW+" 
@@ -340,7 +239,7 @@ const Hero = () => {
                 />
               </div>
               
-              <div className="relative w-28 h-14 md:w-36 md:h-18">
+              <div className="relative w-28 h-14 md:w-32 md:h-16">
                 <Image 
                   src="/images/EasyMove-logo.png" 
                   alt="EasyMove Gel" 
@@ -357,7 +256,6 @@ const Hero = () => {
           </div>
         </div>
       </section>
-
 
      {/* 3. SCIENCE SECTION (Pinned & Reveal) */}
       <section 
