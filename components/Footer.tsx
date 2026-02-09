@@ -48,7 +48,7 @@ const Footer = () => {
               <div>
                 <h3 className="font-bold text-gray-900 mb-2 text-sm">Contact</h3>
                 <div className="space-y-1 text-sm text-gray-600">
-                  <a href="#" className="block hover:text-gray-900">Contact Us</a>
+                  <a href="tel:0102850516" className="block hover:text-gray-900">Contact Us</a>
                   <a href="mailto:deutronix.my@gmail.com" className="block hover:text-gray-900">deutronix.my@gmail.com</a>
                   <p className="block">Malaysia</p>
                 </div>
@@ -69,7 +69,7 @@ const Footer = () => {
                 <FaWhatsapp size={36} className="md:size-7" />
               </a>
               <a 
-                href="https://facebook.com" 
+                href="https://www.facebook.com/deutronix.my" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-blue-600 transition-colors"
@@ -78,7 +78,7 @@ const Footer = () => {
                 <FaFacebook size={36} className="md:size-7" />
               </a>
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/deutronix.my" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-pink-600 transition-colors"
@@ -99,9 +99,9 @@ const Footer = () => {
 
           {/* Center: Policy links */}
           <div className="flex items-center space-x-4 text-xs text-gray-600">
-            <a href="#" className="hover:text-gray-900">Privacy Policy</a>
+            <a href="https://deutronix.my/document/DEUTRONIX_TNC.pdf" className="hover:text-gray-900">Privacy Policy</a>
             <span>·</span>
-            <a href="#" className="hover:text-gray-900">Terms of Use</a>
+            <a href="https://deutronix.my/document/DEUTRONIX_TNC.pdf" className="hover:text-gray-900">Terms of Use</a>
           </div>
         </div>
       </div>
