@@ -7,13 +7,11 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Register GSAP plugins safely
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
 const Hero = () => {
-  
   // ==========================
   // 1. DATA SOURCES
   // ==========================
@@ -53,8 +51,17 @@ const Hero = () => {
   // ==========================
   const [displayCount, setDisplayCount] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Animation Refs
+  // -- NEW HERO REFS --
+  const heroContainerRef = useRef<HTMLElement>(null);
+  const heroBottleRef = useRef<HTMLDivElement>(null);
+  const heroDetailsRef = useRef<HTMLDivElement>(null);
+  const heroProductImageRef = useRef<HTMLDivElement>(null);
+  const heroDescriptionRef = useRef<HTMLDivElement>(null);
+  const heroCompanyDescRef = useRef<HTMLDivElement>(null);
+
+  // -- OTHER REFS --
   const scienceSectionRef = useRef<HTMLElement>(null);
   const scienceBgRef = useRef<HTMLDivElement>(null);
   const scienceContentRef = useRef<HTMLDivElement>(null);
@@ -64,7 +71,6 @@ const Hero = () => {
   // ==========================
   // 3. LOGIC & EFFECTS
   // ==========================
-
   const updateCounter = () => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
@@ -98,9 +104,15 @@ const Hero = () => {
     return () => window.removeEventListener('resize', updateCounter);
   }, []);
 
-  // Auto-scroll testimonials every 6 seconds with looping
-  useEffect(() => {
-    const interval = setInterval(() => {
+  // Auto-scroll testimonials with reset on user interaction
+  const startAutoScroll = () => {
+    // Clear existing interval
+    if (autoScrollIntervalRef.current) {
+      clearInterval(autoScrollIntervalRef.current);
+    }
+
+    // Set up new interval
+    autoScrollIntervalRef.current = setInterval(() => {
       if (scrollContainerRef.current) {
         const container = scrollContainerRef.current;
         const maxScroll = container.scrollWidth - container.clientWidth;
@@ -109,47 +121,110 @@ const Hero = () => {
         const cardWidth = firstCard ? firstCard.clientWidth : 380;
         const gap = 24;
         const scrollAmount = cardWidth + gap;
-        
-        // If we're at or near the end, scroll back to the beginning
         if (currentScroll + scrollAmount >= maxScroll - 10) {
           container.scrollTo({ left: 0, behavior: 'smooth' });
         } else {
           scroll('right');
         }
       }
-    }, 2500);
-    return () => clearInterval(interval);
+    }, 3000);
+  };
+
+  const resetAutoScroll = () => {
+    startAutoScroll(); // Restart the timer when user interacts
+  };
+
+  useEffect(() => {
+    // Start auto-scroll on mount
+    startAutoScroll();
+
+    // Add event listeners to reset timer on user interaction
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', resetAutoScroll);
+      container.addEventListener('mousedown', resetAutoScroll);
+    }
+
+    // Cleanup
+    return () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+      if (container) {
+        container.removeEventListener('scroll', resetAutoScroll);
+        container.removeEventListener('mousedown', resetAutoScroll);
+      }
+    };
   }, []);
 
   // --- GSAP ANIMATIONS ---
   useGSAP(() => {
-    
-    // 1. SCIENCE SECTION (Entrance + Pin & Reveal)
+
+    // ============================================
+    // 1. HERO TEXT (Fade In)
+    // ============================================
+    if (heroDescriptionRef.current) {
+      gsap.fromTo(heroDescriptionRef.current, 
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+      );
+    }
+
+    if (heroCompanyDescRef.current) {
+      gsap.fromTo(heroCompanyDescRef.current, 
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 1.2, delay: 0.5, ease: "power3.out" }
+      );
+    }
+
+    // ============================================
+    // 2. HERO PRODUCT IMAGE (Floating & Glow)
+    // ============================================
+    if (heroProductImageRef.current) {
+      gsap.to(heroProductImageRef.current, {
+        y: -10,
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+      
+      // Add subtle scale pulse for shine effect
+      gsap.to(heroProductImageRef.current, {
+        filter: "drop-shadow(0 0 8px rgba(0, 159, 227, 0.4))",
+        duration: 1.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 0.3
+      });
+    }
+
+    // ============================================
+    // 2. SCIENCE SECTION (Entrance + Pin & Reveal)
+    // ============================================
     const sciSection = scienceSectionRef.current;
     const sciBg = scienceBgRef.current;
     const sciContent = scienceContentRef.current;
 
     if (sciSection && sciBg && sciContent) {
-      
-      // A. ENTRANCE: Words Pop Up
       gsap.fromTo('.gsap-reveal', 
         { y: 100, opacity: 0 },
         {
           y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out",
           scrollTrigger: {
             trigger: sciSection,
-            start: "top 70%", // Triggers before locking
+            start: "top 70%",
             toggleActions: "play none none reverse",
           }
         }
       );
 
-      // B. SCROLL: Pin & Reveal Image
       const pinTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: sciSection,
           start: "top top",
-          end: "+=300%", // Much longer to have adequate image viewing time
+          end: "+=300%",
           pin: true,
           scrub: 1,
           anticipatePin: 1
@@ -157,19 +232,17 @@ const Hero = () => {
       });
 
       pinTimeline
-        // Content fades out COMPLETELY and moves UP (first 30% of timeline)
         .to(sciContent, { y: -500, opacity: 0, scale: 0.80, duration: 0.8 }, 0)
-        // Background image zooms to fill the entire screen
         .to(sciBg, { scale: 1.2, duration: 0.8 }, 0)
-        // HOLD the full image visible for the rest of the scroll (~70% of timeline)
         .to(sciBg, { scale: 1.2, duration: 2.2 }, 0.8);
     }
 
-    // 2. PRODUCTS SECTION (Card Pop & Slide)
+    // ============================================
+    // 3. PRODUCTS SECTION (Card Pop & Slide)
+    // ============================================
     const prodSection = productsSectionRef.current;
     if (prodSection) {
       const cards = gsap.utils.toArray('.product-card');
-      
       cards.forEach((card: any, index) => {
         const image = card.querySelector('.product-image');
         const text = card.querySelector('.product-text');
@@ -194,10 +267,11 @@ const Hero = () => {
       });
     }
 
-    // 3. CERTS SECTION (Shine & Lift animation)
+    // ============================================
+    // 4. CERTS SECTION (Shine & Lift)
+    // ============================================
     if (certsContainerRef.current) {
       const certItems = gsap.utils.toArray('.cert-item');
-      
       certItems.forEach((item: any, index) => {
         gsap.fromTo(item,
           { opacity: 0, y: 40 },
@@ -210,21 +284,7 @@ const Hero = () => {
             }
           }
         );
-
-        // Add subtle hover lift on scroll
-        gsap.to(item, {
-          scrollTrigger: {
-            trigger: certsContainerRef.current,
-            start: "top 50%",
-            end: "bottom 50%",
-            onUpdate: (self) => {
-              gsap.to(item, { y: -10 * (1 - Math.abs(self.progress - 0.5) * 2), duration: 0.1 });
-            }
-          }
-        });
       });
-
-      // Add subtle shine effect to the entire container
       gsap.to(certsContainerRef.current, {
         opacity: 1,
         scrollTrigger: {
@@ -235,7 +295,7 @@ const Hero = () => {
       });
     }
 
-  }, { scope: undefined }); // Remove scope to allow all animations to work
+  }, { scope: undefined });
 
 
   // ==========================
@@ -243,18 +303,16 @@ const Hero = () => {
   // ==========================
   return (
     <div className="w-full flex flex-col font-sans text-gray-700 bg-white">
-      
-
-      {/* 2. HERO SECTION */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-8 md:py-20 z-10 relative">
+        {/* 2. HERO SECTION */}
+      <section className="w-full max-w-7xl mx-auto px-6 py-8 md:py-20 z-10 relative bg-gray-50/40 rounded-2xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">DDW. Precision. Wellness.</h1>
-          <p className="text-lg md:text-xl text-gray-600 font-medium">Advanced wellness solutions built on Deuterium-Depleted Water science.</p>
+          <p ref={heroDescriptionRef} className="text-lg md:text-xl text-gray-600 font-medium">Advanced wellness solutions built on Deuterium-Depleted Water science.</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-10 gap-10 items-center">
           <div className="md:col-span-5 relative flex justify-center md:justify-start">
-            <div className="w-full max-w-xs md:max-w-sm lg:max-w-md">
+            <div ref={heroProductImageRef} className="w-40 md:w-48 lg:w-54">
               <Image 
                 src="/images/product01.png" 
                 alt="Deutronix Products" 
@@ -267,7 +325,7 @@ const Hero = () => {
           </div>
           
           <div className="md:col-span-7 flex flex-col space-y-8">
-            <p className="text-gray-600 leading-relaxed text-lg text-justify">
+            <p ref={heroCompanyDescRef} className="text-gray-600 leading-relaxed text-lg text-justify">
               Deutronix is a science-driven wellness company focused on precision-formulated solutions using <span className="font-semibold text-[#009FE3]">Deuterium-Depleted Water (DDW)</span>. Our platform applies DDW technology across hydration and mobility, supporting everyday wellness through thoughtful formulation and responsible science.
             </p>
             
@@ -300,13 +358,11 @@ const Hero = () => {
         </div>
       </section>
 
-     {/* 3. SCIENCE SECTION (Pinned & Reveal) 
-         - h-screen: Ensures full height for pinning
-         - z-0: Stays behind when Products slide up
-     */}
+
+     {/* 3. SCIENCE SECTION (Pinned & Reveal) */}
       <section 
         ref={scienceSectionRef}
-        className="relative w-full h-screen px-6 flex items-center justify-center overflow-hidden z-0"
+        className="relative w-full h-screen px-6 flex items-center justify-center overflow-hidden z-10"
       >
         <div ref={scienceBgRef} className="absolute inset-0 z-0 scale-100">
           <Image src="/images/mountain01.jpg" alt="Altai Mountain" fill sizes="100vw" className="object-cover" priority />
@@ -334,10 +390,8 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* 4. PRODUCTS SECTION 
-          - z-10, relative, bg-white: Ensures this slides ON TOP of the Science section
-      */}
-      <section ref={productsSectionRef} className="relative z-10 w-full bg-white py-24 px-6">
+      {/* 4. PRODUCTS SECTION */}
+      <section ref={productsSectionRef} className="relative z-20 w-full bg-white py-24 px-6">
         <div className="max-w-7xl mx-auto">
           
           <div className="text-center mb-48">
@@ -452,55 +506,46 @@ const Hero = () => {
           <div className="w-2 flex-shrink-0"></div>
         </div>
         <div className="flex items-center justify-center gap-6 mt-8">
-           <button onClick={() => scroll('left')} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-[#009FE3] hover:border-[#009FE3] transition">&lt;</button>
+           <button onClick={() => { scroll('left'); resetAutoScroll(); }} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-[#009FE3] hover:border-[#009FE3] transition">&lt;</button>
            <span className="text-sm font-medium text-[#009FE3]">{String(displayCount)} of {testimonials.length}</span>
-           <button onClick={() => scroll('right')} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-[#009FE3] hover:border-[#009FE3] transition">&gt;</button>
+           <button onClick={() => { scroll('right'); resetAutoScroll(); }} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-[#009FE3] hover:border-[#009FE3] transition">&gt;</button>
         </div>
       </section>
 
       {/* ABOUT US SECTION */}
-  {/* ABOUT US SECTION - Simple Layout */}
-<section className="w-full max-w-7xl mx-auto px-6 py-16 md:py-24">
-  <div className="flex flex-col lg:flex-row items-center gap-6 md:gap-5">
-    {/* Image - 55% */}
-    <div className="w-full lg:w-7/12">
-      <Image 
-        src="/images/product04.png" 
-        alt="Deutronix Company" 
-        width={850} 
-        height={850} 
-        className="object-contain w-full h-auto"
-        priority
-      />
-    </div>
-    
-    {/* Content */}
-    <div className="w-full lg:w-1/2">
-      {/* About Us heading - Moved here and made blue */}
-      <h2 className="text-3xl md:text-4xl font-bold text-[#009FE3] mb-1">About Us</h2>
-    
-      {/* Description */}
-      <p className="text-gray-600 text-lg md:text-xl leading-relaxed mb-10">
-        Deutronix is a health-focused company dedicated to the research, development, and education of deuterium-depleted water applications. Guided by science, quality, and long-term responsibility, we develop wellness solutions designed to support modern lifestyles with clarity and care.
-      </p>
-      
-      {/* Button */}
-      <div className="flex justify-end">
-        <button className="text-[#009FE3] font-semibold hover:text-[#0077B3] transition-colors flex items-center text-lg md:text-xl group">
-          Learn about Us
-          <svg 
-            className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
+      <section className="w-full max-w-7xl mx-auto px-6 py-16 md:py-24">
+        <div className="flex flex-col lg:flex-row items-center gap-6 md:gap-5">
+          <div className="w-full lg:w-7/12">
+            <Image 
+              src="/images/product04.png" 
+              alt="Deutronix Company" 
+              width={850} 
+              height={850} 
+              className="object-contain w-full h-auto"
+              priority
+            />
+          </div>
+          <div className="w-full lg:w-1/2">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#009FE3] mb-1">About Us</h2>
+            <p className="text-gray-600 text-lg md:text-xl leading-relaxed mb-10">
+              Deutronix is a health-focused company dedicated to the research, development, and education of deuterium-depleted water applications. Guided by science, quality, and long-term responsibility, we develop wellness solutions designed to support modern lifestyles with clarity and care.
+            </p>
+            <div className="flex justify-end">
+              <button className="text-[#009FE3] font-semibold hover:text-[#0077B3] transition-colors flex items-center text-lg md:text-xl group">
+                Learn about Us
+                <svg 
+                  className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   );
