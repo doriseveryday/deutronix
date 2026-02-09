@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="mb-8">
           <div className="font-bold text-gray-900">
             <Image 
-              src="/images/deutronix-logo.png" 
+              src="/images/Deutronix-Logo.png" 
               alt="Deutronix" 
               width={150} 
               height={40}
