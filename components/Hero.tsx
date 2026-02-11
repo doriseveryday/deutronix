@@ -243,7 +243,7 @@ const Hero = () => {
     <div className="w-full flex flex-col font-sans text-gray-700 bg-white">
       
      {/* 2. HERO SECTION */}
-      <section className="w-full max-w-7xl mx-auto px-2 py-5 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-4">
+      <section className="w-full max-w-7xl mx-auto px-2 py-6 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-4">
         {/* Main Title - Centered for both views */}
         <div className="text-center mb-6 md:mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">DDW. Precision. Wellness.</h1>
@@ -257,12 +257,12 @@ const Hero = () => {
           <div className="relative flex flex-row items-center justify-center gap-6 md:gap-8">
             
             {/* 1. Product Image - MADE LARGER */}
-            <div ref={heroProductImageRef} className="w-40 sm:w-48 md:w-72 lg:w-80">
+            <div ref={heroProductImageRef} className="w-40 sm:w-58 md:w-82 lg:w-90">
               <Image 
                 src="/images/Hero DDW Products.png" 
                 alt="Deutronix Products" 
-                width={500} 
-                height={500} 
+                width={600} 
+                height={600} 
                 className="object-contain w-full h-auto" 
                 priority 
               />
@@ -353,7 +353,7 @@ const Hero = () => {
         
         {/* Image - outside padding for proper centering */}
         <div className="relative w-full h-0">
-          <div className="absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[130%] md:w-[150%] max-w-none">
+          <div className="product-image absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[130%] md:w-[150%] max-w-none">
             <Image src="/images/product02.png" alt="DDW+ Pack" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
           </div>
         </div>
@@ -381,7 +381,7 @@ const Hero = () => {
         
         {/* Image - outside padding for proper centering */}
         <div className="relative w-full h-0">
-          <div className="absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[130%] md:w-[150%] max-w-none">
+          <div className="product-image absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[130%] md:w-[150%] max-w-none">
             <Image src="/images/product03.png" alt="EasyMove Gel" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
           </div>
         </div>
