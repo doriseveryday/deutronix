@@ -243,67 +243,67 @@ const Hero = () => {
     <div className="w-full flex flex-col font-sans text-gray-700 bg-white">
       
      {/* 2. HERO SECTION */}
-      <section className="w-full max-w-7xl mx-auto px-2 py-6 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-4">
-        {/* Main Title - Centered for both views */}
-        <div className="text-center mb-6 md:mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">DDW. Precision. Wellness.</h1>
-          <p ref={heroDescriptionRef} className="text-lg md:text-2xl text-gray-600 font-medium">Advanced wellness solutions built on Deuterium-Depleted Water science.</p>
-        </div>
-        
-        {/* Content Grid: Switched to md:grid-cols-2 (50/50 split) for better balance on PC */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          
-          {/* VISUAL COLUMN: Image Left, Logos Right (Stacked) */}
-          <div className="relative flex flex-row items-center justify-center gap-6 md:gap-8">
-            
-            {/* 1. Product Image - MADE LARGER */}
-            <div ref={heroProductImageRef} className="w-40 sm:w-58 md:w-82 lg:w-90">
-              <Image 
-                src="/images/Hero DDW Products.png" 
-                alt="Deutronix Products" 
-                width={600} 
-                height={600} 
-                className="object-contain w-full h-auto" 
-                priority 
-              />
-            </div> 
+<section className="w-full max-w-7xl mx-auto px-2 py-6 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-4 min-h-[calc(100vh-120px)] flex flex-col justify-center">
+  {/* Main Title - Centered for both views */}
+  <div className="text-center mb-6 md:mb-12">
+    <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">DDW. Precision. Wellness.</h1>
+    <p ref={heroDescriptionRef} className="text-lg md:text-2xl text-gray-600 font-medium">Advanced wellness solutions built on Deuterium-Depleted Water science.</p>
+  </div>
+  
+  {/* Content Grid: Switched to md:grid-cols-2 (50/50 split) for better balance on PC */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+    
+    {/* VISUAL COLUMN: Image Left, Logos Right (Stacked) */}
+    <div className="relative flex flex-row items-center justify-center gap-6 md:gap-8">
+      
+      {/* 1. Product Image - MADE EVEN LARGER */}
+      <div ref={heroProductImageRef} className="w-48 sm:w-64 md:w-96 lg:w-[400px]">
+        <Image 
+          src="/images/Hero DDW Products.png" 
+          alt="Deutronix Products" 
+          width={800} 
+          height={800} 
+          className="object-contain w-full h-auto" 
+          priority 
+        />
+      </div> 
 
-            {/* 2. Logos (Stacked Vertically) - MADE LARGER */}
-            <div className="flex flex-col gap-5">
-              <div className="hero-logo relative w-28 h-14 md:w-36 md:h-18 lg:w-40 lg:h-20">
-                <Image 
-                  src="/images/ddw-logo.png" 
-                  alt="DDW+" 
-                  width={180} 
-                  height={90} 
-                  className="object-contain w-full h-full"
-                />
-              </div>
-              <div className="hero-logo relative w-28 h-14 md:w-36 md:h-18 lg:w-40 lg:h-20">
-                <Image 
-                  src="/images/EasyMove-logo.png" 
-                  alt="EasyMove Gel" 
-                  width={180} 
-                  height={90} 
-                  className="object-contain w-full h-full"
-                />
-              </div>
-            </div>
-
-          </div>
-          
-          {/* TEXT COLUMN */}
-          <div className="flex flex-col space-y-6 md:space-y-8 text-center md:text-left">
-            <p ref={heroCompanyDescRef} className="text-gray-600 leading-relaxed text-lg text-justify md:text-left">
-              Deutronix is a science-driven wellness company focused on precision-formulated solutions using <span className="font-semibold text-[#009FE3]">Deuterium-Depleted Water (DDW)</span>. Our platform applies DDW technology across hydration and mobility, supporting everyday wellness through thoughtful formulation and responsible science.
-            </p>
-            
-            <div className="border-t border-b border-gray-200 py-4">
-              <p className="text-xs md:text-sm text-gray-400 uppercase tracking-widest text-center md:text-left">DDW Science | Precision Formulation | Designed for Absorption</p>
-            </div>
-          </div>
+      {/* 2. Logos (Stacked Vertically) - MADE LARGER */}
+      <div className="flex flex-col gap-5">
+        <div className="hero-logo relative w-28 h-14 md:w-36 md:h-18 lg:w-40 lg:h-20">
+          <Image 
+            src="/images/ddw-logo.png" 
+            alt="DDW+" 
+            width={180} 
+            height={90} 
+            className="object-contain w-full h-full"
+          />
         </div>
-      </section>
+        <div className="hero-logo relative w-28 h-14 md:w-36 md:h-18 lg:w-40 lg:h-20">
+          <Image 
+            src="/images/EasyMove-logo.png" 
+            alt="EasyMove Gel" 
+            width={180} 
+            height={90} 
+            className="object-contain w-full h-full"
+          />
+        </div>
+      </div>
+
+    </div>
+    
+    {/* TEXT COLUMN */}
+    <div className="flex flex-col space-y-6 md:space-y-8 text-center md:text-left">
+      <p ref={heroCompanyDescRef} className="text-gray-600 leading-relaxed text-lg text-justify md:text-left">
+        Deutronix is a science-driven wellness company focused on precision-formulated solutions using <span className="font-semibold text-[#009FE3]">Deuterium-Depleted Water (DDW)</span>. Our platform applies DDW technology across hydration and mobility, supporting everyday wellness through thoughtful formulation and responsible science.
+      </p>
+      
+      <div className="border-t border-b border-gray-200 py-4">
+        <p className="text-xs md:text-sm text-gray-400 uppercase tracking-widest text-center md:text-left">DDW Science | Precision Formulation | Designed for Absorption</p>
+      </div>
+    </div>
+  </div>
+</section>
      {/* 3. SCIENCE SECTION (Pinned & Reveal) */}
       <section 
         ref={scienceSectionRef}
