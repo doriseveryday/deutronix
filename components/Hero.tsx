@@ -41,9 +41,9 @@ const Hero = () => {
     { name: "FDA Registered", src: "/images/FDA.png", cols: "col-span-1" },
     { name: "HACCP", src: "/images/HACCP.png", cols: "col-span-1" },
     { name: "Halal", src: "/images/Halal.png", cols: "col-span-1" },
-    { name: "Notification Note", src: "/images/NOT.png", cols: "col-span-2 md:col-span-2" },
     { name: "GMPC Intertek", src: "/images/GMPC.png", cols: "col-span-1" },
     { name: "ISO 22716 Intertek", src: "/images/Interlek.png", cols: "col-span-1" },
+    { name: "Notification Note", src: "/images/NOT.png", cols: "col-span-2 md:col-span-2" },
   ];
   // ==========================
   // 2. REFS & STATE
@@ -414,7 +414,9 @@ const Hero = () => {
           <div className="w-full max-w-4xl mb-10">
             <h2 className="text-4xl md:text-5xl font-bold text-[#009FE3] mb-4">Source & Standards</h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              Our deuterium-depleted water is naturally sourced from the pristine Altai Mountain glacial region...
+              Our deuterium-depleted water is naturally sourced from the pristine Altai Mountain glacial region
+              and produced under strict quality, hygiene, and safety standards. Every formulation reflects our
+              commitment to purity, consistency, and responsible production.
             </p>
           </div>
           <div ref={certsContainerRef} className="w-full grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8 mb-10">
@@ -427,6 +429,11 @@ const Hero = () => {
                </div>
             ))}
           </div>
+           <div className="w-full mt-1 mb-2">
+      <p className="text-sm md:text-base text-gray-500  pl-4">
+        Produced and verified in accordance with internationally recognized quality and safety standards.
+      </p>
+    </div>
           <div className="flex justify-end w-full px-5">
             <Link href="/standards" className="inline-block text-[#009FE3] text-lg font-semibold hover:underline">Learn Our Standards &gt;</Link>
           </div>
