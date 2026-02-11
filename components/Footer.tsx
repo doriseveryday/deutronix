@@ -55,8 +55,7 @@ const Footer = () => {
               </div>
             </div>
           </div>
-
-          {/* Right side - Social Media Icons Container - takes 30% width */}
+{/* right section */}
           <div className="w-3/12 flex justify-end">
             <div className="flex flex-col items-end justify-end space-y-4">
               <a 

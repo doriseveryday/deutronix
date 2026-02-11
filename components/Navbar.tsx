@@ -32,9 +32,12 @@ const Navbar = () => {
           <Image 
             src="/images/Deutronix-Logo.png" 
             alt="Deutronix Logo" 
-            width={180} 
-            height={40}
-            className="h-6 sm:h-7 md:h-8 lg:h-10 w-auto"
+            // width={180} 
+            // height={40}
+            // className="h-6 sm:h-7 md:h-8 lg:h-10 w-auto"
+            width={160}  // Reduced from 180
+            height={35}  // Reduced from 40
+            className="h-5 sm:h-6 md:h-7 lg:h-9 w-auto"  // Reduced all sizes
             priority
           />
         </Link>
@@ -50,13 +53,21 @@ const Navbar = () => {
 
       {/* Right Side: Login Button + Hamburger - With more spacing */}
       <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-6 sm:ml-8">
-       <a 
+       {/* <a 
           href="https://deutronix.my/sign-in" 
           target="_blank" 
           rel="noopener noreferrer"
           className="inline-block bg-gradient-to-r from-[#0077B6] to-[#009FE3] hover:from-[#006699] hover:to-[#0086c9] text-white text-[10px] xs:text-xs sm:text-sm font-semibold py-1 px-3 sm:py-1.5 sm:px-4 md:py-2 md:px-6 rounded-full transition-all duration-300 flex items-center gap-1 sm:gap-2 whitespace-nowrap shadow-sm hover:shadow-md"
         >
           MEMBER LOGIN <span className="text-[8px] xs:text-[10px] sm:text-xs">↓</span>
+        </a> */}
+        <a 
+          href="https://deutronix.my/sign-in" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="inline-block bg-gradient-to-r from-[#0077B6] to-[#009FE3] hover:from-[#006699] hover:to-[#0086c9] text-white text-xs sm:text-sm font-semibold py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-8 rounded-full transition-all duration-300 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-md hover:shadow-lg"
+        >
+          MEMBER LOGIN <span className="text-xs">↓</span>
         </a>
 
         {/* Hamburger/X Icon for Mobile ONLY */}

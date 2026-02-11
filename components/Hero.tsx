@@ -37,15 +37,14 @@ const Hero = () => {
   ];
 
   const certs = [
-    { name: "ISO 22000", src: "/images/ISO.png", label: "ISO NUMBER:", value: "002FSMS2300343", cols: "col-span-1" },
-    { name: "FDA Registered", src: "/images/FDA.png", label: "REGISTRATION NUMBER:", value: "18783320348", cols: "col-span-1" },
-    { name: "HACCP", src: "/images/HACCP.png", label: "CERTIFICATE NUMBER:", value: "002HACCP2300315", cols: "col-span-1" },
-    { name: "Halal", src: "/images/Halal.png", label: "CERTIFICATE NUMBER:", value: "SSPY-201318-34008", cols: "col-span-1" },
-    { name: "Notification Note", src: "/images/NOT.png", label: "", value: "", cols: "col-span-2 md:col-span-2" },
-    { name: "GMPC Intertek", src: "/images/GMPC.png", label: "CERTIFICATE NUMBER:", value: "SZ2207H1", cols: "col-span-1" },
-    { name: "ISO 22716 Intertek", src: "/images/Interlek.png", label: "CERTIFICATE NUMBER:", value: "SZ2207G9", cols: "col-span-1" },
+    { name: "ISO 22000", src: "/images/ISO.png", cols: "col-span-1" },
+    { name: "FDA Registered", src: "/images/FDA.png", cols: "col-span-1" },
+    { name: "HACCP", src: "/images/HACCP.png", cols: "col-span-1" },
+    { name: "Halal", src: "/images/Halal.png", cols: "col-span-1" },
+    { name: "Notification Note", src: "/images/NOT.png", cols: "col-span-2 md:col-span-2" },
+    { name: "GMPC Intertek", src: "/images/GMPC.png", cols: "col-span-1" },
+    { name: "ISO 22716 Intertek", src: "/images/Interlek.png", cols: "col-span-1" },
   ];
-
   // ==========================
   // 2. REFS & STATE
   // ==========================
@@ -77,7 +76,9 @@ const Hero = () => {
       const cardWidth = firstCard ? firstCard.clientWidth : 380;
       const gap = 24; 
       const singleItemWidth = cardWidth + gap;
-      const visibleItems = Math.floor(containerWidth / singleItemWidth) || 1;
+      // const visibleItems = Math.floor(containerWidth / singleItemWidth) || 1;
+      // const visibleItems = Math.floor((containerWidth + gap) / singleItemWidth) || 1;
+      const visibleItems = Math.round(containerWidth / singleItemWidth) || 1;
       const firstVisibleIndex = Math.round(scrollLeft / singleItemWidth);
       let currentEndIndex = Math.min(firstVisibleIndex + visibleItems, testimonials.length);
       setDisplayCount(currentEndIndex);
@@ -149,11 +150,35 @@ const Hero = () => {
     if (heroCompanyDescRef.current) {
       gsap.fromTo(heroCompanyDescRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1.2, delay: 0.5, ease: "power3.out" });
     }
-    // 2. Hero Image Float
+
+    // 2. Hero Product Image - Slide in from left to right in place
     if (heroProductImageRef.current) {
-      gsap.to(heroProductImageRef.current, { y: -10, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
-      gsap.to(heroProductImageRef.current, { filter: "drop-shadow(0 0 8px rgba(0, 159, 227, 0.4))", duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.3 });
+      gsap.fromTo(heroProductImageRef.current, 
+        { opacity: 0, x: -30 }, 
+        { opacity: 1, x: 0, duration: 1.2, ease: "power3.out" }
+      );
     }
+
+    // 3. Hero Logos - Pop up (scale + fade)
+    const heroLogos = document.querySelectorAll('.hero-logo');
+    if (heroLogos.length) {
+      gsap.fromTo(heroLogos, 
+        { opacity: 0, scale: 0.8, y: 10 }, 
+        { opacity: 1, scale: 1, y: 0, duration: 0.8, stagger: 0.15, delay: 0.8, ease: "back.out(1.7)" }
+      );
+    }
+    // // 1. Hero Text
+    // if (heroDescriptionRef.current) {
+    //   gsap.fromTo(heroDescriptionRef.current, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
+    // }
+    // if (heroCompanyDescRef.current) {
+    //   gsap.fromTo(heroCompanyDescRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1.2, delay: 0.5, ease: "power3.out" });
+    // }
+    // 2. Hero Image Float
+    // if (heroProductImageRef.current) {
+    //   gsap.to(heroProductImageRef.current, { y: -10, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    //   gsap.to(heroProductImageRef.current, { filter: "drop-shadow(0 0 8px rgba(0, 159, 227, 0.4))", duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.3 });
+    // }
     // 3. Science Section
     const sciSection = scienceSectionRef.current;
     const sciBg = scienceBgRef.current;
@@ -183,10 +208,30 @@ const Hero = () => {
     // 5. Certs Section
     if (certsContainerRef.current) {
       const certItems = gsap.utils.toArray('.cert-item');
-      certItems.forEach((item: any, index) => {
-        gsap.fromTo(item, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, delay: index * 0.1, ease: "power3.out", scrollTrigger: { trigger: item, start: "top 85%", toggleActions: "play none none none" } });
-      });
-      gsap.to(certsContainerRef.current, { opacity: 1, scrollTrigger: { trigger: certsContainerRef.current, start: "top 80%", toggleActions: "play none none reverse" } });
+      
+      // Animate ALL certs at once, no stagger
+      gsap.fromTo(certItems, 
+        { 
+          opacity: 0, 
+          y: 30,
+          scale: 0.95 
+        }, 
+        { 
+          opacity: 1, 
+          y: 0, 
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          stagger: 0, // No stagger - all appear together
+          scrollTrigger: {
+            trigger: certsContainerRef.current,
+            start: "top 85%",
+            end: "top 50%",
+            toggleActions: "play none none none",
+            once: true // Only animate once
+          }
+        }
+      );
     }
   }, { scope: undefined });
 
@@ -197,10 +242,10 @@ const Hero = () => {
   return (
     <div className="w-full flex flex-col font-sans text-gray-700 bg-white">
       
-      {/* 2. HERO SECTION */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-8 md:py-20 z-10 relative bg-gray-50/40 rounded-2xl mt-4">
+     {/* 2. HERO SECTION */}
+      <section className="w-full max-w-7xl mx-auto px-2 py-5 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-4">
         {/* Main Title - Centered for both views */}
-        <div className="text-center mb-10 md:mb-16">
+        <div className="text-center mb-6 md:mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">DDW. Precision. Wellness.</h1>
           <p ref={heroDescriptionRef} className="text-lg md:text-2xl text-gray-600 font-medium">Advanced wellness solutions built on Deuterium-Depleted Water science.</p>
         </div>
@@ -208,47 +253,50 @@ const Hero = () => {
         {/* Content Grid: Switched to md:grid-cols-2 (50/50 split) for better balance on PC */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           
-          {/* Image Column: Centered in its half */}
-          <div className="relative flex justify-center">
-            <div ref={heroProductImageRef} className="w-40 md:w-64 lg:w-72">
+          {/* VISUAL COLUMN: Image Left, Logos Right (Stacked) */}
+          <div className="relative flex flex-row items-center justify-center gap-6 md:gap-8">
+            
+            {/* 1. Product Image - MADE LARGER */}
+            <div ref={heroProductImageRef} className="w-40 sm:w-48 md:w-72 lg:w-80">
               <Image 
-                src="/images/product01.png" 
+                src="/images/Hero DDW Products.png" 
                 alt="Deutronix Products" 
-                width={400} 
-                height={400} 
+                width={500} 
+                height={500} 
                 className="object-contain w-full h-auto" 
                 priority 
               />
             </div> 
-          </div>
-          
-          {/* Text Column: Left aligned relative to the image */}
-          <div className="flex flex-col space-y-6 md:space-y-8 text-center md:text-left">
-            <p ref={heroCompanyDescRef} className="text-gray-600 leading-relaxed text-lg text-justify md:text-left">
-              Deutronix is a science-driven wellness company focused on precision-formulated solutions using <span className="font-semibold text-[#009FE3]">Deuterium-Depleted Water (DDW)</span>. Our platform applies DDW technology across hydration and mobility, supporting everyday wellness through thoughtful formulation and responsible science.
-            </p>
-            
-            <div className="flex flex-row items-center justify-center md:justify-start gap-4 md:gap-8 mt-2">
-              <div className="relative w-28 h-14 md:w-32 md:h-16">
+
+            {/* 2. Logos (Stacked Vertically) - MADE LARGER */}
+            <div className="flex flex-col gap-5">
+              <div className="hero-logo relative w-28 h-14 md:w-36 md:h-18 lg:w-40 lg:h-20">
                 <Image 
                   src="/images/ddw-logo.png" 
                   alt="DDW+" 
-                  width={144} 
-                  height={72} 
+                  width={180} 
+                  height={90} 
                   className="object-contain w-full h-full"
                 />
               </div>
-              
-              <div className="relative w-28 h-14 md:w-32 md:h-16">
+              <div className="hero-logo relative w-28 h-14 md:w-36 md:h-18 lg:w-40 lg:h-20">
                 <Image 
                   src="/images/EasyMove-logo.png" 
                   alt="EasyMove Gel" 
-                  width={144} 
-                  height={72} 
+                  width={180} 
+                  height={90} 
                   className="object-contain w-full h-full"
                 />
               </div>
             </div>
+
+          </div>
+          
+          {/* TEXT COLUMN */}
+          <div className="flex flex-col space-y-6 md:space-y-8 text-center md:text-left">
+            <p ref={heroCompanyDescRef} className="text-gray-600 leading-relaxed text-lg text-justify md:text-left">
+              Deutronix is a science-driven wellness company focused on precision-formulated solutions using <span className="font-semibold text-[#009FE3]">Deuterium-Depleted Water (DDW)</span>. Our platform applies DDW technology across hydration and mobility, supporting everyday wellness through thoughtful formulation and responsible science.
+            </p>
             
             <div className="border-t border-b border-gray-200 py-4">
               <p className="text-xs md:text-sm text-gray-400 uppercase tracking-widest text-center md:text-left">DDW Science | Precision Formulation | Designed for Absorption</p>
@@ -256,7 +304,6 @@ const Hero = () => {
           </div>
         </div>
       </section>
-
      {/* 3. SCIENCE SECTION (Pinned & Reveal) */}
       <section 
         ref={scienceSectionRef}
@@ -289,61 +336,77 @@ const Hero = () => {
       </section>
 
       {/* 4. PRODUCTS SECTION */}
-      <section ref={productsSectionRef} className="relative z-20 w-full bg-white py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          
-          <div className="text-center mb-48">
-            <h2 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">Precision for Every Need.</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-lg">
-              Two precision applications of Deuterium-Depleted Water, designed to support the body from within and from without.
-            </p>
-          </div>
+<section ref={productsSectionRef} className="relative z-20 w-full bg-white py-24 px-6">
+  <div className="max-w-7xl mx-auto">
+    
+    <div className="text-center mb-48">
+      <h2 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">Precision for Every Need.</h2>
+      <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+        Two precision applications of Deuterium-Depleted Water, designed to support the body from within and from without.
+      </p>
+    </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 md:gap-12">
-            
-            {/* Product 1: DDW+ */}
-            <div className="product-card relative bg-white border border-gray-100 rounded-[2rem] shadow-2xl p-8 pt-24 text-left hover:shadow-[0_20px_40px_rgba(0,159,227,0.1)] transition-shadow duration-300">
-              <div className="product-image absolute -top-48 md:-top-56 left-1/2 transform -translate-x-1/2 w-96 md:w-full max-w-md md:max-w-xl">
-                <Image src="/images/product02.png" alt="DDW+ Pack" width={500} height={600} className="object-contain drop-shadow-xl" />
-              </div>
-              <div className="product-text">
-                <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">DDW+</h3>
-                <p className="text-lg font-semibold text-[#009FE3] mb-2">Deuterium-Depleted Water</p>
-                <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Daily Hydration (132–138 ppm)</p>
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                  Glacial-sourced deuterium-depleted water for everyday consumption, supporting metabolic balance.
-                </p>
-                <div className="flex justify-end">
-                  <Link href="/products/ddw" className="text-[#009FE3] font-semibold text-sm hover:underline flex items-center gap-1">
-                    Learn the Products <span className="text-lg">&gt;</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Product 2: Gel */}
-            <div className="product-card relative bg-white border border-gray-100 rounded-[2rem] shadow-2xl p-8 pt-24 text-left hover:shadow-[0_20px_40px_rgba(0,159,227,0.1)] transition-shadow duration-300 mt-20 md:mt-0">
-               <div className="product-image absolute -top-48 md:-top-56 left-1/2 transform -translate-x-1/2 w-96 md:w-full max-w-md md:max-w-xl">
-                <Image src="/images/product03.png" alt="EasyMove Gel" width={500} height={600} className="object-contain drop-shadow-xl" />
-              </div>
-              <div className="product-text">
-                <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">EasyMove Gel</h3>
-                <p className="text-lg font-semibold text-[#009FE3] mb-2">DDW+ Topical Solution</p>
-                <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Targeted Recovery (50 ppm)</p>
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                  A high-penetration topical gel designed for localized use, delivering deuterium-depleted water efficiently to muscles and skin.
-                </p>
-                <div className="flex justify-end">
-                  <Link href="/products/gel" className="text-[#009FE3] font-semibold text-sm hover:underline flex items-center gap-1">
-                    Learn the Products <span className="text-lg">&gt;</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-20 md:gap-12">
+      
+      {/* Product 1: DDW+ */}
+      <div className="product-card relative bg-white border border-gray-100 rounded-[2rem] shadow-2xl text-left hover:shadow-[0_20px_40px_rgba(0,159,227,0.1)] transition-shadow duration-300">
+        
+        {/* Image - outside padding for proper centering */}
+        <div className="relative w-full h-0">
+          <div className="absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[130%] md:w-[150%] max-w-none">
+            <Image src="/images/product02.png" alt="DDW+ Pack" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
           </div>
         </div>
-      </section>
+
+        {/* Text - with padding only here */}
+        <div className="px-8 pt-10 pb-6">
+          <div className="product-text mt-8 md:mt-56"> 
+            <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">DDW+</h3>
+            <p className="text-lg font-semibold text-[#009FE3] mb-2">Deuterium-Depleted Water</p>
+            <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Daily Hydration (132–138 ppm)</p>
+            <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+              Glacial-sourced deuterium-depleted water for everyday consumption, supporting metabolic balance.
+            </p>
+            <div className="flex justify-end">
+              <Link href="/products/ddw" className="text-[#009FE3] font-semibold text-sm hover:underline flex items-center gap-1">
+                Learn the Products <span className="text-lg">&gt;</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Product 2: Gel */}
+      <div className="product-card relative bg-white border border-gray-100 rounded-[2rem] shadow-2xl text-left hover:shadow-[0_20px_40px_rgba(0,159,227,0.1)] transition-shadow duration-300 mt-40 md:mt-0">
+        
+        {/* Image - outside padding for proper centering */}
+        <div className="relative w-full h-0">
+          <div className="absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[130%] md:w-[150%] max-w-none">
+            <Image src="/images/product03.png" alt="EasyMove Gel" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
+          </div>
+        </div>
+
+        {/* Text - with padding only here */}
+        <div className="px-8 pt-10 pb-6">
+          <div className="product-text mt-8 md:mt-56">
+            <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">EasyMove Gel</h3>
+            <p className="text-lg font-semibold text-[#009FE3] mb-2">DDW+ Topical Solution</p>
+            <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Targeted Recovery (50 ppm)</p>
+            <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+              A high-penetration topical gel designed for localized use, delivering deuterium-depleted water efficiently to muscles and skin.
+            </p>
+            <div className="flex justify-end">
+              <Link href="/products/gel" className="text-[#009FE3] font-semibold text-sm hover:underline flex items-center gap-1">
+                Learn the Products <span className="text-lg">&gt;</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
      {/* 5. SOURCE & STANDARDS */}
       <section className="relative z-10 w-full bg-white py-20 px-6">
@@ -354,22 +417,17 @@ const Hero = () => {
               Our deuterium-depleted water is naturally sourced from the pristine Altai Mountain glacial region...
             </p>
           </div>
-          <div ref={certsContainerRef} className="w-full grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 mb-10">
+          <div ref={certsContainerRef} className="w-full grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8 mb-10">
             {certs.map((cert, index) => (
                <div key={index} className={`cert-item flex flex-col items-center justify-start ${cert.cols} transition-all duration-300 hover:scale-105`}>
-                 <div className="relative w-full h-20 md:h-28 mb-3 filter hover:drop-shadow-lg">
+                 <div className="relative w-full h-24 md:h-32 mb-3 filter hover:drop-shadow-lg">
                    <Image src={cert.src} alt={cert.name} fill sizes="(max-width: 768px) 100px, 120px" className="object-contain" />
                  </div>
-                 {cert.value && (
-                   <div className="text-center mt-auto">
-                     <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wide">{cert.label}</p>
-                     <p className="text-[10px] md:text-xs font-bold text-gray-600 uppercase tracking-wide">{cert.value}</p>
-                   </div>
-                 )}
+              
                </div>
             ))}
           </div>
-          <div className="w-full">
+          <div className="flex justify-end w-full px-5">
             <Link href="/standards" className="inline-block text-[#009FE3] text-lg font-semibold hover:underline">Learn Our Standards &gt;</Link>
           </div>
         </div>
@@ -411,24 +469,30 @@ const Hero = () => {
       </section>
 
       {/* ABOUT US SECTION */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-16 md:py-24">
-        <div className="flex flex-col lg:flex-row items-center gap-6 md:gap-5">
-          <div className="w-full lg:w-7/12">
+
+      <section className="w-full max-w-7xl mx-auto px-4 py-12 md:py-24 overflow-visible"> {/* Changed overflow to visible so large image doesn't cut off */}
+        <div className="flex flex-col lg:flex-row items-center gap-10 md:gap-16">
+          
+          {/* IMAGE COLUMN: Changed to 1/2 width and centered content */}
+          <div className="w-full lg:w-1/2 flex justify-center items-center relative">
             <Image 
               src="/images/product04.png" 
               alt="Deutronix Company" 
-              width={850} 
-              height={850} 
-              className="object-contain w-full h-auto"
+              width={1000} 
+              height={1000} 
+              // UPDATED: Scale increased to 135 (very big) and added drop-shadow for depth
+              className="object-contain w-full h-auto scale-125 md:scale-135 transition-transform duration-500" 
               priority
             />
           </div>
-          <div className="w-full lg:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#009FE3] mb-1">About Us</h2>
+
+          {/* TEXT COLUMN: Changed to 1/2 width to balance the layout */}
+          <div className="w-full lg:w-1/2 mt-8 lg:mt-0">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#009FE3] mb-3">About Us</h2> {/* Increased mb */}
             <p className="text-gray-600 text-lg md:text-xl leading-relaxed mb-10">
               Deutronix is a health-focused company dedicated to the research, development, and education of deuterium-depleted water applications. Guided by science, quality, and long-term responsibility, we develop wellness solutions designed to support modern lifestyles with clarity and care.
             </p>
-            <div className="flex justify-end">
+            <div className="flex justify-end px-5">
               <button className="text-[#009FE3] font-semibold hover:text-[#0077B3] transition-colors flex items-center text-lg md:text-xl group">
                 Learn about Us
                 <svg 
