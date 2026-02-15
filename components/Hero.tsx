@@ -381,7 +381,7 @@ const Hero = () => {
         
         {/* Image - outside padding for proper centering */}
         <div className="relative w-full h-0">
-          <div className="product-image absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[130%] md:w-[150%] max-w-none">
+          <div className="product-image absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[110%] md:w-[150%] max-w-none">
             <Image src="/images/product03.png" alt="EasyMove Gel" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
           </div>
         </div>
