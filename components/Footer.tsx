@@ -30,8 +30,8 @@ const Footer = () => {
               <div>
                 <h3 className="font-bold text-gray-900 mb-2 text-sm">About Deutronix</h3>
                 <div className="space-y-1 text-sm text-gray-600">
-                  <a href="#" className="block hover:text-gray-900">DDW Science</a>
-                  <a href="#" className="block hover:text-gray-900">Source & Standards</a>
+                  <a href="science" className="block hover:text-gray-900">DDW Science</a>
+                  <a href="source" className="block hover:text-gray-900">Source & Standards</a>
                 </div>
               </div>
 
@@ -39,8 +39,8 @@ const Footer = () => {
               <div>
                 <h3 className="font-bold text-gray-900 mb-2 text-sm">Products</h3>
                 <div className="space-y-1 text-sm text-gray-600">
-                  <a href="#" className="block hover:text-gray-900">DDW+ Drinking Water</a>
-                  <a href="#" className="block hover:text-gray-900">EasyMove Gel</a>
+                  <a href="ddwplus" className="block hover:text-gray-900">DDW+ Drinking Water</a>
+                  <a href="ddwgel" className="block hover:text-gray-900">EasyMove Gel</a>
                 </div>
               </div>
 

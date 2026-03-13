@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Navbar />  {/* Sticks to the top of every page */}
-        <main className="min-h-screen">
+        <main className="min-h-screen pt-[60px]">
           {children} {/* This is where your Hero.tsx and other page content goes */}
         </main>
         <Footer />  {/* Sticks to the bottom of every page */}

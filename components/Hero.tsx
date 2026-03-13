@@ -33,7 +33,61 @@ const Hero = () => {
       role: "Beautician Entrepreneur",
       quote: "I drink DDW+ regularly as part of my daily routine. It tastes clean and light, and I appreciate the focus on quality and transparency rather than exaggeration.",
       image: "/images/Eve.png"
-    }
+    },
+    {
+      name: "Wawa",
+      role: "Online Retailer",
+      quote: "I spend most of my day doing housework, and sometimes my lower back and legs feel tired by evening. I've been using EasyMove Gel after long days, and it gives a comforting warm feeling that helps me relax.",
+      image: "/images/Wawa.png"
+    },
+    {
+      name: "Kath",
+      role: "KOL",
+      quote: "I've also been drinking DDW+ regularly, and I like how clean and light it tastes. It feels like a small but thoughtful upgrade to my hydration.",
+      image: "/images/Kath.png"
+    },
+    {
+      name: "Irene",
+      role: "Beautician",
+      quote: "Since incorporating DDW+ into my routine, I feel more mindful about what I'm drinking every day.",
+      image: "/images/Irene.png"
+    },
+    {
+      name: "Candy",
+      role: "KOL / Team Leader",
+      quote: "After workouts, my muscles sometimes feel tight. EasyMove Gel provides a gentle warming comfort that I enjoy post-exercise.",
+      image: "/images/Candy.png"
+    },
+    {
+      name: "Patricia",
+      role: "Hairstylist",
+      quote: "I drink DDW+ daily and appreciate the transparency about its ppm level. It gives me confidence in my daily water choice.",
+      image: "/images/Patricia.png"
+    },
+    {
+      name: "Davne",
+      role: "Entrepreneur",
+      quote: "My schedule can be quite packed, and I'm often moving around. EasyMove Gel is helpful when I need quick comfort during the day.",
+      image: "/images/Davne.png"
+    },
+    {
+      name: "Poh Choo",
+      role: "Retiree",
+      quote: "As I've gotten older, walking sometimes feels uncomfortable. After applying EasyMove, it feels more eased and I can move more smoothly.",
+      image: "/images/Poh-Choo.png"
+    },
+    {
+      name: "Marcle",
+      role: "KOL",
+      quote: "I love to exercise, but after workouts, my muscles sometimes feel tight. EasyMove Gel provides a gentle warming comfort that I enjoy post-exercise.",
+      image: "/images/Marcle.png"
+    },
+    {
+      name: "Ee Ling",
+      role: "Accountant",
+      quote: "Long desk hours can feel stiff. EasyMove absorbs quickly, and help my muscle relax a lot.",
+      image: "/images/Ee-Ling.png"
+    },
   ];
 
   const certs = [
@@ -240,7 +294,7 @@ const Hero = () => {
   // 4. RENDER
   // ==========================
   return (
-    <div className="w-full flex flex-col font-sans text-gray-700 bg-white">
+    <div className="w-full flex flex-col font-sans text-gray-700 bg-white overflow-x-hidden">
       
      {/* 2. HERO SECTION */}
       <section className="w-full max-w-7xl mx-auto px-8 py-6 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-4">
@@ -321,10 +375,10 @@ const Hero = () => {
           <div className="gsap-reveal bg-white rounded-2xl shadow-2xl p-8 md:p-12 w-full">
             <div className="gsap-reveal">
               <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8">
-                Deuterium-Depleted Water (DDW) is water with a naturally lower concentration of deuterium...
+                Deuterium-Depleted Water (DDW) is water with a naturally lower concentration of deuterium, a heavier form of hydrogen found in all water.
                 <br /><br />
-                Lower deuterium levels are an area of scientific interest due to their relationship with cellular energy efficiency.
-              </p>
+                Lower deuterium levels are an area of scientific interest due to their relationship with cellular energy efficiency. DDW represents a precise, science-driven approach to everyday hydration.
+                   </p>
             </div>
             <div className="gsap-reveal flex justify-center">
               <Link href="/science" className="inline-flex items-center bg-white text-[#009FE3] text-lg font-bold border border-gray-100 rounded-full px-8 py-3 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-lg transition-all duration-300">
@@ -336,69 +390,65 @@ const Hero = () => {
       </section>
 
       {/* 4. PRODUCTS SECTION */}
-<section ref={productsSectionRef} className="relative z-20 w-full bg-white py-24 px-6">
+<section ref={productsSectionRef} className="relative z-20 w-full bg-white pt-24 pb-16 px-6">
   <div className="max-w-7xl mx-auto">
     
-    <div className="text-center mb-48">
+    <div className="text-center ">
       <h2 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">Precision for Every Need.</h2>
       <p className="text-gray-500 max-w-2xl mx-auto text-lg">
         Two precision applications of Deuterium-Depleted Water, designed to support the body from within and from without.
       </p>
     </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-20 md:gap-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-6 md:items-end">
       
       {/* Product 1: DDW+ */}
-      <div className="product-card relative bg-white border border-gray-100 rounded-[2rem] shadow-2xl text-left hover:shadow-[0_20px_40px_rgba(0,159,227,0.1)] transition-shadow duration-300">
-        
-        {/* Image - outside padding for proper centering */}
-        <div className="relative w-full h-0">
-          <div className="product-image absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[130%] md:w-[150%] max-w-none">
-            <Image src="/images/product02.png" alt="DDW+ Pack" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
-          </div>
+      <div className="product-card flex flex-col items-center">
+        {/* Image - sits above the card, overlaps into it slightly */}
+        <div className="product-image w-[120%] md:w-[115%] -mb-12 relative z-10">
+          <Image src="/images/product02.png" alt="DDW+ Pack" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
         </div>
-
-        {/* Text - with padding only here */}
-        <div className="px-8 pt-10 pb-6">
-          <div className="product-text mt-8 md:mt-56"> 
-            <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">DDW+</h3>
-            <p className="text-lg font-semibold text-[#009FE3] mb-2">Deuterium-Depleted Water</p>
-            <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Daily Hydration (132–138 ppm)</p>
-            <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-              Glacial-sourced deuterium-depleted water for everyday consumption, supporting metabolic balance.
-            </p>
-            <div className="flex justify-end">
-              <Link href="/products/ddw" className="text-[#009FE3] font-semibold text-sm hover:underline flex items-center gap-1">
-                Learn the Products <span className="text-lg">&gt;</span>
-              </Link>
+        {/* Card - text only */}
+        <div className="relative w-full bg-white border border-gray-100 rounded-[2rem] shadow-2xl hover:shadow-[0_20px_40px_rgba(0,159,227,0.1)] transition-shadow duration-300 pt-16">
+          <div className="px-8 pb-6">
+            <div className="product-text"> 
+              <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">DDW+</h3>
+              <p className="text-lg font-semibold text-[#009FE3] mb-2">Deuterium-Depleted Water</p>
+              <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Daily Hydration (132–138 ppm)</p>
+              <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                Glacial-sourced deuterium-depleted water for everyday consumption, supporting metabolic balance.
+              </p>
+              <div className="flex justify-end">
+                <Link href="/ddwplus" className="text-[#009FE3] font-semibold text-sm hover:underline flex items-center gap-1">
+                  Learn the Products <span className="text-lg">&gt;</span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Product 2: Gel */}
-      <div className="product-card relative bg-white border border-gray-100 rounded-[2rem] shadow-2xl text-left hover:shadow-[0_20px_40px_rgba(0,159,227,0.1)] transition-shadow duration-300 mt-40 md:mt-0">
-        
-        {/* Image - outside padding for proper centering */}
-        <div className="relative w-full h-0">
-          <div className="product-image absolute -top-64 md:-top-80 left-1/2 transform -translate-x-1/2 w-[110%] md:w-[150%] max-w-none">
-            <Image src="/images/product03.png" alt="EasyMove Gel" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
-          </div>
+      <div className="product-card flex flex-col items-center">
+        {/* Image - sits above the card, overlaps into it slightly */}
+        <div className="product-image w-[105%] md:w-[100%] -mb-12 relative z-10">
+          <Image src="/images/product03.png" alt="EasyMove Gel" width={800} height={800} className="object-contain w-full h-auto drop-shadow-xl" />
         </div>
-
-        {/* Text - with padding only here */}
-        <div className="px-8 pt-10 pb-6">
-          <div className="product-text mt-8 md:mt-56">
-            <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">EasyMove Gel</h3>
-            <p className="text-lg font-semibold text-[#009FE3] mb-2">DDW+ Topical Solution</p>
-            <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Targeted Recovery (50 ppm)</p>
-            <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-              A high-penetration topical gel designed for localized use, delivering deuterium-depleted water efficiently to muscles and skin.
-            </p>
-            <div className="flex justify-end">
-              <Link href="/products/gel" className="text-[#009FE3] font-semibold text-sm hover:underline flex items-center gap-1">
-                Learn the Products <span className="text-lg">&gt;</span>
-              </Link>
+        {/* Card - text only */}
+        <div className="relative w-full bg-white border border-gray-100 rounded-[2rem] shadow-2xl hover:shadow-[0_20px_40px_rgba(0,159,227,0.1)] transition-shadow duration-300 pt-16">
+          <div className="px-8 pb-6">
+            <div className="product-text">
+              <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">EasyMove Gel</h3>
+              <p className="text-lg font-semibold text-[#009FE3] mb-2">DDW+ Topical Solution</p>
+              <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Targeted Recovery (50 ppm)</p>
+              <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                A high-penetration topical gel designed for localized use, delivering deuterium-depleted water efficiently to muscles and skin.
+              </p>
+              <div className="flex justify-end">
+                <Link href="/ddwgel" className="text-[#009FE3] font-semibold text-sm hover:underline flex items-center gap-1">
+                  Learn the Products <span className="text-lg">&gt;</span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -411,12 +461,10 @@ const Hero = () => {
      {/* 5. SOURCE & STANDARDS */}
       <section className="relative z-10 w-full bg-white py-20 px-6">
         <div className="max-w-7xl mx-auto flex flex-col items-start">
-          <div className="w-full max-w-4xl mb-10">
+          <div className="w-full mb-10">
             <h2 className="text-4xl md:text-5xl font-bold text-[#009FE3] mb-4">Source & Standards</h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              Our deuterium-depleted water is naturally sourced from the pristine Altai Mountain glacial region
-              and produced under strict quality, hygiene, and safety standards. Every formulation reflects our
-              commitment to purity, consistency, and responsible production.
+              Our deuterium-depleted water is naturally sourced from the pristine Altai Mountain glacial region and produced under strict quality, hygiene, and safety standards. Every formulation reflects our commitment to purity, consistency, and responsible production.
             </p>
           </div>
           <div ref={certsContainerRef} className="w-full grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8 mb-10">
@@ -435,13 +483,14 @@ const Hero = () => {
       </p>
     </div>
           <div className="flex justify-end w-full px-5">
-            <Link href="/standards" className="inline-block text-[#009FE3] text-lg font-semibold hover:underline">Learn Our Standards &gt;</Link>
+            <Link href="/source" className="inline-block text-[#009FE3] text-lg font-semibold hover:underline">Learn Our Standards &gt;</Link>
           </div>
         </div>
       </section>
 
       {/* 6. TESTIMONIALS */}
-      <section className="relative z-10 w-full max-w-7xl mx-auto px-6 py-10 bg-white">
+      <section className="relative z-10 w-full px-6 py-10 bg-white">
+        <div className="max-w-7xl mx-auto">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-[#009FE3] mb-12">What Our Users Say</h2>
         <div 
           ref={scrollContainerRef}
@@ -473,6 +522,20 @@ const Hero = () => {
            <span className="text-sm font-medium text-[#009FE3]">{String(displayCount)} of {testimonials.length}</span>
            <button onClick={() => { scroll('right'); resetAutoScroll(); }} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-[#009FE3] hover:border-[#009FE3] transition">&gt;</button>
         </div>
+        <div className="flex justify-end mt-6 px-5">
+          <Link href="/testimonials" className="text-[#009FE3] font-semibold hover:text-[#0077B3] transition-colors flex items-center text-lg md:text-xl group">
+            View Testimonials
+            <svg 
+              className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+        </div>
+        </div>
       </section>
 
       {/* ABOUT US SECTION */}
@@ -500,7 +563,7 @@ const Hero = () => {
               Deutronix is a health-focused company dedicated to the research, development, and education of deuterium-depleted water applications. Guided by science, quality, and long-term responsibility, we develop wellness solutions designed to support modern lifestyles with clarity and care.
             </p>
             <div className="flex justify-end px-5">
-              <button className="text-[#009FE3] font-semibold hover:text-[#0077B3] transition-colors flex items-center text-lg md:text-xl group">
+              <Link href="/about" className="text-[#009FE3] font-semibold hover:text-[#0077B3] transition-colors flex items-center text-lg md:text-xl group">
                 Learn about Us
                 <svg 
                   className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" 
@@ -510,7 +573,7 @@ const Hero = () => {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-              </button>
+              </Link>
             </div>
           </div>
         </div>
