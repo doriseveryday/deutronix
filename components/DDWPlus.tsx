@@ -122,17 +122,24 @@ const DDWPlus = () => {
         </div>
       </section>
 
-      {/* ===== PRODUCT SHOWCASE ===== */}
+     {/* ===== PRODUCT SHOWCASE ===== */}
       <section className="max-w-6xl mx-auto px-6 py-12">
-        <div className="flex justify-center">
-          <div className="relative fade-up">
+        <div className="flex flex-col items-center justify-center">
+          <div className="relative fade-up w-full max-w-lg">
             <Image
               src="/images/ddwplus/01.png"
-              alt="DDW+ Product Range"
+              alt="DDW+ Product"
               width={600}
               height={400}
               className="object-contain w-full h-auto"
             />
+          </div>
+
+          {/* Price Badge (Smaller) */}
+          <div className="fade-up mt-6">
+            <span className="inline-block bg-[#4693D8] text-white italic text-base md:text-lg tracking-wide px-6 py-1.5 rounded-full shadow-sm">
+              RRP: RM18 / bottle
+            </span>
           </div>
         </div>
       </section>
@@ -173,7 +180,6 @@ const DDWPlus = () => {
               <h3 className="text-xs md:text-2xl font-bold text-white mb-0 md:mb-2">
                 Athletes
               </h3>
-              <p className="text-white/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-white/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 Training and competition put stress on the body. DDW+ helps
                 optimize cellular energy and reduce oxidative stress, promoting
@@ -195,7 +201,6 @@ const DDWPlus = () => {
               <h3 className="text-xs md:text-2xl font-bold text-white mb-0 md:mb-2">
                 Working Professionals
               </h3>
-              <p className="text-white/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-white/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 Mental fatigue and stress are common in busy lifestyles. DDW+
                 enhances brain clarity, energy, and stress resilience.
@@ -219,7 +224,6 @@ const DDWPlus = () => {
               <h3 className="text-xs md:text-2xl font-bold text-gray-900 mb-0.5 md:mb-3">
                 Management Population
               </h3>
-              <p className="text-gray-500 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-gray-600 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 Those with metabolic or fatigue-related conditions benefit from
                 DDW+&apos;s support for cell function, mitochondrial health,
@@ -241,7 +245,6 @@ const DDWPlus = () => {
               <h3 className="text-xs md:text-2xl font-bold text-black mb-0 md:mb-2">
                 Health Seekers
               </h3>
-              <p className="text-black/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 Health-conscious individuals seek clean, effective ways to
                 maintain vitality. DDW+ supports detox, immunity, and balanced
@@ -263,7 +266,6 @@ const DDWPlus = () => {
               <h3 className="text-xs md:text-2xl font-bold text-white mb-0">
                 Aging &amp; Elderly
               </h3>
-              <p className="text-white/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-white/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 Aging involves a natural decline in cell energy and repair. DDW+
                 helps slow down aging, protect DNA, and maintain energy for

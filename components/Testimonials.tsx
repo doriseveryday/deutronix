@@ -104,6 +104,7 @@ const Testimonials = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(1);
   const autoScrollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // ===== VIDEO LOGIC =====
   const scrollVideo = useCallback(
     (direction: "left" | "right") => {
       const container = videoScrollRef.current;
@@ -148,55 +149,93 @@ const Testimonials = () => {
     });
   }, [activeVideo]);
 
-  // Testimonial carousel scroll
+  // ===== TESTIMONIAL LOGIC =====
+
+  // 1. Calculate how many cards are visible and handle the "max scroll" edge case
+  const updateTestimonialCounter = useCallback(() => {
+    const container = testimonialScrollRef.current;
+    if (!container) return;
+    
+    const card = container.firstElementChild as HTMLElement | null;
+    if (!card) return;
+
+    const cardWidth = card.offsetWidth;
+    const gap = 24;
+    const singleItemWidth = cardWidth + gap;
+    
+    const containerWidth = container.clientWidth;
+    const scrollLeft = container.scrollLeft;
+    const scrollWidth = container.scrollWidth;
+    
+    // Calculate how many items fit in the current view
+    const visibleItems = Math.round(containerWidth / singleItemWidth) || 1;
+    
+    // Calculate which item is currently first in view
+    const firstVisibleIndex = Math.round(scrollLeft / singleItemWidth);
+    
+    let currentEndIndex = firstVisibleIndex + visibleItems;
+
+    // Bulletproof check for the end of the scroll container
+    if (Math.ceil(scrollLeft + containerWidth) >= scrollWidth - 10) {
+      currentEndIndex = testimonials.length;
+    }
+
+    // Safely set the state
+    setActiveTestimonial(Math.min(currentEndIndex, testimonials.length));
+  }, []);
+
+  // 2. Attach the scroll listener (and clean it up properly)
+  useEffect(() => {
+    const container = testimonialScrollRef.current;
+    if (!container) return;
+
+    updateTestimonialCounter();
+
+    container.addEventListener("scroll", updateTestimonialCounter, { passive: true });
+    window.addEventListener("resize", updateTestimonialCounter);
+    
+    return () => {
+      container.removeEventListener("scroll", updateTestimonialCounter);
+      window.removeEventListener("resize", updateTestimonialCounter);
+    };
+  }, [updateTestimonialCounter]);
+
+  // 3. Handle manual clicking of the < and > buttons
   const scrollTestimonial = useCallback(
     (direction: "left" | "right") => {
       const container = testimonialScrollRef.current;
       if (!container) return;
       const card = container.firstElementChild as HTMLElement | null;
       if (!card) return;
+
       const cardWidth = card.offsetWidth + 24;
-      if (direction === "left") {
-        container.scrollBy({ left: -cardWidth, behavior: "smooth" });
-      } else {
-        container.scrollBy({ left: cardWidth, behavior: "smooth" });
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const currentScroll = container.scrollLeft;
+
+      if (direction === "right") {
+        if (currentScroll >= maxScroll - 10) {
+          container.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          container.scrollBy({ left: cardWidth, behavior: "smooth" });
+        }
+      } else if (direction === "left") {
+        if (currentScroll <= 10) {
+          container.scrollTo({ left: maxScroll, behavior: "smooth" });
+        } else {
+          container.scrollBy({ left: -cardWidth, behavior: "smooth" });
+        }
       }
     },
     []
   );
 
-  // Track testimonial scroll position
-  useEffect(() => {
-    const container = testimonialScrollRef.current;
-    if (!container) return;
-    const handleScroll = () => {
-      const card = container.firstElementChild as HTMLElement | null;
-      if (!card) return;
-      const cardWidth = card.offsetWidth + 24;
-      const idx = Math.round(container.scrollLeft / cardWidth) + 1;
-      setActiveTestimonial(Math.min(idx, testimonials.length));
-    };
-    container.addEventListener("scroll", handleScroll, { passive: true });
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Auto-scroll testimonials
+  // 4. Handle auto-scrolling
   const resetAutoScroll = useCallback(() => {
     if (autoScrollRef.current) clearInterval(autoScrollRef.current);
     autoScrollRef.current = setInterval(() => {
-      const container = testimonialScrollRef.current;
-      if (!container) return;
-      const card = container.firstElementChild as HTMLElement | null;
-      if (!card) return;
-      const cardWidth = card.offsetWidth + 24;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      if (container.scrollLeft >= maxScroll - 10) {
-        container.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        container.scrollBy({ left: cardWidth, behavior: "smooth" });
-      }
+      scrollTestimonial("right");
     }, 4000);
-  }, []);
+  }, [scrollTestimonial]);
 
   useEffect(() => {
     resetAutoScroll();
@@ -205,6 +244,8 @@ const Testimonials = () => {
     };
   }, [resetAutoScroll]);
 
+
+  // ===== RENDER =====
   return (
     <div className="w-full bg-white">
       {/* ===== HERO ===== */}

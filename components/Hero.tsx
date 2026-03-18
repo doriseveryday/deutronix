@@ -145,8 +145,26 @@ const Hero = () => {
       const firstCard = container.firstElementChild;
       const cardWidth = firstCard ? firstCard.clientWidth : 380;
       const gap = 24;
-      const scrollAmount = direction === 'left' ? -(cardWidth + gap) : (cardWidth + gap);
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      const scrollAmount = cardWidth + gap;
+      
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const currentScroll = container.scrollLeft;
+
+      if (direction === 'right') {
+        // If we are at the end (with a 10px buffer for decimal precision), loop to start
+        if (currentScroll >= maxScroll - 10) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      } else if (direction === 'left') {
+        // If we are at the beginning, loop to the end
+        if (currentScroll <= 10) {
+          container.scrollTo({ left: maxScroll, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        }
+      }
     }
   };
 
@@ -160,20 +178,8 @@ const Hero = () => {
   const startAutoScroll = () => {
     if (autoScrollIntervalRef.current) clearInterval(autoScrollIntervalRef.current);
     autoScrollIntervalRef.current = setInterval(() => {
-      if (scrollContainerRef.current) {
-        const container = scrollContainerRef.current;
-        const maxScroll = container.scrollWidth - container.clientWidth;
-        const currentScroll = container.scrollLeft;
-        const firstCard = container.firstElementChild;
-        const cardWidth = firstCard ? firstCard.clientWidth : 380;
-        const gap = 24;
-        const scrollAmount = cardWidth + gap;
-        if (currentScroll + scrollAmount >= maxScroll - 10) {
-          container.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          scroll('right');
-        }
-      }
+      // Just call the newly updated scroll function!
+      scroll('right');
     }, 3000);
   };
 

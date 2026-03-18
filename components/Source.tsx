@@ -93,7 +93,7 @@ const Source = () => {
       {/* ===== MOBILE TITLE ===== */}
       <div className="block md:hidden px-6 py-4 text-center src-hero-title">
         {/* <h1 className="text-3xl font-extrabold text-[#009FE3] leading-tight"> */}
-        <h1 className="text-3xl font-extrabold text-[#000000] leading-tight">
+        <h1 className="text-3xl font-extrabold text-[#009FE3] leading-tight">
           Source &amp; Standards
         </h1>
       </div>

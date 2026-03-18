@@ -7,6 +7,45 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Data for the Formulation Design section extracted from your image
+const formulationIngredients = [
+  {
+    name: "Loquat Leaf Extract",
+    desc: "Traditionally used in botanical preparations, loquat leaf extract is included to support localized comfort and contribute to a balanced topical formulation profile.",
+    image: "/images/ddwgel/Loquat-Leaf.png", // Update this path to match your actual file
+  },
+  {
+    name: "Licorice Root Extract",
+    desc: "A well-known botanical ingredient valued in topical formulations for its skin-conditioning properties and ability to support overall skin comfort.",
+    image: "/images/ddwgel/Licorice.png",
+  },
+  {
+    name: "Siler Root Extract",
+    desc: "Traditionally incorporated in external botanical applications, selected to complement formulations intended for areas of physical tension.",
+    image: "/images/ddwgel/Siler.png",
+  },
+  {
+    name: "Mugwort Leaf Extract",
+    desc: "Commonly used in warming topical preparations, included to enhance sensory comfort and support localized application.",
+    image: "/images/ddwgel/Mugwort.png",
+  },
+  {
+    name: "Sophora Root Extract",
+    desc: "A botanical extract traditionally used in topical preparations to support skin balance and localized comfort.",
+    image: "/images/ddwgel/Sophora-Root.png",
+  },
+  {
+    name: "Skullcap Root Extract",
+    desc: "Rich in naturally occurring flavonoids, selected to contribute to formulation stability and skin-conditioning support.",
+    image: "/images/ddwgel/Skullcap.png",
+  },
+  {
+    name: "Calendula Extract",
+    desc: "Widely used in botanical topical applications, valued for supporting skin conditioning and soothing formulation characteristics.",
+    image: "/images/ddwgel/Calendula.png",
+  },
+];
+
 const DDWGel = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
 
@@ -125,7 +164,7 @@ const DDWGel = () => {
 
       {/* ===== PRODUCT SHOWCASE ===== */}
       <section className="max-w-6xl mx-auto px-6 py-12">
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center justify-center">
           <div className="relative fade-up w-full max-w-lg">
             <Image
               src="/images/ddwgel/01.png"
@@ -134,6 +173,13 @@ const DDWGel = () => {
               height={400}
               className="object-contain w-full h-auto"
             />
+          </div>
+          
+          {/* Price Badge (Smaller) */}
+          <div className="fade-up mt-6">
+            <span className="inline-block bg-[#4693D8] text-white italic text-base md:text-lg tracking-wide px-6 py-1.5 rounded-full shadow-sm">
+              RRP: RM158 / box
+            </span>
           </div>
         </div>
       </section>
@@ -185,7 +231,6 @@ const DDWGel = () => {
               <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Joint Pain / Knee Pain
               </h3>
-              <p className="text-white/80 md:text-black/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 The most common complaint among elderly individuals. EasyMove
                 Gel is suitable for supporting daily joint comfort and easing
@@ -208,7 +253,6 @@ const DDWGel = () => {
               <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Lower Back Pain
               </h3>
-              <p className="text-white/80 md:text-black/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 Back discomfort from aging, posture changes, or long-term strain
                 is very common. EasyMove Gel provides warming support to help
@@ -231,7 +275,6 @@ const DDWGel = () => {
               <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Frozen Shoulder
               </h3>
-              <p className="text-white/80 md:text-black/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 Stiff shoulders and limited arm movement often affect seniors.
                 EasyMove Gel is suitable for warming the shoulder area to support
@@ -254,7 +297,6 @@ const DDWGel = () => {
               <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Muscle Weakness &amp; Stiffness
               </h3>
-              <p className="text-white/80 md:text-black/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 As circulation and muscle elasticity decline with age, stiffness
                 becomes more noticeable. EasyMove Gel supports muscle relaxation
@@ -277,7 +319,6 @@ const DDWGel = () => {
               <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Difficulty Walking / Reduced Mobility
               </h3>
-              <p className="text-white/80 md:text-black/80 text-[7px] md:text-xs font-semibold mb-0 md:mb-1">Why?</p>
               <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
                 For elderly individuals who feel tightness, heaviness, or
                 discomfort when walking. EasyMove Gel helps provide warming
@@ -287,6 +328,56 @@ const DDWGel = () => {
           </div>
         </div>
       </section>
+
+      {/* ===== DIVIDER ===== */}
+      <div className="w-full h-px bg-gray-200 fade-up" />
+
+      {/* ===== FORMULATION DESIGN (NEW SECTION) ===== */}
+      <section className="max-w-4xl mx-auto px-6 py-14">
+        <div className="fade-up mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-500 mb-2">
+            Formulation Design
+          </h2>
+          <p className="text-gray-500 mb-4">
+            Plant-Based Functional Composition
+          </p>
+          <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+            EasyMove Gel is developed using a precision-based topical formulation
+            strategy. Each botanical extract is selected for compatibility,
+            stability, and localized application performance.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-6 md:gap-8">
+          {formulationIngredients.map((item, index) => (
+            <div
+              key={index}
+              className="fade-up flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8"
+            >
+              <div className="flex-shrink-0 w-32 h-20 md:w-48 md:h-28 relative rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  sizes="(max-width: 768px) 128px, 192px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex flex-col flex-1">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-1">
+                  {item.name}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== DIVIDER ===== */}
+      <div className="w-full h-px bg-gray-200 fade-up" />
 
       {/* ===== WHY 50 PPM MATTERS ===== */}
       <section className="max-w-6xl mx-auto px-6 py-14 overflow-hidden">
