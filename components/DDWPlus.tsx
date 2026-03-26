@@ -110,10 +110,10 @@ const DDWPlus = () => {
       {/* ===== HERO BANNER ===== */}
       <section className="w-full bg-gray-100 py-10 px-6">
         <div className="max-w-6xl mx-auto">
-          <h1 className="hero-element text-3xl md:text-5xl font-extrabold text-[#009FE3] leading-tight">
+          <h1 className="hero-element text-4xl md:text-6xl font-extrabold text-[#009FE3] leading-tight">
             Precision for Every Need.
           </h1>
-          <p className="hero-element text-gray-700 text-sm md:text-base mt-4 leading-relaxed">
+          <p className="hero-element text-gray-700 text-base md:text-lg mt-4 leading-relaxed">
             Two precision applications of Deuterium-Depleted Water, engineered
             with clearly defined deuterium levels to support the body from within
             and from without. Each formulation is optimized for its specific
@@ -176,11 +176,11 @@ const DDWPlus = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-right"
             />
-            <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-12 max-w-[60%] md:max-w-md ddwplus-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-white mb-0 md:mb-2">
+            <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-12 ddwplus-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-white mb-0 md:mb-2">
                 Athletes
               </h3>
-              <p className="text-white/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-white/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
                 Training and competition put stress on the body. DDW+ helps
                 optimize cellular energy and reduce oxidative stress, promoting
                 faster recovery and enhanced performance.
@@ -197,41 +197,38 @@ const DDWPlus = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right max-w-[60%] md:max-w-md ml-auto ddwplus-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-white mb-0 md:mb-2">
+            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ml-auto ddwplus-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-white mb-0 md:mb-2">
                 Working Professionals
               </h3>
-              <p className="text-white/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-white/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
                 Mental fatigue and stress are common in busy lifestyles. DDW+
                 enhances brain clarity, energy, and stress resilience.
               </p>
             </div>
           </div>
 
-          {/* --- Chronic Condition Management --- */}
+      {/* --- Chronic Condition Management --- */}
           <div className="relative w-full overflow-hidden">
+            {/* Using 35% horizontally to shift it just a little bit instead of all the way left */}
             <Image
               src="/images/ddwplus/04.png"
               alt="Chronic Condition Management"
               width={1200}
               height={400}
-              className="w-full h-[110px] md:h-auto object-cover object-[55%_center] md:object-right"
+              className="w-full h-[110px] md:h-auto object-cover object-[35%_center] md:object-right"
             />
-            <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-12 max-w-[60%] md:max-w-md ddwplus-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-gray-900 mb-0">
-                Chronic Condition
+            <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-12 ddwplus-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-gray-900 leading-none md:leading-tight mb-1 md:mb-3 max-w-[55%] md:max-w-md">
+                Chronic Condition<br />Management Population
               </h3>
-              <h3 className="text-xs md:text-2xl font-bold text-gray-900 mb-0.5 md:mb-3">
-                Management Population
-              </h3>
-              <p className="text-gray-600 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-gray-600 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
                 Those with metabolic or fatigue-related conditions benefit from
                 DDW+&apos;s support for cell function, mitochondrial health,
                 and overall vitality.
               </p>
             </div>
           </div>
-
           {/* --- Health Seekers --- */}
           <div className="relative w-full overflow-hidden">
             <Image
@@ -241,11 +238,11 @@ const DDWPlus = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-            <div className="absolute inset-0 flex flex-col justify-end items-end px-4 md:px-12 pb-2 md:pb-10 text-right max-w-[60%] md:max-w-md ml-auto ddwplus-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-black mb-0 md:mb-2">
+            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ml-auto ddwplus-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-black mb-0 md:mb-2">
                 Health Seekers
               </h3>
-              <p className="text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
                 Health-conscious individuals seek clean, effective ways to
                 maintain vitality. DDW+ supports detox, immunity, and balanced
                 metabolism naturally.
@@ -262,11 +259,11 @@ const DDWPlus = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-[75%_center] md:object-right"
             />
-            <div className="absolute inset-0 flex flex-col justify-end px-4 md:px-12 pb-2 md:pb-10 max-w-[60%] md:max-w-md ddwplus-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-white mb-0">
+            <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-12 ddwplus-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-white mb-0 md:mb-2">
                 Aging &amp; Elderly
               </h3>
-              <p className="text-white/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-white/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
                 Aging involves a natural decline in cell energy and repair. DDW+
                 helps slow down aging, protect DNA, and maintain energy for
                 active aging.

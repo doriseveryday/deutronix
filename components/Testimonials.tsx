@@ -90,11 +90,11 @@ const testimonials = [
   },
 ];
 
-// Replace these with your actual YouTube video IDs
+// All videos are now shorts and titles have been removed from the object
 const videos = [
-  { id: "7nKO_qYNCjo", title: "video title" },
-  { id: "F3VVmolvgOM", title: "video title" },
-  { id: "7", title: "video title" },
+  { id: "HChSv_4fY4s", type: "short" },
+  { id: "W0OD226TVv8", type: "short" }, 
+  { id: "MZk4ZM5UkMM", type: "short" }, 
 ];
 
 const Testimonials = () => {
@@ -299,20 +299,24 @@ const Testimonials = () => {
             {videos.map((video, i) => (
               <div
                 key={video.id}
-                className="flex-shrink-0 w-full snap-center"
+                className="flex-shrink-0 w-full snap-center flex flex-col items-center justify-center"
               >
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg bg-gray-900">
+                {/* Dynamically adjust aspect ratio and max-width based on video type */}
+                <div
+                  className={`relative overflow-hidden shadow-lg bg-gray-900 rounded-2xl ${
+                    video.type === "short"
+                      ? "w-full max-w-[320px] aspect-[9/16]" // Portrait mode for Shorts
+                      : "w-full aspect-video" // 16:9 Landscape for regular videos
+                  }`}
+                >
                   <iframe
                     src={`https://www.youtube-nocookie.com/embed/${video.id}?playsinline=1&rel=0&modestbranding=1&enablejsapi=1`}
-                    title={video.title}
+                    title="Video Testimonial"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     className="absolute inset-0 w-full h-full"
                   />
                 </div>
-                <p className="mt-3 text-sm font-medium text-gray-700 text-center">
-                  {video.title}
-                </p>
               </div>
             ))}
           </div>
@@ -366,8 +370,6 @@ const Testimonials = () => {
             />
           ))}
         </div>
-
-       
       </section>
 
       <div className="w-full h-px bg-gray-200" />

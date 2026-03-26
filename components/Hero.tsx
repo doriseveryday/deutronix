@@ -445,7 +445,7 @@ const Hero = () => {
           <div className="px-8 pb-6">
             <div className="product-text">
               <h3 className="text-4xl font-extrabold text-[#009FE3] mb-1">EasyMove Gel</h3>
-              <p className="text-lg font-semibold text-[#009FE3] mb-2">DDW+ Topical Solution</p>
+              <p className="text-lg font-semibold text-[#009FE3] mb-2"><br></br></p>
               <p className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wide">Targeted Recovery (50 ppm)</p>
               <p className="text-gray-600 mb-4 text-sm leading-relaxed">
                 A high-penetration topical gel designed for localized use, delivering deuterium-depleted water efficiently to muscles and skin.

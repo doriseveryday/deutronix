@@ -226,12 +226,14 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
+            {/* Added gradient for mobile */}
             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
-            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right max-w-[60%] md:max-w-lg ml-auto ddwgel-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
+            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
+              {/* Dynamic text color: white on mobile, black on desktop */}
+              <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Joint Pain / Knee Pain
               </h3>
-              <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
                 The most common complaint among elderly individuals. EasyMove
                 Gel is suitable for supporting daily joint comfort and easing
                 stiffness around the knees, hands, and joints during movement.
@@ -248,12 +250,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
-            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right max-w-[60%] md:max-w-lg ml-auto ddwgel-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
+            {/* Added gradient for mobile */}
+            <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
+            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Lower Back Pain
               </h3>
-              <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
                 Back discomfort from aging, posture changes, or long-term strain
                 is very common. EasyMove Gel provides warming support to help
                 relax muscles and improve comfort during daily activities.
@@ -270,12 +273,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
-            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right max-w-[60%] md:max-w-lg ml-auto ddwgel-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
+            {/* Added gradient for mobile */}
+            <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
+            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Frozen Shoulder
               </h3>
-              <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
                 Stiff shoulders and limited arm movement often affect seniors.
                 EasyMove Gel is suitable for warming the shoulder area to support
                 flexibility and smoother movement.
@@ -292,12 +296,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
-            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right max-w-[60%] md:max-w-lg ml-auto ddwgel-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
+            {/* Added gradient for mobile */}
+            <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
+            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Muscle Weakness &amp; Stiffness
               </h3>
-              <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
                 As circulation and muscle elasticity decline with age, stiffness
                 becomes more noticeable. EasyMove Gel supports muscle relaxation
                 and comfort, especially before movement or exercise.
@@ -314,12 +319,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
-            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right max-w-[60%] md:max-w-lg ml-auto ddwgel-banner-overlay">
-              <h3 className="text-xs md:text-2xl font-bold text-white md:text-black mb-0 md:mb-2">
+            {/* Added gradient for mobile */}
+            <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
+            <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
                 Difficulty Walking / Reduced Mobility
               </h3>
-              <p className="text-white/90 md:text-black/90 text-[8px] md:text-sm leading-tight md:leading-relaxed">
+              <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
                 For elderly individuals who feel tightness, heaviness, or
                 discomfort when walking. EasyMove Gel helps provide warming
                 comfort to support smoother, more confident movement.
