@@ -7,7 +7,7 @@ import { useLanguage } from '@/app/LanguageContext'; // Added translation hook
 
 const Footer = () => {
   const { t } = useLanguage();
-
+``
   const safeT = (key: string, fallback: string) => {
     const val = t(key);
     // If translation fails (returns the key itself) or is empty, use the fallback
@@ -94,7 +94,7 @@ const Footer = () => {
           <div className="w-3/12 flex justify-end">
             <div className="flex flex-col items-end justify-end space-y-4">
               <a 
-                href="https://wa.me" 
+                href="https://wa.me/60102850516" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-green-600 transition-colors"
