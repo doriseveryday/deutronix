@@ -148,7 +148,7 @@ const Contact = () => {
         </div>
         <div className="ct-map w-full rounded-xl overflow-hidden shadow-md">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.338575002013!2d100.26767421476566!3d5.292994996053351!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac06b00000001%3A0x6b802eb74f36c559!2sDeutronix%20Sdn%20Bhd!5e0!3m2!1sen!2smy!4v1655555555555!5m2!1sen!2smy"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.6412087524022!2d100.26585437486929!3d5.318535635992151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac12eeb06eaab%3A0x6157afbb02428066!2sDeutronix%20Sdn%20Bhd!5e0!3m2!1sen!2smy!4v1774597141719!5m2!1sen!2smy"
             width="100%"
             height="400"
             style={{ border: 0 }}
