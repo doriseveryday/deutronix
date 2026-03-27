@@ -3,11 +3,25 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLanguage } from '@/app/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Contact = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
+
+  // ========================================================================
+  // BULLETPROOF TRANSLATION HELPER
+  // Automatically falls back to English if Next.js caches the JSON file
+  // ========================================================================
+  const safeT = (key: string, fallback: string) => {
+    const val = t(key);
+    if (!val || (typeof val === 'string' && val.includes('contactPage'))) {
+      return fallback;
+    }
+    return val as string;
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -46,11 +60,10 @@ const Contact = () => {
       {/* ===== HEADER ===== */}
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-6">
         <h1 className="ct-heading text-3xl md:text-4xl font-extrabold text-[#009FE3] mb-2">
-          Contact Us
+          {safeT('contactPage.hero.title', 'Contact Us')}
         </h1>
         <p className="ct-subheading text-sm md:text-base text-gray-600 leading-relaxed">
-          If you have questions about our products, science, or standards, our
-          team will be happy to assist.
+          {safeT('contactPage.hero.subtitle', 'If you have questions about our products, science, or standards, our team will be happy to assist.')}
         </p>
       </section>
 
@@ -66,9 +79,13 @@ const Contact = () => {
             </svg>
           </div>
           <div>
-            <p className="font-bold text-gray-900">Customer Hotline</p>
+            <p className="font-bold text-gray-900">
+              {safeT('contactPage.info.hotlineTitle', 'Customer Hotline')}
+            </p>
             <p className="text-gray-600 text-sm">+6010 285 0516</p>
-            <p className="text-gray-500 text-sm">(Monday to Saturday 09:00 - 18:00)</p>
+            <p className="text-gray-500 text-sm">
+              {safeT('contactPage.info.hotlineHours', '(Monday to Saturday 09:00 - 18:00)')}
+            </p>
           </div>
         </div>
 
@@ -80,7 +97,9 @@ const Contact = () => {
             </svg>
           </div>
           <div>
-            <p className="font-bold text-gray-900">Customer Service Email</p>
+            <p className="font-bold text-gray-900">
+              {safeT('contactPage.info.emailTitle', 'Customer Service Email')}
+            </p>
             <p className="text-gray-600 text-sm">deutronix.my@gmail.com</p>
           </div>
         </div>
@@ -92,7 +111,10 @@ const Contact = () => {
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
             </svg>
           </div>
-          <div className="flex items-center h-14">
+          <div>
+            <p className="font-bold text-gray-900">
+              {safeT('contactPage.info.facebookTitle', 'Facebook')}
+            </p>
             <p className="text-gray-600 text-sm">facebook.com/deutronix.my</p>
           </div>
         </div>
@@ -106,7 +128,10 @@ const Contact = () => {
               <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
             </svg>
           </div>
-          <div className="flex items-center h-14">
+          <div>
+            <p className="font-bold text-gray-900">
+              {safeT('contactPage.info.instagramTitle', 'Instagram')}
+            </p>
             <p className="text-gray-600 text-sm">instagram.com/deutronix.my</p>
           </div>
         </div>
@@ -123,7 +148,7 @@ const Contact = () => {
         </div>
         <div className="ct-map w-full rounded-xl overflow-hidden shadow-md">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.6412087524022!2d100.26585437486928!3d5.31853563599214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac12eeb06eaab%3A0x6157afbb02428066!2sDeutronix%20Sdn%20Bhd!5e0!3m2!1sen!2smy!4v1773417412525!5m2!1sen!2smy"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.338575002013!2d100.26767421476566!3d5.292994996053351!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac06b00000001%3A0x6b802eb74f36c559!2sDeutronix%20Sdn%20Bhd!5e0!3m2!1sen!2smy!4v1655555555555!5m2!1sen!2smy"
             width="100%"
             height="400"
             style={{ border: 0 }}

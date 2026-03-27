@@ -1,0 +1,479 @@
+{
+  "nav": {
+    "about": "About Us",
+    "products": "Products",
+    "ddwplus": "DDW+",
+    "easymoveGel": "EasyMove Gel",
+    "science": "DDW Science",
+    "source": "Standards",
+    "testimonials": "Testimonials",
+    "contact": "Contact Us",
+    "member": "Member Login"
+  },
+  "hero": {
+    "tagline": "DDW. Precision. Wellness.",
+    "description": "Advanced wellness solutions built on Deuterium-Depleted Water science.",
+    "subtitle": "Deutronix is a science-driven wellness company focused on precision-formulated solutions using Deuterium-Depleted Water (DDW). Our platform applies DDW technology across hydration and mobility, supporting everyday wellness through thoughtful formulation and responsible science.",
+    "features": "DDW Science | Precision Formulation | Designed for Absorption"
+  },
+  "about": {
+    "title": "Deuterium-Depleted Water (DDW)",
+    "description": "Deuterium-Depleted Water (DDW) is water with a naturally lower concentration of deuterium, a heavier form of hydrogen found in all water.",
+    "content": "Lower deuterium levels are an area of scientific interest due to their relationship with cellular energy efficiency. DDW represents a precise, science-driven approach to everyday hydration.",
+    "learnMore": "Learn the Science"
+  },
+  "products": {
+    "title": "Precision for Every Need.",
+    "subtitle": "Two precision applications of Deuterium-Depleted Water, designed to support the body from within and from without.",
+    "ddwplus": {
+      "name": "DDW+",
+      "type": "Deuterium-Depleted Water",
+      "spec": "Daily Hydration (132–138 ppm)",
+      "description": "Glacial-sourced deuterium-depleted water for everyday consumption, supporting metabolic balance.",
+      "learnMore": "Learn the Products"
+    },
+    "gel": {
+      "name": "EasyMove Gel",
+      "type": "",
+      "spec": "Targeted Recovery (50 ppm)",
+      "description": "A high-penetration topical gel designed for localized use, delivering deuterium-depleted water efficiently to muscles and skin.",
+      "learnMore": "Learn the Products"
+    }
+  },
+  "standards": {
+    "title": "Source & Standards",
+    "description": "Our deuterium-depleted water is naturally sourced from the pristine Altai Mountain glacial region and produced under strict quality, hygiene, and safety standards. Every formulation reflects our commitment to purity, consistency, and responsible production.",
+    "verification": "Produced and verified in accordance with internationally recognized quality and safety standards.",
+    "learnMore": "Learn Our Standards"
+  },
+  "testimonials": {
+    "title": "What Our Users Say",
+    "viewMore": "View Testimonials",
+    "testimonials": [
+      {
+        "name": "Lynn Teh",
+        "title": "Beauty Ambassador",
+        "quote": "DDW+ fits well into my daily hydration routine. I like that the information is clearly explained and the ppm level is stated. It gives me confidence in what I’m drinking, and it feels like a thoughtful upgrade from regular water."
+      },
+      {
+        "name": "Kaka",
+        "title": "KOL\nHouse Wife",
+        "quote": "As I get older, my knees and back feel stiff, especially in the morning. EasyMove Gel gives a gentle warming feeling that helps me feel more comfortable when I start moving for the day."
+      },
+      {
+        "name": "Eve Tan",
+        "title": "Beautician Entrepreneur",
+        "quote": "I drink DDW+ regularly as part of my daily routine. It tastes clean and light, and I appreciate the focus on quality and transparency rather than exaggeration."
+      },
+      {
+        "name": "Wawa",
+        "title": "Online Retailer",
+        "quote": "I spend most of my day doing housework, and sometimes my lower back and legs feel tired by evening. I've been using EasyMove Gel after long days, and it gives a comforting warm feeling that helps me relax."
+      },
+      {
+        "name": "Kath",
+        "title": "KOL",
+        "quote": "I've also been drinking DDW+ regularly, and I like how clean and light it tastes. It feels like a small but thoughtful upgrade to my hydration."
+      },
+      {
+        "name": "Irene",
+        "title": "Beautician",
+        "quote": "Since incorporating DDW+ into my routine, I feel more mindful about what I'm drinking every day."
+      },
+      {
+        "name": "Candy",
+        "title": "KOL / Team Leader",
+        "quote": "After workouts, my muscles sometimes feel tight. EasyMove Gel provides a gentle warming comfort that I enjoy post-exercise."
+      },
+      {
+        "name": "Patricia",
+        "title": "Hairstylist",
+        "quote": "I drink DDW+ daily and appreciate the transparency about its ppm level. It gives me confidence in my daily water choice."
+      },
+      {
+        "name": "Davne",
+        "title": "Entrepreneur",
+        "quote": "My schedule can be quite packed, and I'm often moving around. EasyMove Gel is helpful when I need quick comfort during the day."
+      },
+      {
+        "name": "Poh Choo",
+        "title": "Retiree",
+        "quote": "As I've gotten older, walking sometimes feels uncomfortable. After applying EasyMove, it feels more eased and I can move more smoothly."
+      },
+      {
+        "name": "Marcle",
+        "title": "KOL",
+        "quote": "I love to exercise, but after workouts, my muscles sometimes feel tight. EasyMove Gel provides a gentle warming comfort that I enjoy post-exercise."
+      },
+      {
+        "name": "Ee Ling",
+        "title": "Accountant",
+        "quote": "Long desk hours can feel stiff. EasyMove absorbs quickly, and help my muscle relax a lot."
+      }
+    ]
+  },
+  "aboutUs": {
+    "title": "About Us",
+    "description": "Deutronix is a health-focused company dedicated to the research, development, and education of deuterium-depleted water applications. Guided by science, quality, and long-term responsibility, we develop wellness solutions designed to support modern lifestyles with clarity and care.",
+    "learnMore": "Learn about Us",
+    "footer": {
+      "about": "About Deutronix",
+      "science": "DDW Science",
+      "source": "Source & Standards"
+    }
+  },
+  "footer": {
+    "products": "Products",
+    "ddwplus": "DDW+ Drinking Water",
+    "easymoveGel": "EasyMove Gel",
+    "contact": "Contact Us",
+    "email": "deutronix.my@gmail.com",
+    "location": "Malaysia",
+    "copyright": "© 2026 Deutronix Sdn. Bhd. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  },
+  "aboutPage": {
+    "hero": {
+      "title": "About Deutronix",
+      "subtitle": "Precision Wellness, Guided by Science",
+      "p1": "Deutronix is a wellness-focused company dedicated to the research, development, and responsible application of Deuterium-Depleted Water (DDW).",
+      "p2": "We apply DDW science with precision — creating purpose-built formulations designed to support everyday hydration and targeted mobility needs."
+    },
+    "approach": {
+      "title": "Our Approach",
+      "p1": "Deutronix is built on a single scientific platform, applied thoughtfully across different wellness applications.",
+      "p2": "Each product is developed with clearly defined intent, measured parameters, and transparent communication.",
+      "p3": "We believe precision matters more than exaggeration."
+    },
+    "science": {
+      "title": "Science & Responsibility",
+      "p1": "Our work is guided by an international scientific advisory team spanning nutrition, biomedical science, and water research.",
+      "p2": "We reference established research, maintain responsible boundaries, and avoid overstated claims.",
+      "p3": "Education comes before promotion. Responsibility comes before trends."
+    },
+    "quality": {
+      "title": "Quality & Standards",
+      "p1": "Our DDW is naturally sourced from pristine glacial regions and produced under strict quality, hygiene, and safety standards, aligned with internationally recognised systems and local regulatory requirements.",
+      "p2": "Consistency, traceability, and verification are central to how we operate."
+    },
+    "quote": {
+      "line1": "Deutronix is built for the long term",
+      "line2": "where science, precision, and trust come together."
+    }
+  },
+  "sciencePage": {
+    "hero": {
+      "title": "DDW SCIENCE",
+      "subtitle": "Understanding Deuterium-Depleted Water"
+    },
+    "whatIsDeuterium": {
+      "title": "What is Deuterium?",
+      "p1": "Deuterium is a naturally occurring form of hydrogen found in all water. Because it is heavier than regular hydrogen, it behaves differently inside the body at the cellular level.",
+      "p2": "All natural water contains deuterium. The difference lies in how much."
+    },
+    "whatIsDDW": {
+      "title": "What is Deuterium-Depleted Water (DDW)?",
+      "p1": "Deuterium-Depleted Water (DDW) is water with a naturally reduced concentration of deuterium compared to ordinary drinking water.",
+      "p2": "Lower deuterium levels are an area of scientific interest because deuterium concentration can influence how efficiently cells produce and manage energy. By reducing deuterium intake through hydration, DDW is designed to support more efficient cellular processes and metabolic balance.",
+      "p3": "DDW is not a drug, treatment, or supplement.",
+      "p4": "It is a refined approach to hydration, developed through science and nature."
+    },
+    "whyMatter": {
+      "title": "Why Deuterium Levels Matter",
+      "p1": "At the cellular level, energy production is a delicate and precise process. Research suggests that excess deuterium may interfere with normal cellular energy efficiency due to its heavier molecular structure.",
+      "p2": "By lowering deuterium exposure through daily hydration, DDW is designed to support:",
+      "list": [
+        "More efficient cellular energy processes",
+        "Improved metabolic balance",
+        "Long-term hydration efficiency"
+      ],
+      "p3": "This is why DDW is often described as precision hydration, rather than ordinary water."
+    },
+    "naturalVsArtificial": {
+      "title": "Natural vs Artificial Low-Deuterium Water",
+      "p1": "Not all low-deuterium water is the same.",
+      "p2": "Some products reduce deuterium through artificial methods such as electrolysis or chemical alteration. While deuterium levels may change, the natural molecular structure of the water can be affected.",
+      "p3": "Deutronix DDW is naturally low in deuterium, formed through rare environmental conditions over time."
+    },
+    "precision": {
+      "title": "Precision, Not Excess",
+      "p1": "Deutronix does not pursue extremes.",
+      "p2": "Our approach to DDW is guided by precision, not exaggeration.",
+      "p3": "Each formulation is carefully monitored to maintain:",
+      "list": [
+        "Stable deuterium levels",
+        "Consistent quality",
+        "Safety for daily consumption",
+        "Recognition by professors and universities"
+      ],
+      "p4": "DDW is intended to support everyday wellness as part of a balanced lifestyle."
+    },
+    "source": {
+      "title": "Our Natural Source",
+      "p1": "Our DDW originates from ancient glacial snowmelt in the Altai Mountain region, one of the world's most pristine and isolated high-altitude environments.",
+      "p2": "Over thousands of years, long-distance atmospheric movement, freezing temperatures, and natural filtration gradually reduce deuterium levels — without human intervention.",
+      "p3": "This natural process creates a rare water profile that:",
+      "list": [
+        "Requires no chemical treatment",
+        "Preserves water integrity",
+        "Maintains stable molecular structure"
+      ],
+      "p4": "Nature does the work. Science ensures transparency."
+    },
+    "advisory": {
+      "title": "Scientific Advisory Board",
+      "subtitle": "Guiding DDW research, formulation, and responsible application.",
+      "p1": "At Deutronix, our DDW research and product development are guided by an international scientific advisory board with expertise spanning biomedical science, nutrition, glaciology, and water resource research.",
+      "p2": "Their role is to provide scientific guidance, academic insight, and responsible oversight in the exploration and application of deuterium-depleted water.",
+      "listTitle": "Advisory Board Members",
+      "advisors": [
+        {
+          "name": "Professor Cong Feng Song",
+          "title": "Professor | Functional Nutrition",
+          "description": "Expert in functional nutrition and long-term wellness research, with a focus on metabolic health and low-deuterium science education."
+        },
+        {
+          "name": "Professor Wang Fei Teng",
+          "title": "Professor | Glaciology & Cryosphere Science",
+          "description": "Research specialist in glacial systems and cryosphere science, contributing expertise on natural low-deuterium water formation and high-altitude water sources."
+        },
+        {
+          "name": "Guo De Yong",
+          "title": "DDW Resource Specialist",
+          "description": "Specialist in natural deuterium-depleted water resources and sustainable development of low-deuterium water sources."
+        },
+        {
+          "name": "Doctor Li Hui Lin",
+          "title": "Doctor | Cryosphere & DDW Research",
+          "description": "Researcher in cryosphere science and low-deuterium water studies, contributing international academic perspectives on water science."
+        }
+      ]
+    },
+    "philosophy": {
+      "title": "A Responsible Wellness Philosophy",
+      "p1": "At Deutronix, we believe ",
+      "p1_highlight": "education comes before claims.",
+      "p2": "DDW represents a growing area of scientific exploration, and we remain committed to responsible development, transparent communication, and continuous research collaboration.",
+      "p3": "Our goal is not to promise outcomes, but to provide thoughtfully developed wellness solutions grounded in science, nature, and long-term responsibility."
+    },
+    "quote": {
+      "line1": "Deuterium-Depleted Water is not about trends.",
+      "line2": "It is about understanding water, more precisely."
+    }
+  },
+  "sourcePage": {
+    "hero": {
+      "title": "Source & Standards",
+      "subtitle": "Quality You Can Trace. Standards You Can Trust.",
+      "p1": "At Deutronix, quality is not an afterthought — it is built into every stage of sourcing, formulation, production, and verification.",
+      "p2": "Our products are developed with a clear commitment to purity, consistency, safety, and responsible production, guided by internationally recognised standards and regulatory requirements."
+    },
+    "water": {
+      "title": "Our Water Source",
+      "p1": "Our deuterium-depleted water is naturally sourced from the Altai Mountain glacial region, one of the world's most pristine and isolated high-altitude environments.",
+      "p2": "This region's unique climatic conditions — long-distance atmospheric movement, freezing temperatures, and natural filtration — contribute to a naturally low and stable deuterium profile.",
+      "p3": "We do not artificially alter the water's structure.",
+      "p4": "Nature forms the foundation. Science ensures consistency."
+    },
+    "cert": {
+      "title": "Certifications & Compliance",
+      "p1": "Deutronix products and production facilities are produced and verified in accordance with internationally recognised quality and safety standards, including:",
+      "list": [
+        "U.S FDA Registered",
+        "ISO Quality Management Systems",
+        "HACCP Food Safety Standards",
+        "Halal Certification",
+        "GMP / Production Environment Standards",
+        "Independent third-party testing and verification"
+      ],
+      "p2": "Where applicable, products are notified and regulated in compliance with local authority requirements, including Malaysia's Ministry of Health.",
+      "p3": "Certifications are not used as marketing claims. They are operational requirements we adhere to."
+    },
+    "product": {
+      "title": "Product-Specific Compliance",
+      "p1": "Different products require different regulatory pathways.",
+      "ddwTitle": "DDW+ Drinking Water",
+      "ddwP": "Produced under food safety and quality management systems appropriate for daily consumption.",
+      "gelTitle": "DDW EasyMove Gel",
+      "gelP": "Manufactured under cosmetic regulatory requirements and notified in accordance with applicable local regulations.",
+      "p2": "Each product is evaluated and managed based on its intended use — responsibly and transparently."
+    },
+    "commit": {
+      "title": "Our Commitment to Responsibility",
+      "p1": "We believe standards should be:",
+      "list": [
+        "Clearly defined",
+        "Consistently applied",
+        "Transparently communicated"
+      ],
+      "p2": "At Deutronix, we avoid exaggerated claims and shortcuts.",
+      "p3": "Our focus is on long-term trust, not short-term persuasion."
+    },
+    "quote": {
+      "line1": "Quality is not what we claim.",
+      "line2": "It is what we follow — every step of the way."
+    }
+  },
+  "testimonialsPage": {
+    "hero": {
+      "title": "What Our Users Say",
+      "subtitle": "Real stories from real people. Hear how DDW+ and EasyMove Gel fit into everyday life."
+    },
+    "videoSection": {
+      "title": "Video Testimonials"
+    },
+    "writtenSection": {
+      "title": "Stories from Our Community"
+    },
+    "cta": {
+      "title": "Every story begins with a choice.",
+      "subtitle": "Discover what DDW+ and EasyMove Gel can do for your daily routine."
+    }
+  },
+  "contactPage": {
+    "hero": {
+      "title": "Contact Us",
+      "subtitle": "If you have questions about our products, science, or standards, our team will be happy to assist."
+    },
+    "info": {
+      "hotlineTitle": "Customer Hotline",
+      "hotlineHours": "(Monday to Saturday 09:00 - 18:00)",
+      "emailTitle": "Customer Service Email",
+      "facebookTitle": "Facebook",
+      "instagramTitle": "Instagram"
+    }
+  },
+  "ddwPlusPage": {
+    "hero": {
+      "title": "Precision for Every Need.",
+      "description": "Two precision applications of Deuterium-Depleted Water, engineered with clearly defined deuterium levels to support the body from within and from without. Each formulation is optimized for its specific purpose. Measured, intentional, and uncompromised."
+    },
+    "product": {
+      "badge": "RRP: RM18 / bottle",
+      "title": "Designed for Daily Hydration with Purpose",
+      "description": "DDW+ is formulated with a naturally reduced deuterium level of 132–138 ppm, making it suitable for long-term, daily consumption. This specific ppm range is intentionally chosen to balance effectiveness, safety, and consistency — supporting everyday wellness without overstimulation."
+    },
+    "suitable": {
+      "title": "Who Is DDW+ Suitable For?",
+      "cards": {
+        "c1": {
+          "title": "Athletes",
+          "desc": "Training and competition put stress on the body. DDW+ helps optimize cellular energy and reduce oxidative stress, promoting faster recovery and enhanced performance."
+        },
+        "c2": {
+          "title": "Working Professionals",
+          "desc": "Mental fatigue and stress are common in busy lifestyles. DDW+ enhances brain clarity, energy, and stress resilience."
+        },
+        "c3": {
+          "title": "Chronic Condition<br />Management Population",
+          "desc": "Those with metabolic or fatigue-related conditions benefit from DDW+'s support for cell function, mitochondrial health, and overall vitality."
+        },
+        "c4": {
+          "title": "Health Seekers",
+          "desc": "Health-conscious individuals seek clean, effective ways to maintain vitality. DDW+ supports detox, immunity, and balanced metabolism naturally."
+        },
+        "c5": {
+          "title": "Aging & Elderly",
+          "desc": "Aging involves a natural decline in cell energy and repair. DDW+ helps slow down aging, protect DNA, and maintain energy for active aging."
+        }
+      }
+    },
+    "ppm": {
+      "title": "Why 132–138 ppm Matters",
+      "p1": "Not all deuterium-depleted water products clearly disclose their deuterium concentration on the bottle label.",
+      "p2": "At Deutronix, we openly state 132–138 ppm because precision and transparency are part of our product philosophy. This range reflects a naturally low and stable deuterium level, carefully monitored to ensure consistency and suitability for daily hydration.",
+      "p3": "Declaring the ppm is not a requirement — it is a deliberate choice. A choice to communicate clearly, measure accurately, and allow consumers to understand exactly what they are drinking."
+    },
+    "cta": {
+      "title": "DDW+ is not designed<br />for short-term intervention.<br />It is designed for everyday hydration<br />refined by science and nature."
+    }
+  },
+  "ddwGelPage": {
+    "hero": {
+      "title": "Targeted Recovery with Precision.",
+      "description": "EasyMove Gel is formulated with 50 ppm ultra-low deuterium deuterium-depleted water, designed specifically for targeted, external application. This formulation is engineered to support deeper absorption and localized comfort where muscles and joints require focused recovery support."
+    },
+    "product": {
+      "badge": "RRP: RM158 / box",
+      "title": "Designed for Targeted Recovery with Purpose",
+      "p1": "EasyMove Gel combines:",
+      "list": [
+        "Ultra-light 50 ppm DDW",
+        "Herbal warming formulation",
+        "Topical delivery design"
+      ],
+      "p2": "This integrated approach supports smoother application, enhanced absorption, and warming comfort in localized areas — without overwhelming the body.",
+      "p3": "The formulation is intentional, measured, and uncompromised."
+    },
+    "suitable": {
+      "title": "Who Is EasyMove Gel Suitable For?",
+      "cards": {
+        "c1": {
+          "title": "Joint Pain / Knee Pain",
+          "desc": "The most common complaint among elderly individuals. EasyMove Gel is suitable for supporting daily joint comfort and easing stiffness around the knees, hands, and joints during movement."
+        },
+        "c2": {
+          "title": "Lower Back Pain",
+          "desc": "Back discomfort from aging, posture changes, or long-term strain is very common. EasyMove Gel provides warming support to help relax muscles and improve comfort during daily activities."
+        },
+        "c3": {
+          "title": "Frozen Shoulder",
+          "desc": "Stiff shoulders and limited arm movement often affect seniors. EasyMove Gel is suitable for warming the shoulder area to support flexibility and smoother movement."
+        },
+        "c4": {
+          "title": "Muscle Weakness & Stiffness",
+          "desc": "As circulation and muscle elasticity decline with age, stiffness becomes more noticeable. EasyMove Gel supports muscle relaxation and comfort, especially before movement or exercise."
+        },
+        "c5": {
+          "title": "Difficulty Walking / Reduced Mobility",
+          "desc": "For elderly individuals who feel tightness, heaviness, or discomfort when walking. EasyMove Gel helps provide warming comfort to support smoother, more confident movement."
+        }
+      }
+    },
+    "formulation": {
+      "title": "Formulation Design",
+      "subtitle": "Plant-Based Functional Composition",
+      "desc": "EasyMove Gel is developed using a precision-based topical formulation strategy. Each botanical extract is selected for compatibility, stability, and localized application performance.",
+      "ingredients": [
+        {
+          "name": "Loquat Leaf Extract",
+          "desc": "Traditionally used in botanical preparations, loquat leaf extract is included to support localized comfort and contribute to a balanced topical formulation profile."
+        },
+        {
+          "name": "Licorice Root Extract",
+          "desc": "A well-known botanical ingredient valued in topical formulations for its skin-conditioning properties and ability to support overall skin comfort."
+        },
+        {
+          "name": "Siler Root Extract",
+          "desc": "Traditionally incorporated in external botanical applications, selected to complement formulations intended for areas of physical tension."
+        },
+        {
+          "name": "Mugwort Leaf Extract",
+          "desc": "Commonly used in warming topical preparations, included to enhance sensory comfort and support localized application."
+        },
+        {
+          "name": "Sophora Root Extract",
+          "desc": "A botanical extract traditionally used in topical preparations to support skin balance and localized comfort."
+        },
+        {
+          "name": "Skullcap Root Extract",
+          "desc": "Rich in naturally occurring flavonoids, selected to contribute to formulation stability and skin-conditioning support."
+        },
+        {
+          "name": "Calendula Extract",
+          "desc": "Widely used in botanical topical applications, valued for supporting skin conditioning and soothing formulation characteristics."
+        }
+      ]
+    },
+    "ppm": {
+      "title": "Why 50 ppm Matters",
+      "p1": "Not all deuterium-depleted formulations are intended for the same purpose.",
+      "p2": "EasyMove Gel is formulated with 50 ppm DDW because topical delivery requires lighter molecular behavior than daily drinking water. This ultra-low deuterium level is selected to support smoother penetration and more effective delivery of herbal actives into targeted areas.",
+      "p3": "Stating the ppm is not a marketing statement — it reflects formulation intent, precision, and transparency."
+    },
+    "cta": {
+      "title": "50 ppm<br />formulated for targeted comfort,<br />not general hydration."
+    }
+  }
+}

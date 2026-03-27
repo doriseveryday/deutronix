@@ -2,95 +2,83 @@
 
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
+import { useLanguage } from '@/app/LanguageContext';
 
-const testimonials = [
+const baseTestimonials = [
   {
     name: "Lynn Teh",
     role: "Beauty Ambassador",
-    quote:
-      "DDW+ fits well into my daily hydration routine. I like that the information is clearly explained and the ppm level is stated. It gives me confidence in what I'm drinking, and it feels like a thoughtful upgrade from regular water.",
+    quote: "DDW+ fits well into my daily hydration routine. I like that the information is clearly explained and the ppm level is stated. It gives me confidence in what I'm drinking, and it feels like a thoughtful upgrade from regular water.",
     image: "/images/Lynn.png",
   },
   {
     name: "Kaka",
     role: "KOL / House Wife",
-    quote:
-      "As I get older, my knees and back feel stiff, especially in the morning. EasyMove Gel gives a gentle warming feeling that helps me feel more comfortable when I start moving for the day.",
+    quote: "As I get older, my knees and back feel stiff, especially in the morning. EasyMove Gel gives a gentle warming feeling that helps me feel more comfortable when I start moving for the day.",
     image: "/images/Kaka.png",
   },
   {
     name: "Eve Tan",
     role: "Beautician Entrepreneur",
-    quote:
-      "I drink DDW+ regularly as part of my daily routine. It tastes clean and light, and I appreciate the focus on quality and transparency rather than exaggeration.",
+    quote: "I drink DDW+ regularly as part of my daily routine. It tastes clean and light, and I appreciate the focus on quality and transparency rather than exaggeration.",
     image: "/images/Eve.png",
   },
   {
     name: "Wawa",
     role: "Online Retailer",
-    quote:
-      "I spend most of my day doing housework, and sometimes my lower back and legs feel tired by evening. I've been using EasyMove Gel after long days, and it gives a comforting warm feeling that helps me relax.",
+    quote: "I spend most of my day doing housework, and sometimes my lower back and legs feel tired by evening. I've been using EasyMove Gel after long days, and it gives a comforting warm feeling that helps me relax.",
     image: "/images/Wawa.png",
   },
   {
     name: "Kath",
     role: "KOL",
-    quote:
-      "I've also been drinking DDW+ regularly, and I like how clean and light it tastes. It feels like a small but thoughtful upgrade to my hydration.",
+    quote: "I've also been drinking DDW+ regularly, and I like how clean and light it tastes. It feels like a small but thoughtful upgrade to my hydration.",
     image: "/images/Kath.png",
   },
   {
     name: "Irene",
     role: "Beautician",
-    quote:
-      "Since incorporating DDW+ into my routine, I feel more mindful about what I'm drinking every day.",
+    quote: "Since incorporating DDW+ into my routine, I feel more mindful about what I'm drinking every day.",
     image: "/images/Irene.png",
   },
   {
     name: "Candy",
     role: "KOL / Team Leader",
-    quote:
-      "After workouts, my muscles sometimes feel tight. EasyMove Gel provides a gentle warming comfort that I enjoy post-exercise.",
+    quote: "After workouts, my muscles sometimes feel tight. EasyMove Gel provides a gentle warming comfort that I enjoy post-exercise.",
     image: "/images/Candy.png",
   },
   {
     name: "Patricia",
     role: "Hairstylist",
-    quote:
-      "I drink DDW+ daily and appreciate the transparency about its ppm level. It gives me confidence in my daily water choice.",
+    quote: "I drink DDW+ daily and appreciate the transparency about its ppm level. It gives me confidence in my daily water choice.",
     image: "/images/Patricia.png",
   },
   {
     name: "Davne",
     role: "Entrepreneur",
-    quote:
-      "My schedule can be quite packed, and I'm often moving around. EasyMove Gel is helpful when I need quick comfort during the day.",
+    quote: "My schedule can be quite packed, and I'm often moving around. EasyMove Gel is helpful when I need quick comfort during the day.",
     image: "/images/Davne.png",
   },
   {
     name: "Poh Choo",
     role: "Retiree",
-    quote:
-      "As I've gotten older, walking sometimes feels uncomfortable. After applying EasyMove, it feels more eased and I can move more smoothly.",
+    quote: "As I've gotten older, walking sometimes feels uncomfortable. After applying EasyMove, it feels more eased and I can move more smoothly.",
     image: "/images/Poh-Choo.png",
   },
   {
     name: "Marcle",
     role: "KOL",
-    quote:
-      "I love to exercise, but after workouts, my muscles sometimes feel tight. EasyMove Gel provides a gentle warming comfort that I enjoy post-exercise.",
+    quote: "I love to exercise, but after workouts, my muscles sometimes feel tight. EasyMove Gel provides a gentle warming comfort that I enjoy post-exercise.",
     image: "/images/Marcle.png",
   },
   {
     name: "Ee Ling",
     role: "Accountant",
-    quote:
-      "Long desk hours can feel stiff. EasyMove absorbs quickly, and help my muscle relax a lot.",
+    quote: "Long desk hours can feel stiff. EasyMove absorbs quickly, and help my muscle relax a lot.",
     image: "/images/Ee-Ling.png",
   },
 ];
 
-// All videos are now shorts and titles have been removed from the object
 const videos = [
   { id: "HChSv_4fY4s", type: "short" },
   { id: "W0OD226TVv8", type: "short" }, 
@@ -98,11 +86,38 @@ const videos = [
 ];
 
 const Testimonials = () => {
+  const { t } = useLanguage();
   const videoScrollRef = useRef<HTMLDivElement>(null);
   const testimonialScrollRef = useRef<HTMLDivElement>(null);
   const [activeVideo, setActiveVideo] = useState(0);
   const [activeTestimonial, setActiveTestimonial] = useState(1);
   const autoScrollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // ==========================================
+  // BULLETPROOF TRANSLATION MAPPING
+  // ==========================================
+  const localizedTestimonials = baseTestimonials.map((baseTest, index) => {
+    const tName = t(`testimonials.testimonials.${index}.name`);
+    const tRole = t(`testimonials.testimonials.${index}.title`); // Maps JSON "title" to "role"
+    const tQuote = t(`testimonials.testimonials.${index}.quote`);
+
+    // Helper to ensure the translation hook didn't just return the key name
+    const isValid = (val: any) => val && typeof val === 'string' && !val.includes('testimonials.testimonials');
+
+    return {
+      name: isValid(tName) ? tName : baseTest.name,
+      role: isValid(tRole) ? tRole : baseTest.role,
+      quote: isValid(tQuote) ? tQuote : baseTest.quote,
+      image: baseTest.image
+    };
+  });
+
+  // Helper for section titles (falls back to English if keys are showing)
+  const safeT = (key: string, fallback: string) => {
+    const val = t(key);
+    if (!val || (typeof val === 'string' && val.includes('testimonialsPage.'))) return fallback;
+    return val as string;
+  };
 
   // ===== VIDEO LOGIC =====
   const scrollVideo = useCallback(
@@ -151,7 +166,6 @@ const Testimonials = () => {
 
   // ===== TESTIMONIAL LOGIC =====
 
-  // 1. Calculate how many cards are visible and handle the "max scroll" edge case
   const updateTestimonialCounter = useCallback(() => {
     const container = testimonialScrollRef.current;
     if (!container) return;
@@ -167,24 +181,18 @@ const Testimonials = () => {
     const scrollLeft = container.scrollLeft;
     const scrollWidth = container.scrollWidth;
     
-    // Calculate how many items fit in the current view
     const visibleItems = Math.round(containerWidth / singleItemWidth) || 1;
-    
-    // Calculate which item is currently first in view
     const firstVisibleIndex = Math.round(scrollLeft / singleItemWidth);
     
     let currentEndIndex = firstVisibleIndex + visibleItems;
 
-    // Bulletproof check for the end of the scroll container
     if (Math.ceil(scrollLeft + containerWidth) >= scrollWidth - 10) {
-      currentEndIndex = testimonials.length;
+      currentEndIndex = localizedTestimonials.length;
     }
 
-    // Safely set the state
-    setActiveTestimonial(Math.min(currentEndIndex, testimonials.length));
-  }, []);
+    setActiveTestimonial(Math.min(currentEndIndex, localizedTestimonials.length));
+  }, [localizedTestimonials.length]);
 
-  // 2. Attach the scroll listener (and clean it up properly)
   useEffect(() => {
     const container = testimonialScrollRef.current;
     if (!container) return;
@@ -200,7 +208,6 @@ const Testimonials = () => {
     };
   }, [updateTestimonialCounter]);
 
-  // 3. Handle manual clicking of the < and > buttons
   const scrollTestimonial = useCallback(
     (direction: "left" | "right") => {
       const container = testimonialScrollRef.current;
@@ -229,7 +236,6 @@ const Testimonials = () => {
     []
   );
 
-  // 4. Handle auto-scrolling
   const resetAutoScroll = useCallback(() => {
     if (autoScrollRef.current) clearInterval(autoScrollRef.current);
     autoScrollRef.current = setInterval(() => {
@@ -252,11 +258,10 @@ const Testimonials = () => {
       <section className="w-full bg-gradient-to-r from-[#009FE3] to-[#0077B6] py-14 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-extrabold text-white">
-            What Our Users Say
+            {safeT('testimonialsPage.hero.title', 'What Our Users Say')}
           </h1>
           <p className="text-white/80 mt-4 text-sm md:text-base max-w-2xl mx-auto">
-            Real stories from real people. Hear how DDW+ and EasyMove Gel fit
-            into everyday life.
+            {safeT('testimonialsPage.hero.subtitle', 'Real stories from real people. Hear how DDW+ and EasyMove Gel fit into everyday life.')}
           </p>
         </div>
       </section>
@@ -264,7 +269,7 @@ const Testimonials = () => {
       {/* ===== VIDEO CAROUSEL ===== */}
       <section className="max-w-6xl mx-auto px-6 py-14">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
-          Video Testimonials
+          {safeT('testimonialsPage.videoSection.title', 'Video Testimonials')}
         </h2>
 
         <div className="relative">
@@ -281,12 +286,7 @@ const Testimonials = () => {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
@@ -301,12 +301,11 @@ const Testimonials = () => {
                 key={video.id}
                 className="flex-shrink-0 w-full snap-center flex flex-col items-center justify-center"
               >
-                {/* Dynamically adjust aspect ratio and max-width based on video type */}
                 <div
                   className={`relative overflow-hidden shadow-lg bg-gray-900 rounded-2xl ${
                     video.type === "short"
-                      ? "w-full max-w-[320px] aspect-[9/16]" // Portrait mode for Shorts
-                      : "w-full aspect-video" // 16:9 Landscape for regular videos
+                      ? "w-full max-w-[320px] aspect-[9/16]" 
+                      : "w-full aspect-video" 
                   }`}
                 >
                   <iframe
@@ -334,12 +333,7 @@ const Testimonials = () => {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
         </div>
@@ -377,7 +371,7 @@ const Testimonials = () => {
       {/* ===== WRITTEN TESTIMONIALS CAROUSEL ===== */}
       <section className="max-w-6xl mx-auto px-6 py-14">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-10">
-          Stories from Our Community
+          {safeT('testimonialsPage.writtenSection.title', 'Stories from Our Community')}
         </h2>
 
         <div
@@ -385,7 +379,7 @@ const Testimonials = () => {
           className="flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory scrollbar-hide"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {testimonials.map((t) => (
+          {localizedTestimonials.map((t) => (
             <div
               key={t.name}
               className="min-w-[85vw] md:min-w-[380px] snap-center bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col"
@@ -433,7 +427,7 @@ const Testimonials = () => {
             &lt;
           </button>
           <span className="text-sm font-medium text-[#009FE3]">
-            {activeTestimonial} of {testimonials.length}
+            {activeTestimonial} of {localizedTestimonials.length}
           </span>
           <button
             onClick={() => { scrollTestimonial("right"); resetAutoScroll(); }}
@@ -448,10 +442,10 @@ const Testimonials = () => {
       <section className="w-full bg-gradient-to-r from-[#009FE3] to-[#0077B6] py-12">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <p className="text-xl md:text-2xl font-bold text-white leading-snug">
-            Every story begins with a choice.
+            {safeT('testimonialsPage.cta.title', 'Every story begins with a choice.')}
           </p>
           <p className="text-white/80 mt-2 text-sm md:text-base">
-            Discover what DDW+ and EasyMove Gel can do for your daily routine.
+            {safeT('testimonialsPage.cta.subtitle', 'Discover what DDW+ and EasyMove Gel can do for your daily routine.')}
           </p>
         </div>
       </section>

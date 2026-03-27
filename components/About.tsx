@@ -3,11 +3,13 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLanguage } from '@/app/LanguageContext'; // Import translation hook
 
 gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage(); // Initialize translation hook
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -139,21 +141,17 @@ const About = () => {
       {/* ===== ABOUT DEUTRONIX ===== */}
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-10">
         <h1 className="about-hero-heading text-3xl md:text-4xl font-extrabold text-[#009FE3] mb-2">
-          About Deutronix
+          {t('aboutPage.hero.title')}
         </h1>
         <p className="about-hero-sub text-gray-500 text-sm mb-6">
-          Precision Wellness, Guided by Science
+          {t('aboutPage.hero.subtitle')}
         </p>
         <div className="about-hero-text">
           <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-            Deutronix is a wellness-focused company dedicated to the research,
-            development, and responsible application of Deuterium-Depleted Water
-            (DDW).
+            {t('aboutPage.hero.p1')}
           </p>
           <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-            We apply DDW science with precision — creating purpose-built
-            formulations designed to support everyday hydration and targeted
-            mobility needs.
+            {t('aboutPage.hero.p2')}
           </p>
         </div>
       </section>
@@ -164,18 +162,16 @@ const About = () => {
       <section className="about-card max-w-6xl mx-auto px-6 py-10">
         <div className="about-card-accent w-12 h-1 bg-[#009FE3] rounded mb-4" />
         <h2 className="about-card-heading text-3xl md:text-4xl font-extrabold text-[#009FE3] mb-4">
-          Our Approach
+          {t('aboutPage.approach.title')}
         </h2>
         <p className="about-card-text text-sm md:text-base text-gray-600 leading-relaxed mb-1">
-          Deutronix is built on a single scientific platform, applied
-          thoughtfully across different wellness applications.
+          {t('aboutPage.approach.p1')}
         </p>
         <p className="about-card-text text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-          Each product is developed with clearly defined intent, measured
-          parameters, and transparent communication.
+          {t('aboutPage.approach.p2')}
         </p>
         <p className="about-card-text text-sm md:text-base text-gray-600 leading-relaxed">
-          We believe precision matters more than exaggeration.
+          {t('aboutPage.approach.p3')}
         </p>
       </section>
 
@@ -185,18 +181,16 @@ const About = () => {
       <section className="about-card max-w-6xl mx-auto px-6 py-10">
         <div className="about-card-accent w-12 h-1 bg-[#009FE3] rounded mb-4" />
         <h2 className="about-card-heading text-3xl md:text-4xl font-extrabold text-[#009FE3] mb-4">
-          Science &amp; Responsibility
+          {t('aboutPage.science.title')}
         </h2>
         <p className="about-card-text text-sm md:text-base text-gray-600 leading-relaxed mb-1">
-          Our work is guided by an international scientific advisory team
-          spanning nutrition, biomedical science, and water research.
+          {t('aboutPage.science.p1')}
         </p>
         <p className="about-card-text text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-          We reference established research, maintain responsible boundaries,
-          and avoid overstated claims.
+          {t('aboutPage.science.p2')}
         </p>
         <p className="about-card-text text-sm md:text-base text-gray-600 leading-relaxed">
-          Education comes before promotion. Responsibility comes before trends.
+          {t('aboutPage.science.p3')}
         </p>
       </section>
 
@@ -206,16 +200,13 @@ const About = () => {
       <section className="about-card max-w-6xl mx-auto px-6 py-10">
         <div className="about-card-accent w-12 h-1 bg-[#009FE3] rounded mb-4" />
         <h2 className="about-card-heading text-3xl md:text-4xl font-extrabold text-[#009FE3] mb-4">
-          Quality &amp; Standards
+          {t('aboutPage.quality.title')}
         </h2>
         <p className="about-card-text text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-          Our DDW is naturally sourced from pristine glacial regions and produced
-          under strict quality, hygiene, and safety standards, aligned with
-          internationally recognised systems and local regulatory requirements.
+          {t('aboutPage.quality.p1')}
         </p>
         <p className="about-card-text text-sm md:text-base text-gray-600 leading-relaxed">
-          Consistency, traceability, and verification are central to how we
-          operate.
+          {t('aboutPage.quality.p2')}
         </p>
       </section>
 
@@ -224,10 +215,10 @@ const About = () => {
         <div className="max-w-6xl mx-auto px-6 text-center">
           <div className="about-quote-line w-16 h-1 bg-[#009FE3] rounded mx-auto mb-6" />
           <p className="text-lg md:text-xl font-bold text-gray-900 leading-snug">
-            Deutronix is built for the long term
+            {t('aboutPage.quote.line1')}
           </p>
           <p className="text-lg md:text-xl font-bold text-gray-900 leading-snug">
-            where science, precision, and trust come together.
+            {t('aboutPage.quote.line2')}
           </p>
         </div>
       </section>

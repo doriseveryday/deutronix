@@ -3,8 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLanguage } from '@/app/LanguageContext';
 
 const Navbar = () => {
+  const { language, setLanguage, t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   // Separate state for mobile submenu toggle
@@ -64,7 +66,7 @@ const Navbar = () => {
       {/* Desktop Navigation Links */}
       <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-6 xl:space-x-8 text-sm font-medium text-gray-600">
         <Link href="/about" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
-          About Us
+          {t('nav.about')}
         </Link>
         
         {/* Products Dropdown (Desktop) */}
@@ -73,7 +75,7 @@ const Navbar = () => {
             className="hover:text-[#009FE3] transition-colors whitespace-nowrap inline-flex items-center gap-1 focus:outline-none"
             onClick={() => setIsProductsOpen(!isProductsOpen)}
           >
-            Products <span className="text-xs transition-transform duration-200" style={{ transform: isProductsOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
+            {t('nav.products')} <span className="text-xs transition-transform duration-200" style={{ transform: isProductsOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
           </button>
           
           <div className={`absolute top-full left-1/2 transform -translate-x-1/2 pt-2 transition-all duration-200 z-50 ${
@@ -85,42 +87,67 @@ const Navbar = () => {
                 className="block px-4 py-2.5 text-sm text-gray-600 hover:text-[#009FE3] hover:bg-gray-50 transition-colors"
                 onClick={() => setIsProductsOpen(false)}
               >
-                DDW+
+                {t('nav.ddwplus')}
               </Link>
               <Link 
                 href="/ddwgel" 
                 className="block px-4 py-2.5 text-sm text-gray-600 hover:text-[#009FE3] hover:bg-gray-50 transition-colors"
                 onClick={() => setIsProductsOpen(false)}
               >
-                EasyMove Gel
+                {t('nav.easymoveGel')}
               </Link>
             </div>
           </div>
         </div>
         
         <Link href="/science" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
-          DDW Science
+          {t('nav.science')}
         </Link>
         <Link href="/source" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
-          Standards
+          {t('nav.source')}
         </Link>
         <Link href="/testimonials" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
-          Testimonials
+          {t('nav.testimonials')}
         </Link>
         <Link href="/contact" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
-          Contact Us
+          {t('nav.contact')}
         </Link>
       </div>
 
-      {/* Right Side: Login Button + Hamburger */}
+      {/* Right Side: Login Button + Language Switcher + Hamburger */}
       <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-6 sm:ml-8">
+        
+        {/* Language Switcher (Hidden on Mobile, Shows on Desktop) */}
+        <div className="hidden lg:flex items-center border border-gray-300 rounded-full p-0.5">
+          <button
+            onClick={() => setLanguage('en')}
+            className={`px-3 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
+              language === 'en'
+                ? 'bg-[#009FE3] text-white'
+                : 'text-gray-600 hover:text-[#009FE3]'
+            }`}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setLanguage('zh')}
+            className={`px-3 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
+              language === 'zh'
+                ? 'bg-[#009FE3] text-white'
+                : 'text-gray-600 hover:text-[#009FE3]'
+            }`}
+          >
+            中文
+          </button>
+        </div>
+
         <a 
           href="https://deutronix.my/sign-in" 
           target="_blank" 
           rel="noopener noreferrer"
           className="inline-block bg-gradient-to-r from-[#0077B6] to-[#009FE3] hover:from-[#006699] hover:to-[#0086c9] text-white text-xs sm:text-sm font-semibold py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-8 rounded-full transition-all duration-300 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-md hover:shadow-lg"
         >
-          MEMBER LOGIN <span className="text-xs">↓</span>
+          {t('nav.member')} <span className="text-xs">↓</span>
         </a>
 
         <button 
@@ -150,7 +177,7 @@ const Navbar = () => {
               className="text-gray-600 hover:text-[#009FE3] py-2 transition-colors text-base"
               onClick={() => setIsMenuOpen(false)}
             >
-              About Us
+              {t('nav.about')}
             </Link>
             
             {/* Mobile Products with Toggleable Submenu */}
@@ -159,7 +186,7 @@ const Navbar = () => {
                 onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
                 className="w-full text-gray-600 font-medium py-2 flex items-center justify-between focus:outline-none"
               >
-                Products
+                {t('nav.products')}
                 <span className={`text-xs text-gray-400 transition-transform duration-200 ${isMobileProductsOpen ? 'rotate-180' : ''}`}>
                   ▼
                 </span>
@@ -175,7 +202,7 @@ const Navbar = () => {
                       setIsMobileProductsOpen(false);
                     }}
                   >
-                    DDW+
+                    {t('nav.ddwplus')}
                   </Link>
                   <Link 
                     href="/ddwgel" 
@@ -185,7 +212,7 @@ const Navbar = () => {
                       setIsMobileProductsOpen(false);
                     }}
                   >
-                    EasyMove Gel
+                    {t('nav.easymoveGel')}
                   </Link>
                 </div>
               )}
@@ -196,29 +223,56 @@ const Navbar = () => {
               className="text-gray-600 hover:text-[#009FE3] py-2 transition-colors text-base"
               onClick={() => setIsMenuOpen(false)}
             >
-              DDW Science
+              {t('nav.science')}
             </Link>
             <Link 
               href="/source" 
               className="text-gray-600 hover:text-[#009FE3] py-2 transition-colors text-base"
               onClick={() => setIsMenuOpen(false)}
             >
-              Standards
+              {t('nav.source')}
             </Link>
             <Link 
               href="/testimonials" 
               className="text-gray-600 hover:text-[#009FE3] py-2 transition-colors text-base"
               onClick={() => setIsMenuOpen(false)}
             >
-              Testimonials
+              {t('nav.testimonials')}
             </Link>
             <Link
               href="/contact"
               className="text-gray-600 hover:text-[#009FE3] py-2 transition-colors text-base"
               onClick={() => setIsMenuOpen(false)}
             >
-              Contact Us
+              {t('nav.contact')}
             </Link>
+
+            {/* Mobile Language Switcher */}
+            <div className="pt-4 mt-2 border-t border-gray-100 flex justify-center">
+              <div className="flex items-center border border-gray-300 rounded-full p-1 w-fit">
+                <button
+                  onClick={() => setLanguage('en')}
+                  className={`px-6 py-1.5 text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
+                    language === 'en'
+                      ? 'bg-[#009FE3] text-white'
+                      : 'text-gray-600 hover:text-[#009FE3]'
+                  }`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => setLanguage('zh')}
+                  className={`px-6 py-1.5 text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
+                    language === 'zh'
+                      ? 'bg-[#009FE3] text-white'
+                      : 'text-gray-600 hover:text-[#009FE3]'
+                  }`}
+                >
+                  中文
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       )}

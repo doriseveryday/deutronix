@@ -4,11 +4,29 @@ import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLanguage } from '@/app/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Source = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
+
+  // --- BULLETPROOF HELPER FOR LISTS (Same as Science Page) ---
+  const getList = (baseKey: string, count: number) => {
+    const list = [];
+    for (let i = 0; i < count; i++) {
+      const item = t(`${baseKey}.${i}`) as string;
+      // Make sure it doesn't push empty strings or raw keys
+      if (item && !item.includes('sourcePage')) {
+        list.push(item);
+      }
+    }
+    return list;
+  };
+
+  const certList = getList('sourcePage.cert.list', 6);
+  const commitList = getList('sourcePage.commit.list', 3);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -92,9 +110,8 @@ const Source = () => {
     <div ref={containerRef} className="w-full bg-white">
       {/* ===== MOBILE TITLE ===== */}
       <div className="block md:hidden px-6 py-4 text-center src-hero-title">
-        {/* <h1 className="text-3xl font-extrabold text-[#009FE3] leading-tight"> */}
         <h1 className="text-3xl font-extrabold text-[#009FE3] leading-tight">
-          Source &amp; Standards
+          {t('sourcePage.hero.title')}
         </h1>
       </div>
 
@@ -116,10 +133,10 @@ const Source = () => {
         <div className="absolute inset-0 bg-black/40 md:bg-gradient-to-r md:from-black/50 md:to-transparent" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center md:text-center px-14 md:px-16 max-w-3xl mx-auto">
           <h1 className="src-hero-title hidden md:block text-5xl font-extrabold text-white leading-tight">
-            Source &amp; Standards
+            {t('sourcePage.hero.title')}
           </h1>
           <p className="src-hero-sub text-white font-semibold text-xs md:text-lg mt-1 md:mt-2">
-            Quality You Can Trace. Standards You Can Trust.
+            {t('sourcePage.hero.subtitle')}
           </p>
           <div className="src-hero-stars flex gap-1 mt-2 md:mt-4 justify-center">
             {[...Array(5)].map((_, i) => (
@@ -129,13 +146,10 @@ const Source = () => {
             ))}
           </div>
           <p className="src-hero-text text-white/90 text-[10px] md:text-base mt-2 md:mt-4 leading-relaxed text-justify">
-            At Deutronix, quality is not an afterthought — it is built into
-            every stage of sourcing, formulation, production, and verification.
+            {t('sourcePage.hero.p1')}
           </p>
           <p className="src-hero-text text-white/90 text-[10px] md:text-base mt-1 md:mt-3 leading-relaxed text-justify">
-            Our products are developed with a clear commitment to purity,
-            consistency, safety, and responsible production, guided by
-            internationally recognised standards and regulatory requirements.
+            {t('sourcePage.hero.p2')}
           </p>
         </div>
       </section>
@@ -151,7 +165,7 @@ const Source = () => {
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 flex items-center justify-center px-6 md:px-16">
           <h2 className="src-water-title text-2xl md:text-6xl font-bold text-white">
-            Our Water Source
+            {t('sourcePage.water.title')}
           </h2>
         </div>
       </section>
@@ -159,19 +173,15 @@ const Source = () => {
       {/* ===== WATER SOURCE TEXT ===== */}
       <section className="src-water-text max-w-6xl mx-auto px-6 py-12">
         <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-          Our deuterium-depleted water is naturally sourced from the Altai
-          Mountain glacial region, one of the world&apos;s most pristine and
-          isolated high-altitude environments.
+          {t('sourcePage.water.p1')}
         </p>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-          This region&apos;s unique climatic conditions — long-distance
-          atmospheric movement, freezing temperatures, and natural filtration —
-          contribute to a naturally low and stable deuterium profile.
+          {t('sourcePage.water.p2')}
         </p>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-          We do not artificially alter the water&apos;s structure.
+          {t('sourcePage.water.p3')}
           <br />
-          Nature forms the foundation. Science ensures consistency.
+          {t('sourcePage.water.p4')}
         </p>
       </section>
 
@@ -199,29 +209,25 @@ const Source = () => {
       {/* ===== CERTIFICATIONS & COMPLIANCE ===== */}
       <section className="src-compliance max-w-6xl mx-auto px-6 py-10">
         <h2 className="src-compliance-heading text-xl md:text-2xl font-bold text-gray-900 mb-4">
-          Certifications &amp; Compliance
+          {t('sourcePage.cert.title')}
         </h2>
         <p className="src-compliance-text text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-          Deutronix products and production facilities are produced and verified
-          in accordance with internationally recognised quality and safety
-          standards, including:
+          {t('sourcePage.cert.p1')}
         </p>
-        <ul className="src-compliance-text text-sm md:text-base text-gray-600 leading-relaxed list-disc list-inside space-y-1 mb-4">
-          <li>U.S FDA Registered</li>
-          <li>ISO Quality Management Systems</li>
-          <li>HACCP Food Safety Standards</li>
-          <li>Halal Certification</li>
-          <li>GMP / Production Environment Standards</li>
-          <li>Independent third-party testing and verification</li>
-        </ul>
+        
+        {certList.length > 0 && (
+          <ul className="src-compliance-text text-sm md:text-base text-gray-600 leading-relaxed list-disc list-inside space-y-1 mb-4">
+            {certList.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        )}
+        
         <p className="src-compliance-text text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-          Where applicable, products are notified and regulated in compliance
-          with local authority requirements, including Malaysia&apos;s Ministry
-          of Health.
+          {t('sourcePage.cert.p2')}
         </p>
         <p className="src-compliance-text text-sm md:text-base text-gray-600 leading-relaxed">
-          Certifications are not used as marketing claims. They are operational
-          requirements we adhere to.
+          {t('sourcePage.cert.p3')}
         </p>
       </section>
 
@@ -230,28 +236,25 @@ const Source = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div className="src-product-text">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-              Product-Specific Compliance
+              {t('sourcePage.product.title')}
             </h2>
             <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-              Different products require different regulatory pathways.
+              {t('sourcePage.product.p1')}
             </p>
             <p className="text-sm md:text-base text-gray-900 font-semibold mb-1">
-              DDW+ Drinking Water
+              {t('sourcePage.product.ddwTitle')}
             </p>
             <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-              Produced under food safety and quality management systems
-              appropriate for daily consumption.
+              {t('sourcePage.product.ddwP')}
             </p>
             <p className="text-sm md:text-base text-gray-900 font-semibold mb-1">
-              DDW EasyMove Gel
+              {t('sourcePage.product.gelTitle')}
             </p>
             <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-              Manufactured under cosmetic regulatory requirements and notified in
-              accordance with applicable local regulations.
+              {t('sourcePage.product.gelP')}
             </p>
             <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-              Each product is evaluated and managed based on its intended use —
-              responsibly and transparently.
+              {t('sourcePage.product.p2')}
             </p>
           </div>
           <div className="src-product-image flex justify-start md:justify-center">
@@ -269,31 +272,35 @@ const Source = () => {
       {/* ===== OUR COMMITMENT ===== */}
       <section className="src-commit max-w-6xl mx-auto px-6 py-10">
         <h2 className="src-commit-heading text-xl md:text-2xl font-bold text-gray-900 mb-4">
-          Our Commitment to Responsibility
+          {t('sourcePage.commit.title')}
         </h2>
         <p className="src-commit-item text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-          We believe standards should be:
+          {t('sourcePage.commit.p1')}
         </p>
-        <ul className="text-sm md:text-base text-gray-600 leading-relaxed list-disc list-inside space-y-1 mb-4">
-          <li className="src-commit-item">Clearly defined</li>
-          <li className="src-commit-item">Consistently applied</li>
-          <li className="src-commit-item">Transparently communicated</li>
-        </ul>
+
+        {commitList.length > 0 && (
+          <ul className="text-sm md:text-base text-gray-600 leading-relaxed list-disc list-inside space-y-1 mb-4">
+            {commitList.map((item, index) => (
+              <li key={index} className="src-commit-item">{item}</li>
+            ))}
+          </ul>
+        )}
+
         <p className="src-commit-item text-sm md:text-base text-gray-600 leading-relaxed mb-1">
-          At Deutronix, we avoid exaggerated claims and shortcuts.
+          {t('sourcePage.commit.p2')}
         </p>
         <p className="src-commit-item text-sm md:text-base text-gray-600 leading-relaxed">
-          Our focus is on long-term trust, not short-term persuasion.
+          {t('sourcePage.commit.p3')}
         </p>
       </section>
 
       {/* ===== BOTTOM QUOTE ===== */}
       <section className="src-quote max-w-6xl mx-auto px-6 py-16 text-center">
         <h2 className="src-quote-line text-2xl md:text-3xl font-bold text-gray-900 leading-snug">
-          Quality is not what we claim.
+          {t('sourcePage.quote.line1')}
         </h2>
         <p className="src-quote-line text-xl md:text-2xl text-gray-900 font-bold mt-2 leading-snug">
-          It is what we follow — every step of the way.
+          {t('sourcePage.quote.line2')}
         </p>
       </section>
     </div>

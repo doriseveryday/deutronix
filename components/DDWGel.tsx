@@ -4,15 +4,15 @@ import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { useLanguage } from '@/app/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Data for the Formulation Design section extracted from your image
-const formulationIngredients = [
+const baseFormulationIngredients = [
   {
     name: "Loquat Leaf Extract",
     desc: "Traditionally used in botanical preparations, loquat leaf extract is included to support localized comfort and contribute to a balanced topical formulation profile.",
-    image: "/images/ddwgel/Loquat-Leaf.png", // Update this path to match your actual file
+    image: "/images/ddwgel/Loquat-Leaf.png",
   },
   {
     name: "Licorice Root Extract",
@@ -48,96 +48,83 @@ const formulationIngredients = [
 
 const DDWGel = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
+
+  // ==========================================
+  // BULLETPROOF TRANSLATION HELPERS
+  // ==========================================
+  const safeT = (key: string, fallback: string) => {
+    const val = t(key);
+    if (!val || (typeof val === 'string' && val.includes('ddwGelPage'))) {
+      return fallback;
+    }
+    return val as string;
+  };
+
+  const getSafeList = (baseKey: string, fallbacks: string[]) => {
+    return fallbacks.map((fallback, i) => {
+      const val = t(`${baseKey}.${i}`);
+      if (val === `${baseKey}.${i}` || !val) {
+        return fallback;
+      }
+      return val as string;
+    });
+  };
+
+  // Safe Mapping for the Ingredients List
+  const localizedIngredients = baseFormulationIngredients.map((baseItem, index) => {
+    const tName = t(`ddwGelPage.formulation.ingredients.${index}.name`) as string;
+    const tDesc = t(`ddwGelPage.formulation.ingredients.${index}.desc`) as string;
+
+    const isValid = (val: any) => val && typeof val === 'string' && !val.includes('ddwGelPage');
+
+    return {
+      name: isValid(tName) ? tName : baseItem.name,
+      desc: isValid(tDesc) ? tDesc : baseItem.desc,
+      image: baseItem.image
+    };
+  });
+
+  const productList = getSafeList('ddwGelPage.product.list', [
+    "Ultra-light 50 ppm DDW",
+    "Herbal warming formulation",
+    "Topical delivery design"
+  ]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       // 1. Hero Section Entrance
-      gsap.fromTo(
-        ".hero-element",
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power2.out",
-        }
-      );
+      gsap.fromTo(".hero-element", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power2.out" });
 
       // 2. Banner Overlays
       gsap.utils.toArray<HTMLElement>(".ddwgel-banner-overlay").forEach((el, i) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            delay: i * 0.15,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+        gsap.fromTo(el, { opacity: 0, y: 40 }, {
+          opacity: 1, y: 0, duration: 0.7, delay: i * 0.15, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+        });
       });
 
       // 3. Fade Up Elements
       gsap.utils.toArray<HTMLElement>(".fade-up").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+        gsap.fromTo(el, { opacity: 0, y: 40 }, {
+          opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+        });
       });
 
       // 4. Directional Slides
       gsap.utils.toArray<HTMLElement>(".slide-in-left").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, x: -50 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+        gsap.fromTo(el, { opacity: 0, x: -50 }, {
+          opacity: 1, x: 0, duration: 0.8, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" },
+        });
       });
 
       gsap.utils.toArray<HTMLElement>(".slide-in-right").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, x: 50 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+        gsap.fromTo(el, { opacity: 0, x: 50 }, {
+          opacity: 1, x: 0, duration: 0.8, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" },
+        });
       });
     }, bannerRef);
 
@@ -150,14 +137,10 @@ const DDWGel = () => {
       <section className="w-full bg-gray-100 py-10 px-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="hero-element text-3xl md:text-5xl font-extrabold text-[#009FE3] leading-tight">
-            Targeted Recovery with Precision.
+            {safeT('ddwGelPage.hero.title', 'Targeted Recovery with Precision.')}
           </h1>
           <p className="hero-element text-gray-700 text-sm md:text-base mt-4 max-w-2xl leading-relaxed">
-            EasyMove Gel is formulated with 50 ppm ultra-low deuterium
-            deuterium-depleted water, designed specifically for targeted,
-            external application. This formulation is engineered to support
-            deeper absorption and localized comfort where muscles and joints
-            require focused recovery support.
+            {safeT('ddwGelPage.hero.description', 'EasyMove Gel is formulated with 50 ppm ultra-low deuterium deuterium-depleted water, designed specifically for targeted, external application. This formulation is engineered to support deeper absorption and localized comfort where muscles and joints require focused recovery support.')}
           </p>
         </div>
       </section>
@@ -175,10 +158,9 @@ const DDWGel = () => {
             />
           </div>
           
-          {/* Price Badge (Smaller) */}
           <div className="fade-up mt-6">
             <span className="inline-block bg-[#4693D8] text-white italic text-base md:text-lg tracking-wide px-6 py-1.5 rounded-full shadow-sm">
-              RRP: RM158 / box
+              {safeT('ddwGelPage.product.badge', 'RRP: RM158 / box')}
             </span>
           </div>
         </div>
@@ -187,23 +169,21 @@ const DDWGel = () => {
       {/* ===== DESIGNED FOR TARGETED RECOVERY ===== */}
       <section className="max-w-6xl mx-auto px-6 pb-12 fade-up">
         <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3">
-          Designed for Targeted Recovery with Purpose
+          {safeT('ddwGelPage.product.title', 'Designed for Targeted Recovery with Purpose')}
         </h2>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-2">
-          EasyMove Gel combines:
+          {safeT('ddwGelPage.product.p1', 'EasyMove Gel combines:')}
         </p>
         <ul className="text-sm md:text-base text-gray-600 leading-relaxed list-disc list-inside mb-4 space-y-1">
-          <li>Ultra-light 50 ppm DDW</li>
-          <li>Herbal warming formulation</li>
-          <li>Topical delivery design</li>
+          {productList.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
         </ul>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4 max-w-3xl">
-          This integrated approach supports smoother application, enhanced
-          absorption, and warming comfort in localized areas — without
-          overwhelming the body.
+          {safeT('ddwGelPage.product.p2', 'This integrated approach supports smoother application, enhanced absorption, and warming comfort in localized areas — without overwhelming the body.')}
         </p>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-          The formulation is intentional, measured, and uncompromised.
+          {safeT('ddwGelPage.product.p3', 'The formulation is intentional, measured, and uncompromised.')}
         </p>
       </section>
 
@@ -213,7 +193,7 @@ const DDWGel = () => {
       {/* ===== WHO IS EASYMOVE GEL SUITABLE FOR? ===== */}
       <section className="max-w-6xl mx-auto px-6 py-14">
         <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-8 md:mb-10 fade-up">
-          Who Is EasyMove Gel Suitable For?
+          {safeT('ddwGelPage.suitable.title', 'Who Is EasyMove Gel Suitable For?')}
         </h2>
 
         <div className="flex flex-col gap-0">
@@ -226,17 +206,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-            {/* Added gradient for mobile */}
             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
             <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
-              {/* Dynamic text color: white on mobile, black on desktop */}
               <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
-                Joint Pain / Knee Pain
+                {safeT('ddwGelPage.suitable.cards.c1.title', 'Joint Pain / Knee Pain')}
               </h3>
               <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
-                The most common complaint among elderly individuals. EasyMove
-                Gel is suitable for supporting daily joint comfort and easing
-                stiffness around the knees, hands, and joints during movement.
+                {safeT('ddwGelPage.suitable.cards.c1.desc', 'The most common complaint among elderly individuals. EasyMove Gel is suitable for supporting daily joint comfort and easing stiffness around the knees, hands, and joints during movement.')}
               </p>
             </div>
           </div>
@@ -250,16 +226,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-            {/* Added gradient for mobile */}
             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
             <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
               <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
-                Lower Back Pain
+                {safeT('ddwGelPage.suitable.cards.c2.title', 'Lower Back Pain')}
               </h3>
               <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
-                Back discomfort from aging, posture changes, or long-term strain
-                is very common. EasyMove Gel provides warming support to help
-                relax muscles and improve comfort during daily activities.
+                {safeT('ddwGelPage.suitable.cards.c2.desc', 'Back discomfort from aging, posture changes, or long-term strain is very common. EasyMove Gel provides warming support to help relax muscles and improve comfort during daily activities.')}
               </p>
             </div>
           </div>
@@ -273,16 +246,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-            {/* Added gradient for mobile */}
             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
             <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
               <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
-                Frozen Shoulder
+                {safeT('ddwGelPage.suitable.cards.c3.title', 'Frozen Shoulder')}
               </h3>
               <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
-                Stiff shoulders and limited arm movement often affect seniors.
-                EasyMove Gel is suitable for warming the shoulder area to support
-                flexibility and smoother movement.
+                {safeT('ddwGelPage.suitable.cards.c3.desc', 'Stiff shoulders and limited arm movement often affect seniors. EasyMove Gel is suitable for warming the shoulder area to support flexibility and smoother movement.')}
               </p>
             </div>
           </div>
@@ -296,16 +266,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-            {/* Added gradient for mobile */}
             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
             <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
               <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
-                Muscle Weakness &amp; Stiffness
+                {safeT('ddwGelPage.suitable.cards.c4.title', 'Muscle Weakness & Stiffness')}
               </h3>
               <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
-                As circulation and muscle elasticity decline with age, stiffness
-                becomes more noticeable. EasyMove Gel supports muscle relaxation
-                and comfort, especially before movement or exercise.
+                {safeT('ddwGelPage.suitable.cards.c4.desc', 'As circulation and muscle elasticity decline with age, stiffness becomes more noticeable. EasyMove Gel supports muscle relaxation and comfort, especially before movement or exercise.')}
               </p>
             </div>
           </div>
@@ -319,16 +286,13 @@ const DDWGel = () => {
               height={400}
               className="w-full h-[110px] md:h-auto object-cover object-left"
             />
-            {/* Added gradient for mobile */}
             <div className="absolute inset-0 bg-gradient-to-l from-[#222]/70 to-transparent md:hidden" />
             <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ddwgel-banner-overlay">
               <h3 className="text-sm md:text-3xl font-bold text-white md:text-black mb-0 md:mb-2">
-                Difficulty Walking / Reduced Mobility
+                {safeT('ddwGelPage.suitable.cards.c5.title', 'Difficulty Walking / Reduced Mobility')}
               </h3>
               <p className="text-white/90 md:text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[65%] md:max-w-lg">
-                For elderly individuals who feel tightness, heaviness, or
-                discomfort when walking. EasyMove Gel helps provide warming
-                comfort to support smoother, more confident movement.
+                {safeT('ddwGelPage.suitable.cards.c5.desc', 'For elderly individuals who feel tightness, heaviness, or discomfort when walking. EasyMove Gel helps provide warming comfort to support smoother, more confident movement.')}
               </p>
             </div>
           </div>
@@ -338,36 +302,25 @@ const DDWGel = () => {
       {/* ===== DIVIDER ===== */}
       <div className="w-full h-px bg-gray-200 fade-up" />
 
-      {/* ===== FORMULATION DESIGN (NEW SECTION) ===== */}
+      {/* ===== FORMULATION DESIGN ===== */}
       <section className="max-w-4xl mx-auto px-6 py-14">
         <div className="fade-up mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-500 mb-2">
-            Formulation Design
+            {safeT('ddwGelPage.formulation.title', 'Formulation Design')}
           </h2>
           <p className="text-gray-500 mb-4">
-            Plant-Based Functional Composition
+            {safeT('ddwGelPage.formulation.subtitle', 'Plant-Based Functional Composition')}
           </p>
           <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-            EasyMove Gel is developed using a precision-based topical formulation
-            strategy. Each botanical extract is selected for compatibility,
-            stability, and localized application performance.
+            {safeT('ddwGelPage.formulation.desc', 'EasyMove Gel is developed using a precision-based topical formulation strategy. Each botanical extract is selected for compatibility, stability, and localized application performance.')}
           </p>
         </div>
 
         <div className="flex flex-col gap-6 md:gap-8">
-          {formulationIngredients.map((item, index) => (
-            <div
-              key={index}
-              className="fade-up flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8"
-            >
+          {localizedIngredients.map((item, index) => (
+            <div key={index} className="fade-up flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
               <div className="flex-shrink-0 w-32 h-20 md:w-48 md:h-28 relative rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  sizes="(max-width: 768px) 128px, 192px"
-                  className="object-cover"
-                />
+                <Image src={item.image} alt={item.name} fill sizes="(max-width: 768px) 128px, 192px" className="object-cover" />
               </div>
               <div className="flex flex-col flex-1">
                 <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-1">
@@ -391,7 +344,7 @@ const DDWGel = () => {
              <div className="w-full slide-in-left">
             <div className="flex flex-row items-center mb-4 md:block">
               <h2 className="text-2xl font-bold text-gray-900 mr-3 mb-0 md:text-4xl md:mb-6">
-                Why 50 ppm Matters
+                {safeT('ddwGelPage.ppm.title', 'Why 50 ppm Matters')}
               </h2>
               <span className="flex-shrink-0 md:hidden">
                 <Image
@@ -405,19 +358,13 @@ const DDWGel = () => {
             </div>
             <div>
             <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-              Not all deuterium-depleted formulations are intended for the same
-              purpose.
+              {safeT('ddwGelPage.ppm.p1', 'Not all deuterium-depleted formulations are intended for the same purpose.')}
             </p>
             <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-              EasyMove Gel is formulated with 50 ppm DDW because topical
-              delivery requires lighter molecular behavior than daily drinking
-              water. This ultra-low deuterium level is selected to support
-              smoother penetration and more effective delivery of herbal actives
-              into targeted areas.
+              {safeT('ddwGelPage.ppm.p2', 'EasyMove Gel is formulated with 50 ppm DDW because topical delivery requires lighter molecular behavior than daily drinking water. This ultra-low deuterium level is selected to support smoother penetration and more effective delivery of herbal actives into targeted areas.')}
             </p>
             <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-              Stating the ppm is not a marketing statement — it reflects
-              formulation intent, precision, and transparency.
+              {safeT('ddwGelPage.ppm.p3', 'Stating the ppm is not a marketing statement — it reflects formulation intent, precision, and transparency.')}
             </p>
             </div>
           </div>
@@ -446,13 +393,10 @@ const DDWGel = () => {
             />
           </div>
           <div className="slide-in-right">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-700 leading-snug">
-              50 ppm
-              <br />
-              formulated for targeted comfort,
-              <br />
-              not general hydration.
-            </h2>
+            <h2 
+              className="text-2xl md:text-3xl font-bold text-gray-700 leading-snug"
+              dangerouslySetInnerHTML={{ __html: safeT('ddwGelPage.cta.title', '50 ppm<br />formulated for targeted comfort,<br />not general hydration.') }}
+            />
           </div>
         </div>
       </section>

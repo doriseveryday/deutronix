@@ -4,11 +4,24 @@ import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { useLanguage } from '@/app/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const DDWPlus = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
+
+  // ========================================================================
+  // BULLETPROOF TRANSLATION HELPER
+  // ========================================================================
+  const safeT = (key: string, fallback: string) => {
+    const val = t(key);
+    if (!val || (typeof val === 'string' && val.includes('ddwPlusPage'))) {
+      return fallback;
+    }
+    return val as string;
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -34,7 +47,7 @@ const DDWPlus = () => {
             opacity: 1,
             y: 0,
             duration: 0.7,
-            delay: i * 0.15, // Optional: you can remove the delay if you want them to trigger exactly when they enter the viewport
+            delay: i * 0.15,
             ease: "power2.out",
             scrollTrigger: {
               trigger: el,
@@ -111,13 +124,10 @@ const DDWPlus = () => {
       <section className="w-full bg-gray-100 py-10 px-6">
         <div className="max-w-6xl mx-auto">
           <h1 className="hero-element text-4xl md:text-6xl font-extrabold text-[#009FE3] leading-tight">
-            Precision for Every Need.
+            {safeT('ddwPlusPage.hero.title', 'Precision for Every Need.')}
           </h1>
           <p className="hero-element text-gray-700 text-base md:text-lg mt-4 leading-relaxed">
-            Two precision applications of Deuterium-Depleted Water, engineered
-            with clearly defined deuterium levels to support the body from within
-            and from without. Each formulation is optimized for its specific
-            purpose. Measured, intentional, and uncompromised.
+            {safeT('ddwPlusPage.hero.description', 'Two precision applications of Deuterium-Depleted Water, engineered with clearly defined deuterium levels to support the body from within and from without. Each formulation is optimized for its specific purpose. Measured, intentional, and uncompromised.')}
           </p>
         </div>
       </section>
@@ -138,7 +148,7 @@ const DDWPlus = () => {
           {/* Price Badge (Smaller) */}
           <div className="fade-up mt-6">
             <span className="inline-block bg-[#4693D8] text-white italic text-base md:text-lg tracking-wide px-6 py-1.5 rounded-full shadow-sm">
-              RRP: RM18 / bottle
+              {safeT('ddwPlusPage.product.badge', 'RRP: RM18 / bottle')}
             </span>
           </div>
         </div>
@@ -147,13 +157,10 @@ const DDWPlus = () => {
       {/* ===== DESIGNED FOR DAILY HYDRATION ===== */}
       <section className="max-w-6xl mx-auto px-6 pb-12 fade-up">
         <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3">
-          Designed for Daily Hydration with Purpose
+          {safeT('ddwPlusPage.product.title', 'Designed for Daily Hydration with Purpose')}
         </h2>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-          DDW+ is formulated with a naturally reduced deuterium level of 132–138
-          ppm, making it suitable for long-term, daily consumption. This specific
-          ppm range is intentionally chosen to balance effectiveness, safety, and
-          consistency — supporting everyday wellness without overstimulation.
+          {safeT('ddwPlusPage.product.description', 'DDW+ is formulated with a naturally reduced deuterium level of 132–138 ppm, making it suitable for long-term, daily consumption. This specific ppm range is intentionally chosen to balance effectiveness, safety, and consistency — supporting everyday wellness without overstimulation.')}
         </p>
       </section>
 
@@ -163,7 +170,7 @@ const DDWPlus = () => {
       {/* ===== WHO IS DDW+ SUITABLE FOR? ===== */}
       <section className="max-w-6xl mx-auto px-6 py-14">
         <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-8 md:mb-10 fade-up">
-          Who Is DDW+ Suitable For?
+          {safeT('ddwPlusPage.suitable.title', 'Who Is DDW+ Suitable For?')}
         </h2>
 
         <div className="flex flex-col gap-0">
@@ -178,12 +185,10 @@ const DDWPlus = () => {
             />
             <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-12 ddwplus-banner-overlay">
               <h3 className="text-sm md:text-3xl font-bold text-white mb-0 md:mb-2">
-                Athletes
+                {safeT('ddwPlusPage.suitable.cards.c1.title', 'Athletes')}
               </h3>
               <p className="text-white/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
-                Training and competition put stress on the body. DDW+ helps
-                optimize cellular energy and reduce oxidative stress, promoting
-                faster recovery and enhanced performance.
+                {safeT('ddwPlusPage.suitable.cards.c1.desc', 'Training and competition put stress on the body. DDW+ helps optimize cellular energy and reduce oxidative stress, promoting faster recovery and enhanced performance.')}
               </p>
             </div>
           </div>
@@ -199,18 +204,16 @@ const DDWPlus = () => {
             />
             <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ml-auto ddwplus-banner-overlay">
               <h3 className="text-sm md:text-3xl font-bold text-white mb-0 md:mb-2">
-                Working Professionals
+                {safeT('ddwPlusPage.suitable.cards.c2.title', 'Working Professionals')}
               </h3>
               <p className="text-white/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
-                Mental fatigue and stress are common in busy lifestyles. DDW+
-                enhances brain clarity, energy, and stress resilience.
+                {safeT('ddwPlusPage.suitable.cards.c2.desc', 'Mental fatigue and stress are common in busy lifestyles. DDW+ enhances brain clarity, energy, and stress resilience.')}
               </p>
             </div>
           </div>
 
-      {/* --- Chronic Condition Management --- */}
+          {/* --- Chronic Condition Management --- */}
           <div className="relative w-full overflow-hidden">
-            {/* Using 35% horizontally to shift it just a little bit instead of all the way left */}
             <Image
               src="/images/ddwplus/04.png"
               alt="Chronic Condition Management"
@@ -219,16 +222,16 @@ const DDWPlus = () => {
               className="w-full h-[110px] md:h-auto object-cover object-[35%_center] md:object-right"
             />
             <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-12 ddwplus-banner-overlay">
-              <h3 className="text-sm md:text-3xl font-bold text-gray-900 leading-none md:leading-tight mb-1 md:mb-3 max-w-[55%] md:max-w-md">
-                Chronic Condition<br />Management Population
-              </h3>
+              <h3 
+                className="text-sm md:text-3xl font-bold text-gray-900 leading-none md:leading-tight mb-1 md:mb-3 max-w-[55%] md:max-w-md"
+                dangerouslySetInnerHTML={{ __html: safeT('ddwPlusPage.suitable.cards.c3.title', 'Chronic Condition<br />Management Population') }}
+              />
               <p className="text-gray-600 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
-                Those with metabolic or fatigue-related conditions benefit from
-                DDW+&apos;s support for cell function, mitochondrial health,
-                and overall vitality.
+                {safeT('ddwPlusPage.suitable.cards.c3.desc', "Those with metabolic or fatigue-related conditions benefit from DDW+'s support for cell function, mitochondrial health, and overall vitality.")}
               </p>
             </div>
           </div>
+
           {/* --- Health Seekers --- */}
           <div className="relative w-full overflow-hidden">
             <Image
@@ -240,12 +243,10 @@ const DDWPlus = () => {
             />
             <div className="absolute inset-0 flex flex-col justify-center items-end px-4 md:px-12 text-right ml-auto ddwplus-banner-overlay">
               <h3 className="text-sm md:text-3xl font-bold text-black mb-0 md:mb-2">
-                Health Seekers
+                {safeT('ddwPlusPage.suitable.cards.c4.title', 'Health Seekers')}
               </h3>
               <p className="text-black/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
-                Health-conscious individuals seek clean, effective ways to
-                maintain vitality. DDW+ supports detox, immunity, and balanced
-                metabolism naturally.
+                {safeT('ddwPlusPage.suitable.cards.c4.desc', 'Health-conscious individuals seek clean, effective ways to maintain vitality. DDW+ supports detox, immunity, and balanced metabolism naturally.')}
               </p>
             </div>
           </div>
@@ -261,12 +262,10 @@ const DDWPlus = () => {
             />
             <div className="absolute inset-0 flex flex-col justify-center px-4 md:px-12 ddwplus-banner-overlay">
               <h3 className="text-sm md:text-3xl font-bold text-white mb-0 md:mb-2">
-                Aging &amp; Elderly
+                {safeT('ddwPlusPage.suitable.cards.c5.title', 'Aging & Elderly')}
               </h3>
               <p className="text-white/90 text-[10px] md:text-base leading-tight md:leading-relaxed max-w-[55%] md:max-w-md">
-                Aging involves a natural decline in cell energy and repair. DDW+
-                helps slow down aging, protect DNA, and maintain energy for
-                active aging.
+                {safeT('ddwPlusPage.suitable.cards.c5.desc', 'Aging involves a natural decline in cell energy and repair. DDW+ helps slow down aging, protect DNA, and maintain energy for active aging.')}
               </p>
             </div>
           </div>
@@ -276,11 +275,10 @@ const DDWPlus = () => {
       {/* ===== WHY 132-138 PPM MATTERS ===== */}
       <section className="max-w-6xl mx-auto px-6 py-14 overflow-hidden">
         <div className="md:grid md:grid-cols-2 gap-4 md:gap-6 items-center">
-          {/* Left: heading+logo inline on mobile, heading+text on desktop */}
           <div className="w-full">
             <div className="flex flex-row items-center mb-4 md:block">
               <h2 className="text-2xl font-bold text-gray-900 mr-3 mb-0 md:text-4xl md:mb-6">
-                Why 132–138 ppm Matters
+                {safeT('ddwPlusPage.ppm.title', 'Why 132–138 ppm Matters')}
               </h2>
               <span className="flex-shrink-0 md:hidden">
                 <Image
@@ -294,24 +292,16 @@ const DDWPlus = () => {
             </div>
             <div>
               <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-                Not all deuterium-depleted water products clearly disclose their
-                deuterium concentration on the bottle label.
+                {safeT('ddwPlusPage.ppm.p1', 'Not all deuterium-depleted water products clearly disclose their deuterium concentration on the bottle label.')}
               </p>
               <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-                At Deutronix, we openly state 132–138 ppm because precision and
-                transparency are part of our product philosophy. This range
-                reflects a naturally low and stable deuterium level, carefully
-                monitored to ensure consistency and suitability for daily
-                hydration.
+                {safeT('ddwPlusPage.ppm.p2', 'At Deutronix, we openly state 132–138 ppm because precision and transparency are part of our product philosophy. This range reflects a naturally low and stable deuterium level, carefully monitored to ensure consistency and suitability for daily hydration.')}
               </p>
               <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-                Declaring the ppm is not a requirement — it is a deliberate
-                choice. A choice to communicate clearly, measure accurately, and
-                allow consumers to understand exactly what they are drinking.
+                {safeT('ddwPlusPage.ppm.p3', 'Declaring the ppm is not a requirement — it is a deliberate choice. A choice to communicate clearly, measure accurately, and allow consumers to understand exactly what they are drinking.')}
               </p>
             </div>
           </div>
-          {/* Right: logo only on desktop, hidden on mobile */}
           <div className="hidden md:flex justify-end items-center">
             <Image
               src="/images/ddwplus/132.png"
@@ -337,16 +327,10 @@ const DDWPlus = () => {
             />
           </div>
           <div className="slide-in-right">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-700 leading-snug">
-              DDW+ is not designed
-              <br />
-              for short-term intervention.
-              <br />
-              It is designed for everyday hydration
-              <br />
-              refined by science and nature.
-            </h2>
-            
+            <h2 
+              className="text-2xl md:text-3xl font-bold text-gray-700 leading-snug"
+              dangerouslySetInnerHTML={{ __html: safeT('ddwPlusPage.cta.title', 'DDW+ is not designed<br />for short-term intervention.<br />It is designed for everyday hydration<br />refined by science and nature.') }}
+            />
           </div>
         </div>
       </section>
