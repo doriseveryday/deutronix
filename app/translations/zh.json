@@ -2,8 +2,8 @@
   "nav": {
     "about": "关于我们",
     "products": "产品",
-    "ddwplus": "低氘水",
-    "easymoveGel": "关节膏",
+    "ddwplus": "DDW+ 低氘水",
+    "easymoveGel": "EasyMove 关节膏",
     "science": "DDW科学",
     "source": "水源与标准",
     "testimonials": "用户评价",
@@ -26,15 +26,15 @@
     "title": "精准满足每一项需求",
     "subtitle": "低氘水的两项精准应用，旨在从内而外为您的身体提供全方位支持。",
     "ddwplus": {
-      "name": "低氘水",
+      "name": "DDW+低氘水",
       "type": "低氘饮用水",
       "spec": "日常补水 (132–138 ppm)",
       "description": "源自冰川的低氘水，专为每日饮用设计，助力身体代谢平衡。",
       "learnMore": "了解产品"
     },
     "gel": {
-      "name": "关节膏",
-      "type": "DDW+ 外用方案",
+      "name": "EasyMove关节膏",
+      "type": "",
       "spec": "针对性修复 (50 ppm)",
       "description": "一款高渗透性的外用凝胶，专为局部使用设计，将低氘水高效输送至肌肉与皮肤。",
       "learnMore": "了解产品"
@@ -124,8 +124,8 @@
   },
   "footer": {
     "products": "产品",
-    "ddwplus": "DDW+ 饮用水",
-    "easymoveGel": "EasyMove 凝胶",
+    "ddwplus": "DDW+ 低氘水",
+    "easymoveGel": "EasyMove 关节膏",
     "contact": "联系我们",
     "email": "deutronix.my@gmail.com",
     "location": "马来西亚",

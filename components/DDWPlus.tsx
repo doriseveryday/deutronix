@@ -316,19 +316,19 @@ const DDWPlus = () => {
 
       {/* ===== BOTTOM CTA ===== */}
       <section className="max-w-6xl mx-auto px-6 py-14 overflow-hidden">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-10 items-center">
           <div className="flex justify-center slide-in-left">
             <Image
               src="/images/ddwplus/07.png"
               alt="DDW+ Bottle"
-              width={380}
-              height={600}
-              className="object-contain"
+              width={120}
+              height={180}
+              className="object-contain max-w-[80px] md:max-w-[180px]"
             />
           </div>
           <div className="slide-in-right">
             <h2 
-              className="text-2xl md:text-3xl font-bold text-gray-700 leading-snug"
+              className="text-lg md:text-3xl font-bold text-gray-700 leading-snug"
               dangerouslySetInnerHTML={{ __html: safeT('ddwPlusPage.cta.title', 'DDW+ is not designed<br />for short-term intervention.<br />It is designed for everyday hydration<br />refined by science and nature.') }}
             />
           </div>

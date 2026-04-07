@@ -156,7 +156,7 @@ const Contact = () => {
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             title="Deutronix Sdn Bhd Location"
-          />
+          />``
         </div>
       </section>
     </div>
