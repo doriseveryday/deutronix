@@ -83,6 +83,9 @@ const videos = [
   { id: "HChSv_4fY4s", type: "short" },
   { id: "W0OD226TVv8", type: "short" }, 
   { id: "MZk4ZM5UkMM", type: "short" }, 
+  { id: "3KSJBcCItGI", type: "short" }, 
+  { id: "J6cvTpxL0jI", type: "short" }, 
+  { id: "NaAMvKdwoSY", type: "short" }, 
 ];
 
 const Testimonials = () => {
