@@ -261,9 +261,11 @@ const Source = () => {
             <Image
               src="/images/source/03.png"
               alt="DDW+ and EasyMove Gel Products"
-              width={400}
-              height={400}
-              className="object-contain -ml-6 md:ml-0"
+              // CHANGED: Bumped up intrinsic resolution to keep it sharp on PC
+              width={1000}
+              height={1000}
+              // CHANGED: Added w-full, h-auto, and max-w classes to scale up on desktop
+              className="object-contain w-full h-auto max-w-[400px] md:max-w-xl lg:max-w-2xl -ml-6 md:ml-0"
             />
           </div>
         </div>
@@ -296,10 +298,10 @@ const Source = () => {
 
       {/* ===== BOTTOM QUOTE ===== */}
       <section className="src-quote max-w-6xl mx-auto px-6 py-16 text-center">
-        <h2 className="src-quote-line text-2xl md:text-3xl font-bold text-gray-900 leading-snug">
+        <h2 className="src-quote-line text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-snug">
           {t('sourcePage.quote.line1')}
         </h2>
-        <p className="src-quote-line text-xl md:text-2xl text-gray-900 font-bold mt-2 leading-snug">
+        <p className="src-quote-line text-xl md:text-2xl lg:text-3xl text-gray-900 font-bold mt-2 md:mt-3 leading-snug">
           {t('sourcePage.quote.line2')}
         </p>
       </section>

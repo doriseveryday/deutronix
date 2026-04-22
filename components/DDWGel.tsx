@@ -92,43 +92,55 @@ const DDWGel = () => {
   ]);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // 1. Hero Section Entrance
-      gsap.fromTo(".hero-element", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power2.out" });
+    // Add a slight delay to allow Next.js images/layout to settle
+    const initGsap = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        // 1. Hero Section Entrance
+        gsap.fromTo(".hero-element", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power2.out" });
 
-      // 2. Banner Overlays
-      gsap.utils.toArray<HTMLElement>(".ddwgel-banner-overlay").forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0, y: 40 }, {
-          opacity: 1, y: 0, duration: 0.7, delay: i * 0.15, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+        // 2. Banner Overlays
+        gsap.utils.toArray<HTMLElement>(".ddwgel-banner-overlay").forEach((el, i) => {
+          gsap.fromTo(el, { opacity: 0, y: 40 }, {
+            opacity: 1, y: 0, duration: 0.7, delay: i * 0.15, ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" },
+          });
         });
-      });
 
-      // 3. Fade Up Elements
-      gsap.utils.toArray<HTMLElement>(".fade-up").forEach((el) => {
-        gsap.fromTo(el, { opacity: 0, y: 40 }, {
-          opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+        // 3. Fade Up Elements
+        gsap.utils.toArray<HTMLElement>(".fade-up").forEach((el) => {
+          gsap.fromTo(el, { opacity: 0, y: 40 }, {
+            opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+            // Changed to 90% so elements near the bottom trigger easier
+            scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" },
+          });
         });
-      });
 
-      // 4. Directional Slides
-      gsap.utils.toArray<HTMLElement>(".slide-in-left").forEach((el) => {
-        gsap.fromTo(el, { opacity: 0, x: -50 }, {
-          opacity: 1, x: 0, duration: 0.8, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" },
+        // 4. Directional Slides
+        gsap.utils.toArray<HTMLElement>(".slide-in-left").forEach((el) => {
+          gsap.fromTo(el, { opacity: 0, x: -50 }, {
+            opacity: 1, x: 0, duration: 0.8, ease: "power2.out",
+            // Changed to 90% so bottom CTA doesn't get stuck
+            scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" },
+          });
         });
-      });
 
-      gsap.utils.toArray<HTMLElement>(".slide-in-right").forEach((el) => {
-        gsap.fromTo(el, { opacity: 0, x: 50 }, {
-          opacity: 1, x: 0, duration: 0.8, ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" },
+        gsap.utils.toArray<HTMLElement>(".slide-in-right").forEach((el) => {
+          gsap.fromTo(el, { opacity: 0, x: 50 }, {
+            opacity: 1, x: 0, duration: 0.8, ease: "power2.out",
+            // Changed to 90% so bottom CTA doesn't get stuck
+            scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" },
+          });
         });
-      });
-    }, bannerRef);
 
-    return () => ctx.revert();
+        // Force GSAP to recalculate all trigger positions after initialization
+        ScrollTrigger.refresh();
+
+      }, bannerRef);
+
+      return () => ctx.revert();
+    }, 100); // 100ms delay gives the DOM time to paint
+
+    return () => clearTimeout(initGsap);
   }, []);
 
   return (
@@ -145,15 +157,17 @@ const DDWGel = () => {
         </div>
       </section>
 
-      {/* ===== PRODUCT SHOWCASE ===== */}
+     {/* ===== PRODUCT SHOWCASE ===== */}
       <section className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex flex-col items-center justify-center">
-          <div className="relative fade-up w-full max-w-lg">
+          {/* CHANGED: Added md:max-w-3xl and lg:max-w-4xl for PC view */}
+          <div className="relative fade-up w-full max-w-lg md:max-w-2xl lg:max-w-3xl">
             <Image
               src="/images/ddwgel/01.png"
               alt="EasyMove Gel Product"
-              width={600}
-              height={400}
+              // CHANGED: Bumped up the base width/height so it doesn't blur on large screens
+              width={1200}
+              height={800}
               className="object-contain w-full h-auto"
             />
           </div>
@@ -387,14 +401,16 @@ const DDWGel = () => {
             <Image
               src="/images/ddwgel/07.png"
               alt="EasyMove Gel Products"
-              width={280}
-              height={500}
-              className="object-contain"
+              // CHANGED: Increased intrinsic dimensions for crispness on PC
+              width={800}
+              height={1200}
+              // CHANGED: Added w-full, h-auto, and responsive max-widths
+              className="object-contain w-full max-w-[280px] md:max-w-md lg:max-w-lg h-auto"
             />
           </div>
           <div className="slide-in-right">
             <h2 
-              className="text-2xl md:text-3xl font-bold text-gray-700 leading-snug"
+              className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-700 leading-snug"
               dangerouslySetInnerHTML={{ __html: safeT('ddwGelPage.cta.title', '50 ppm<br />formulated for targeted comfort,<br />not general hydration.') }}
             />
           </div>

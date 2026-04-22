@@ -493,7 +493,7 @@ const Hero = () => {
       <section className="relative z-10 w-full bg-white py-20 px-6">
         <div className="max-w-7xl mx-auto flex flex-col items-start">
           <div className="w-full mb-10">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#009FE3] mb-4">{t('standards.title')}</h2>
+            <h2 className="text-[32px] md:text-4xl font-bold text-[#009FE3] mb-4">{t('standards.title')}</h2>
             <p className="text-gray-600 text-lg leading-relaxed">
               {t('standards.description')}
             </p>
@@ -531,7 +531,9 @@ const Hero = () => {
       {/* 6. TESTIMONIALS */}
       <section className="relative z-10 w-full px-6 py-10 bg-white">
         <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-[#009FE3] mb-12">{t('testimonials.title')}</h2>
+        <h2 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#009FE3] mb-12">
+          {t('testimonials.title')}
+        </h2>
         <div 
           ref={scrollContainerRef}
           onScroll={updateCounter} 

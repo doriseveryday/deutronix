@@ -135,12 +135,14 @@ const DDWPlus = () => {
      {/* ===== PRODUCT SHOWCASE ===== */}
       <section className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex flex-col items-center justify-center">
-          <div className="relative fade-up w-full max-w-lg">
+ 
+          <div className="relative fade-up w-full max-w-lg md:max-w-3xl">
             <Image
               src="/images/ddwplus/01.png"
               alt="DDW+ Product"
-              width={600}
-              height={400}
+     
+              width={1200}
+              height={800}
               className="object-contain w-full h-auto"
             />
           </div>
