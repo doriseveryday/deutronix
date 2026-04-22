@@ -24,98 +24,110 @@ const DDWPlus = () => {
   };
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // 1. Hero Section Entrance (Plays immediately on load)
-      gsap.fromTo(
-        ".hero-element",
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power2.out",
-        }
-      );
-
-      // 2. Existing Banner Overlays (Who is DDW+ Suitable For)
-      gsap.utils.toArray<HTMLElement>(".ddwplus-banner-overlay").forEach((el, i) => {
+    // Add a slight delay to allow Next.js images/layout to settle
+    const initGsap = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        // 1. Hero Section Entrance (Plays immediately on load)
         gsap.fromTo(
-          el,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            delay: i * 0.15,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
-      });
-
-      // 3. Reusable Fade Up Elements (Product images, section titles)
-      gsap.utils.toArray<HTMLElement>(".fade-up").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 40 },
+          ".hero-element",
+          { opacity: 0, y: 30 },
           {
             opacity: 1,
             y: 0,
             duration: 0.8,
+            stagger: 0.2,
             ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
           }
         );
-      });
 
-      // 4. Directional Slides (Left/Right elements)
-      gsap.utils.toArray<HTMLElement>(".slide-in-left").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, x: -50 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
-      });
+        // 2. Existing Banner Overlays (Who is DDW+ Suitable For)
+        gsap.utils.toArray<HTMLElement>(".ddwplus-banner-overlay").forEach((el, i) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              delay: i * 0.15,
+              ease: "power2.out",
+              // CHANGED to 90%
+              scrollTrigger: {
+                trigger: el,
+                start: "top 90%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        });
 
-      gsap.utils.toArray<HTMLElement>(".slide-in-right").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, x: 50 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
-      });
-    }, bannerRef);
+        // 3. Reusable Fade Up Elements (Product images, section titles)
+        gsap.utils.toArray<HTMLElement>(".fade-up").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              // CHANGED to 90%
+              scrollTrigger: {
+                trigger: el,
+                start: "top 90%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        });
 
-    return () => ctx.revert();
+        // 4. Directional Slides (Left/Right elements)
+        gsap.utils.toArray<HTMLElement>(".slide-in-left").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, x: -50 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              // CHANGED to 90%
+              scrollTrigger: {
+                trigger: el,
+                start: "top 90%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        });
+
+        gsap.utils.toArray<HTMLElement>(".slide-in-right").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, x: 50 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              // CHANGED to 90%
+              scrollTrigger: {
+                trigger: el,
+                start: "top 90%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        });
+
+        // Force GSAP to recalculate all trigger positions after initialization
+        ScrollTrigger.refresh();
+      }, bannerRef);
+
+      return () => ctx.revert();
+    }, 100); // 100ms delay gives the DOM time to paint
+
+    return () => clearTimeout(initGsap);
   }, []);
 
   return (
