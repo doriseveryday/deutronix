@@ -226,7 +226,8 @@ const Hero = () => {
   async function fetchEvents() {
     try {
       const calendarId =
-        "a66e982c9e48fb6b2a3430011b5e533e594f6b1ad3b96f30a789ca859d276099@group.calendar.google.com";
+        // "a66e982c9e48fb6b2a3430011b5e533e594f6b1ad3b96f30a789ca859d276099@group.calendar.google.com";
+         "deutronix.my@gmail.com";
 
       const apiKey = "AIzaSyDYq3LG8CmviV5oOK6SLuNrn008VJW9MN8";
 
@@ -617,114 +618,131 @@ const Hero = () => {
       </section>
 
 {/* Upcoming events section */}
-      <section
+     <section
         id="upcoming-events"
         ref={eventsRef}
-        className="relative z-10 w-full bg-gray-50/50 py-20 px-6 border-t border-gray-100"
+        className="relative z-10 w-full bg-white py-20 px-6 border-t border-gray-100"
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-center text-[#009FE3] mb-4">
-              Upcoming Events
-            </h2>
-            <p className="text-center text-gray-500 text-lg">
-              Join our latest activities, seminars, and product showcases.
-            </p>
-          </div>
-
-          <div
-            ref={eventsScrollContainerRef}
-            // If there are 3 or fewer events, center them on PC. Otherwise, keep them left-aligned so they can scroll properly.
-            className={`flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide pt-4 px-4 md:px-0 ${
-              events.length <= 3 ? "md:justify-center" : ""
-            }`}
-          >
-            {events.length > 0 ? (
-  events.map((event, index) => {
-    // --- ADVANCED DATE PARSING ---
-    const startStr = event.start?.dateTime || event.start?.date;
-    const endStr = event.end?.dateTime || event.end?.date;
-    const isAllDay = !event.start?.dateTime;
-
-    const startDate = new Date(startStr);
-    let endDate = endStr ? new Date(endStr) : null;
-
-    if (isAllDay && endDate) {
-      endDate = new Date(endDate.getTime() - 1);
-    }
-
-    const startDay = startDate.toLocaleDateString("en-US", { day: "2-digit" });
-    const startMonth = startDate.toLocaleDateString("en-US", { month: "long" }).toUpperCase();
-    
-    let displayDay = startDay;
-    let displayMonth = startMonth;
-
-    if (endDate && startDate.toLocaleDateString() !== endDate.toLocaleDateString()) {
-      const endDay = endDate.toLocaleDateString("en-US", { day: "2-digit" });
-      const endMonth = endDate.toLocaleDateString("en-US", { month: "long" }).toUpperCase();
-      
-      displayDay = `${startDay}-${endDay}`;
-      if (startMonth !== endMonth) {
-        displayMonth = `${startMonth}/${endMonth}`;
-      }
-    }
-
-    let timeFormatted = isAllDay ? "ALL DAY" : startDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
-    if (!isAllDay && endDate && startDate.getTime() !== endDate.getTime()) {
-        timeFormatted += ` - ${endDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })}`;
-    }
-
-    return (
-      <div
-        key={index}
-        onClick={() => setSelectedEvent(event)}
-        // FIX: w-[...] locks the width, h-[340px] locks the height, flex-shrink-0 stops it from squishing, overflow-hidden keeps it contained
-        className="w-[85vw] md:w-[340px] h-[340px] flex-shrink-0 overflow-hidden cursor-pointer snap-center bg-gray-50 rounded-xl p-8 flex flex-col justify-between transition-all duration-300 border border-gray-100 hover:bg-white hover:shadow-[0_8px_30px_rgba(0,159,227,0.12)] hover:-translate-y-1 group relative"
-      >
-        {/* BIG DATE SECTION */}
-        <div className="mb-4">
-          <h3 className="text-5xl md:text-[4rem] font-light text-gray-800 leading-none tracking-tight mb-2 group-hover:text-[#009FE3] transition-colors">
-            {displayDay}
-          </h3>
-          <p className="text-sm font-bold text-gray-400 tracking-[0.2em]">
-            {displayMonth}
-          </p>
-        </div>
-
-        {/* DETAILS SECTION */}
-        <div className="flex flex-col justify-end">
-          {/* We lock the min-height of the title so the location text always stays at the same bottom level */}
-          <h4 className="text-xl font-bold text-gray-800 mb-4 line-clamp-2 min-h-[3.5rem] leading-tight">
-            {event.summary}
-          </h4>
+        {/* FIX: Changed lg:items-stretch to lg:items-center to perfectly middle-align left and right sides */}
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 lg:items-center">
           
-          <div className="flex flex-col gap-1.5 text-xs font-bold text-[#009FE3]">
-            <p className="uppercase tracking-wide">{timeFormatted}</p>
-            {event.location && (
-              <p className="truncate pr-4">@ {event.location}</p>
-            )}
+          {/* LEFT COLUMN: Text and Button */}
+          <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start text-center lg:text-left">
+            {/* <p className="text-[#009FE3] font-bold text-sm tracking-widest uppercase mb-3">
+              Upcoming Events
+            </p> */}
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#009FE3] mb-3 leading-tight">
+              Upcoming Events<br/>& Webinars
+            </h2>
+            <p className="text-gray-500 text-lg mb-8 leading-relaxed max-w-md">
+              Join our upcoming events and webinars to learn, grow and connect with the Deutronix community.
+            </p>
+            <Link 
+              href="/events" 
+              className="inline-flex items-center gap-3 border-2 border-[#009FE3] text-[#009FE3] font-bold px-6 py-3 rounded-lg hover:bg-[#009FE3] hover:text-white transition-all duration-300 group"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              VIEW FULL CALENDAR 
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
           </div>
-        </div>
 
-        {/* Floating "Click for details" indicator */}
-        <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-           <svg className="w-6 h-6 text-[#009FE3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-           </svg>
-        </div>
-      </div>
-    );
-  })
-) : (
-  <div className="w-full flex justify-center py-10">
-    <p className="text-gray-400 font-medium bg-white px-8 py-4 rounded-xl border border-gray-100 shadow-sm">
-      No upcoming events right now. Stay tuned!
-    </p>
-  </div>
-)}
-            
-            {/* End spacer for smooth scrolling padding */}
-            {events.length > 0 && <div className="w-4 flex-shrink-0"></div>}
+          {/* RIGHT COLUMN: Scrolling Cards OR Empty State */}
+          <div className="w-full lg:w-2/3">
+            {events.length > 0 ? (
+              <div
+                ref={eventsScrollContainerRef}
+                className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide py-4"
+              >
+                {events.map((event, index) => {
+                  const startStr = event.start?.dateTime || event.start?.date;
+                  const isAllDay = !event.start?.dateTime;
+                  const startDate = new Date(startStr);
+                  
+                  const displayDay = startDate.toLocaleDateString("en-US", { day: "2-digit" });
+                  const displayMonth = startDate.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
+                  const displayYear = startDate.toLocaleDateString("en-US", { year: "numeric" });
+                  
+                  const timeFormatted = isAllDay 
+                    ? "ALL DAY" 
+                    : startDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+
+                  let rawDescription = event.description || "";
+                  let imageUrl = "/images/mountain01.jpg"; 
+                  let category = "EVENT";
+
+                  const imgMatch = rawDescription.match(/IMAGE:\s*([^\s<]+)/);
+                  if (imgMatch) {
+                    imageUrl = imgMatch[1];
+                    rawDescription = rawDescription.replace(/IMAGE:\s*([^\s<]+)/, "");
+                  }
+
+                  if (event.summary?.toLowerCase().includes("webinar") || event.summary?.toLowerCase().includes("online")) {
+                    category = "WEBINAR";
+                  }
+
+                  const cleanDescription = rawDescription.replace(/<[^>]*>/g, "").trim();
+
+                  return (
+                    <div
+                      key={index}
+                      className="w-[85vw] md:w-[360px] flex-shrink-0 cursor-pointer snap-center bg-white rounded-2xl flex flex-col transition-all duration-300 border border-gray-100 hover:shadow-xl group overflow-hidden"
+                      onClick={() => setSelectedEvent(event)}
+                    >
+                      <div className="relative h-48 w-full bg-gray-200">
+                        <Image src={imageUrl} alt={event.summary} fill className="object-cover group-hover:scale-105 transition-transform duration-500"/>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div className="absolute top-4 left-4 bg-[#0052cc] text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">{category}</div>
+                        <div className="absolute top-4 right-4 bg-white rounded-lg flex flex-col items-center justify-center p-2 shadow-lg w-14">
+                          <span className="text-xl font-extrabold text-[#0B1B3D] leading-none">{displayDay}</span>
+                          <span className="text-[10px] font-bold text-gray-500">{displayMonth}</span>
+                          <span className="text-[9px] font-bold text-gray-400">{displayYear}</span>
+                        </div>
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <h3 className="text-white font-bold text-xl leading-tight line-clamp-2 drop-shadow-md">{event.summary}</h3>
+                        </div>
+                      </div>
+
+                      <div className="p-6 flex flex-col flex-grow bg-white">
+                        <div className="flex items-center gap-2 text-xs font-bold text-gray-500 mb-3">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>{timeFormatted}</span>
+                        </div>
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-6 flex-grow">
+                          {cleanDescription || "Join us for this upcoming event. Click to view more details."}
+                        </p>
+                        <div className="flex items-center text-[#0052cc] font-bold text-sm group/link mt-auto">
+                          {category === "WEBINAR" ? "REGISTER NOW" : "VIEW DETAILS"}
+                          <svg className="w-4 h-4 ml-2 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                {/* Dummy Card: Only shows if there is exactly 1 event */}
+                {events.length === 1 && (
+                  <div className="w-[85vw] md:w-[360px] flex-shrink-0 snap-center bg-gray-50/50 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-200 p-8 text-center h-[auto] min-h-[400px]">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm border border-gray-100">
+                      <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-400 mb-2">More Events Soon</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed max-w-[200px]">
+                      We are preparing more sessions. Check back later!
+                    </p>
+                  </div>
+                )}
+                <div className="w-4 flex-shrink-0"></div>
+              </div>
+            ) : (
+              /* FIX: When 0 events, this box perfectly centers itself vertically against the text on the left */
+              <div className="flex items-center justify-center w-full h-full min-h-[250px]">
+                <div className="px-8 py-5 bg-gray-50 rounded-xl border border-gray-100 text-gray-400 font-medium shadow-sm w-full max-w-md text-center">
+                  No upcoming events right now. Check back soon!
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -773,11 +791,14 @@ const Hero = () => {
               )}
             </div>
 
-            <div>
+           <div>
                <h4 className="text-lg font-bold text-gray-800 mb-3">About this Event</h4>
                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
                  {selectedEvent.description 
-                   ? selectedEvent.description.replace(/<[^>]*>/g, "") 
+                   ? selectedEvent.description
+                       .replace(/IMAGE:\s*([^\s<]+)/, "") // 1. Remove the image link
+                       .replace(/<[^>]*>/g, "") // 2. Remove HTML tags
+                       .trim() 
                    : "No additional details provided for this event."}
                </p>
             </div>
