@@ -206,6 +206,13 @@ const Hero = () => {
 
   const resetAutoScroll = () => startAutoScroll();
 
+  const scrollToEvents = () => {
+    eventsRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
+
   useEffect(() => {
     startAutoScroll();
     const container = scrollContainerRef.current;
@@ -841,6 +848,32 @@ const Hero = () => {
           </div>
         </div>
       </section>
+
+      {/* Floating Events Button */}
+<button
+  onClick={scrollToEvents}
+  className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#009FE3] text-white shadow-xl hover:scale-110 hover:bg-[#0077B3] transition-all duration-300 flex items-center justify-center group"
+  aria-label="Upcoming Events"
+>
+  <svg
+    className="w-7 h-7"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+    />
+  </svg>
+
+  {/* Tooltip */}
+  <span className="absolute right-16 whitespace-nowrap bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+    Upcoming Events
+  </span>
+</button>
 
     </div>
   );
