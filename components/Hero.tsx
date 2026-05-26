@@ -233,8 +233,8 @@ const Hero = () => {
   async function fetchEvents() {
     try {
       const calendarId =
-        // "a66e982c9e48fb6b2a3430011b5e533e594f6b1ad3b96f30a789ca859d276099@group.calendar.google.com";
-         "deutronix.my@gmail.com";
+        "a66e982c9e48fb6b2a3430011b5e533e594f6b1ad3b96f30a789ca859d276099@group.calendar.google.com";
+        //  "deutronix.my@gmail.com";
 
       const apiKey = "AIzaSyDYq3LG8CmviV5oOK6SLuNrn008VJW9MN8";
 
