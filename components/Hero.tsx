@@ -799,7 +799,7 @@ const Hero = () => {
             </div>
 
            <div>
-               <h4 className="text-lg font-bold text-gray-800 mb-3">About this Event</h4>
+               <h4 className="text-lg font-bold text-gray-800 mb-3">Event Details</h4>
                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
                  {selectedEvent.description 
                    ? selectedEvent.description

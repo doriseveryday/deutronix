@@ -109,6 +109,9 @@ const Navbar = () => {
         <Link href="/testimonials" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
           {t('nav.testimonials')}
         </Link>
+        <Link href="/events" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
+          {t('nav.events')}
+        </Link>
         <Link href="/contact" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
           {t('nav.contact')}
         </Link>
@@ -238,6 +241,13 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               {t('nav.testimonials')}
+            </Link>
+            <Link
+              href="/events"
+              className="text-gray-600 hover:text-[#009FE3] py-2 transition-colors text-base"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t('nav.events')}
             </Link>
             <Link
               href="/contact"
