@@ -476,5 +476,51 @@
     "cta": {
       "title": "50 ppm<br />formulated for targeted comfort,<br />not general hydration."
     }
+  },
+  "eventsPage": {
+    "title": "Full Event Calendar",
+    "backHome": "Back to Home",
+    "today": "Today",
+    "dateTime": "Date & Time",
+    "location": "Location",
+    "eventDetails": "Event Details",
+    "noDetails": "No additional details provided for this event.",
+    "days": {
+      "sun": "SUN",
+      "mon": "MON",
+      "tue": "TUE",
+      "wed": "WED",
+      "thu": "THU",
+      "fri": "FRI",
+      "sat": "SAT"
+    }
+  },
+  "events": {
+    "title": "Upcoming Events",
+    "title2": "& Webinars",
+    "description": "Join our upcoming events and webinars to learn, grow and connect with the Deutronix community.",
+    "viewCalendar": "VIEW FULL CALENDAR",
+
+    "event": "EVENT",
+    "webinar": "WEBINAR",
+
+    "registerNow": "REGISTER NOW",
+    "viewDetails": "VIEW DETAILS",
+
+    "allDay": "ALL DAY",
+
+    "moreEventsTitle": "More Events Soon",
+    "moreEventsDescription": "We are preparing more sessions. Check back later!",
+
+    "noEvents": "No upcoming events right now. Check back soon!",
+
+    "modal": {
+      "dateTime": "Date & Time",
+      "location": "Location",
+      "details": "Event Details",
+      "noDetails": "No additional details provided for this event."
+    },
+
+    "floatingButton": "Upcoming Events"
   }
 }

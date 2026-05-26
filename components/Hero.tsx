@@ -13,7 +13,7 @@ if (typeof window !== 'undefined') {
 }
 
 const Hero = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // ==========================
   // 1. DATA SOURCES & TRANSLATIONS
@@ -635,14 +635,12 @@ const Hero = () => {
           
           {/* LEFT COLUMN: Text and Button */}
           <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start text-center lg:text-left">
-            {/* <p className="text-[#009FE3] font-bold text-sm tracking-widest uppercase mb-3">
-              Upcoming Events
-            </p> */}
             <h2 className="text-4xl md:text-5xl font-extrabold text-[#009FE3] mb-3 leading-tight">
-              Upcoming Events<br/>& Webinars
+              {t('events.title')}<br />
+              {t('events.title2')}
             </h2>
             <p className="text-gray-500 text-lg mb-8 leading-relaxed max-w-md">
-              Join our upcoming events and webinars to learn, grow and connect with the Deutronix community.
+              {t('events.description')}
             </p>
             <Link 
               href="/events" 
@@ -651,7 +649,7 @@ const Hero = () => {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              VIEW FULL CALENDAR 
+              {t('events.viewCalendar')}
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
@@ -668,17 +666,19 @@ const Hero = () => {
                   const isAllDay = !event.start?.dateTime;
                   const startDate = new Date(startStr);
                   
-                  const displayDay = startDate.toLocaleDateString("en-US", { day: "2-digit" });
-                  const displayMonth = startDate.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
-                  const displayYear = startDate.toLocaleDateString("en-US", { year: "numeric" });
+                  const displayDay = language === 'zh' 
+                    ? startDate.getDate().toString() 
+                    : startDate.toLocaleDateString("en-US", { day: "2-digit" });
+                  const displayMonth = startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : "en-US", { month: "short" }).toUpperCase();
+                  const displayYear = startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : "en-US", { year: "numeric" });
                   
                   const timeFormatted = isAllDay 
-                    ? "ALL DAY" 
-                    : startDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+                    ? t('events.allDay')
+                    : startDate.toLocaleTimeString(language === 'zh' ? 'zh-CN' : "en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 
                   let rawDescription = event.description || "";
                   let imageUrl = "/images/mountain01.jpg"; 
-                  let category = "EVENT";
+                  let category = t('events.event');
 
                   const imgMatch = rawDescription.match(/IMAGE:\s*([^\s<]+)/);
                   if (imgMatch) {
@@ -687,7 +687,7 @@ const Hero = () => {
                   }
 
                   if (event.summary?.toLowerCase().includes("webinar") || event.summary?.toLowerCase().includes("online")) {
-                    category = "WEBINAR";
+                    category = t('events.webinar');
                   }
 
                   const cleanDescription = rawDescription.replace(/<[^>]*>/g, "").trim();
@@ -718,10 +718,10 @@ const Hero = () => {
                           <span>{timeFormatted}</span>
                         </div>
                         <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-6 flex-grow">
-                          {cleanDescription || "Join us for this upcoming event. Click to view more details."}
+                          {cleanDescription || t('events.modal.noDetails')}
                         </p>
                         <div className="flex items-center text-[#0052cc] font-bold text-sm group/link mt-auto">
-                          {category === "WEBINAR" ? "REGISTER NOW" : "VIEW DETAILS"}
+                          {category === t('events.webinar') ? t('events.registerNow') : t('events.viewDetails')}
                           <svg className="w-4 h-4 ml-2 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
                         </div>
                       </div>
@@ -734,9 +734,9 @@ const Hero = () => {
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm border border-gray-100">
                       <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-400 mb-2">More Events Soon</h3>
+                    <h3 className="text-xl font-bold text-gray-400 mb-2">{t('events.moreEventsTitle')}</h3>
                     <p className="text-sm text-gray-400 leading-relaxed max-w-[200px]">
-                      We are preparing more sessions. Check back later!
+                      {t('events.moreEventsDescription')}
                     </p>
                   </div>
                 )}
@@ -746,7 +746,7 @@ const Hero = () => {
               /* FIX: When 0 events, this box perfectly centers itself vertically against the text on the left */
               <div className="flex items-center justify-center w-full h-full min-h-[250px]">
                 <div className="px-8 py-5 bg-gray-50 rounded-xl border border-gray-100 text-gray-400 font-medium shadow-sm w-full max-w-md text-center">
-                  No upcoming events right now. Check back soon!
+                  {t('events.noEvents')}
                 </div>
               </div>
             )}
@@ -779,10 +779,18 @@ const Hero = () => {
               <div className="flex items-start gap-3">
                 <span className="text-xl">📅</span>
                 <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Date & Time</p>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                    {t('events.modal.dateTime')}
+                  </p>
                   <p className="text-gray-800 font-medium">
-                    {new Date(selectedEvent.start?.dateTime || selectedEvent.start?.date).toLocaleDateString("en-MY", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                    {!selectedEvent.start?.date && ` • ${new Date(selectedEvent.start?.dateTime).toLocaleTimeString("en-MY", { hour: "numeric", minute: "2-digit", hour12: true })}`}
+                    {new Date(selectedEvent.start?.dateTime || selectedEvent.start?.date).toLocaleDateString(
+                      language === 'zh' ? 'zh-CN' : 'en-MY',
+                      { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+                    )}
+                    {!selectedEvent.start?.date && ` • ${new Date(selectedEvent.start?.dateTime).toLocaleTimeString(
+                      language === 'zh' ? 'zh-CN' : 'en-MY',
+                      { hour: "numeric", minute: "2-digit", hour12: true }
+                    )}`}
                   </p>
                 </div>
               </div>
@@ -791,7 +799,9 @@ const Hero = () => {
                 <div className="flex items-start gap-3 mt-2">
                   <span className="text-xl">📍</span>
                   <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Location</p>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                      {t('events.modal.location')}
+                    </p>
                     <p className="text-gray-800 font-medium">{selectedEvent.location}</p>
                   </div>
                 </div>
@@ -799,14 +809,16 @@ const Hero = () => {
             </div>
 
            <div>
-               <h4 className="text-lg font-bold text-gray-800 mb-3">Event Details</h4>
+               <h4 className="text-lg font-bold text-gray-800 mb-3">
+                 {t('events.modal.details')}
+               </h4>
                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
                  {selectedEvent.description 
                    ? selectedEvent.description
                        .replace(/IMAGE:\s*([^\s<]+)/, "") // 1. Remove the image link
                        .replace(/<[^>]*>/g, "") // 2. Remove HTML tags
                        .trim() 
-                   : "No additional details provided for this event."}
+                   : t('events.modal.noDetails')}
                </p>
             </div>
           </div>
@@ -871,7 +883,7 @@ const Hero = () => {
 
   {/* Tooltip */}
   <span className="absolute right-16 whitespace-nowrap bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-    Upcoming Events
+    {t('events.floatingButton')}
   </span>
 </button>
 

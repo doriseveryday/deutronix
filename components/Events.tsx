@@ -1,9 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '@/app/LanguageContext';
 import Link from 'next/link';
 
 export default function EventsPage() {
+  const { t, language } = useLanguage();
+  
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
@@ -51,7 +54,10 @@ export default function EventsPage() {
   // --- CALENDAR MATH ---
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-  const monthName = currentDate.toLocaleString('default', { month: 'long' });
+  const monthName = currentDate.toLocaleString(
+    language === 'zh' ? 'zh-CN' : 'en-US',
+    { month: 'long' }
+  );
   const year = currentDate.getFullYear();
 
   const handlePrevMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
@@ -62,7 +68,15 @@ export default function EventsPage() {
   // --- RENDER GRID CELLS ---
   const renderCalendarCells = () => {
     const cells = [];
-    const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const daysOfWeek = [
+      t('eventsPage.days.sun'),
+      t('eventsPage.days.mon'),
+      t('eventsPage.days.tue'),
+      t('eventsPage.days.wed'),
+      t('eventsPage.days.thu'),
+      t('eventsPage.days.fri'),
+      t('eventsPage.days.sat')
+    ];
 
     // 1. Render Days of Week Header
     daysOfWeek.forEach((day, i) => {
@@ -135,9 +149,9 @@ export default function EventsPage() {
           
           <div className="w-full md:w-auto">
             <Link href="/" className="text-[#009FE3] font-bold text-xs tracking-widest uppercase hover:text-[#0B1B3D] transition-colors flex items-center gap-2 mb-3">
-              ← Back to Home
+              ← {t('eventsPage.backHome')}
             </Link>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-[#0B1B3D]">Full Event Calendar</h1>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-[#0B1B3D]">{t('eventsPage.title')}</h1>
           </div>
 
           {/* Calendar Controls (Mobile Responsive) */}
@@ -149,7 +163,7 @@ export default function EventsPage() {
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               </button>
               <button onClick={handleToday} className="px-2 md:px-4 py-2 h-10 text-sm font-bold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                Today
+                {t('eventsPage.today')}
               </button>
               <button onClick={handleNextMonth} className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +201,7 @@ export default function EventsPage() {
         )}
       </div>
 
-      {/* 3. EVENT DETAILS MODAL (Same as before!) */}
+      {/* 3. EVENT DETAILS MODAL */}
       {selectedEvent && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -212,10 +226,25 @@ export default function EventsPage() {
               <div className="flex items-start gap-3">
                 <span className="text-xl">📅</span>
                 <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Date & Time</p>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t('eventsPage.dateTime')}</p>
                   <p className="text-gray-800 font-medium">
-                    {new Date(selectedEvent.start?.dateTime || selectedEvent.start?.date).toLocaleDateString("en-MY", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                    {!selectedEvent.start?.date && ` • ${new Date(selectedEvent.start?.dateTime).toLocaleTimeString("en-MY", { hour: "numeric", minute: "2-digit", hour12: true })}`}
+                    {new Date(selectedEvent.start?.dateTime || selectedEvent.start?.date).toLocaleDateString(
+                      language === 'zh' ? 'zh-CN' : 'en-MY',
+                      {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                      }
+                    )}
+                    {!selectedEvent.start?.date && ` • ${new Date(selectedEvent.start?.dateTime).toLocaleTimeString(
+                      language === 'zh' ? 'zh-CN' : 'en-MY',
+                      {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                      }
+                    )}`}
                   </p>
                 </div>
               </div>
@@ -224,7 +253,7 @@ export default function EventsPage() {
                 <div className="flex items-start gap-3 mt-2">
                   <span className="text-xl">📍</span>
                   <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Location</p>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t('eventsPage.location')}</p>
                     <p className="text-gray-800 font-medium">{selectedEvent.location}</p>
                   </div>
                 </div>
@@ -232,14 +261,14 @@ export default function EventsPage() {
             </div>
 
             <div>
-               <h4 className="text-lg font-bold text-gray-800 mb-3">About this Event</h4>
+               <h4 className="text-lg font-bold text-gray-800 mb-3">{t('eventsPage.eventDetails')}</h4>
                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
                  {selectedEvent.description 
                    ? selectedEvent.description
                        .replace(/IMAGE:\s*([^\s<]+)/, "") 
                        .replace(/<[^>]*>/g, "") 
                        .trim() 
-                   : "No additional details provided for this event."}
+                   : t('eventsPage.noDetails')}
                </p>
             </div>
           </div>

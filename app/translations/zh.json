@@ -476,5 +476,51 @@
     "cta": {
       "title": "50 ppm<br />专为局部舒适配制，<br />而非一般补水。"
     }
+  },
+  "eventsPage": {
+    "title": "活动日历",
+    "backHome": "返回首页",
+    "today": "今天",
+    "dateTime": "日期与时间",
+    "location": "地点",
+    "eventDetails": "活动详情",
+    "noDetails": "暂无活动详情。",
+    "days": {
+      "sun": "星期日",
+      "mon": "星期一",
+      "tue": "星期二",
+      "wed": "星期三",
+      "thu": "星期四",
+      "fri": "星期五",
+      "sat": "星期六"
+    }
+  },
+  "events": {
+    "title": "即将举行的活动",
+    "title2": "与线上研讨会",
+    "description": "参与我们的活动与线上研讨会，与 Deutronix 社群一起学习、成长与交流。",
+    "viewCalendar": "查看完整活动日历",
+
+    "event": "活动",
+    "webinar": "线上研讨会",
+
+    "registerNow": "立即报名",
+    "viewDetails": "查看详情",
+
+    "allDay": "全天",
+
+    "moreEventsTitle": "更多活动即将推出",
+    "moreEventsDescription": "我们正在筹备更多活动，敬请期待！",
+
+    "noEvents": "目前暂无即将举行的活动，请稍后再回来查看。",
+
+    "modal": {
+      "dateTime": "日期与时间",
+      "location": "地点",
+      "details": "活动详情",
+      "noDetails": "此活动暂无额外说明。"
+    },
+
+    "floatingButton": "即将举行的活动"
   }
 }
