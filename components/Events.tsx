@@ -154,32 +154,26 @@ export default function EventsPage() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-[#0B1B3D]">{t('eventsPage.title')}</h1>
           </div>
 
-          {/* Calendar Controls (Mobile Responsive) */}
-          <div className="flex w-full md:w-auto items-center justify-between bg-white p-2 rounded-xl shadow-sm border border-gray-100">
+          {/* Calendar Controls (Centered on mobile, right-aligned on desktop) */}
+          <div className="flex w-full md:w-auto items-center justify-center md:justify-end bg-white p-2 rounded-xl shadow-sm border border-gray-100">
             
-            {/* Left Side: Navigation Buttons */}
+            {/* < Month Year > Controls */}
             <div className="flex items-center gap-1">
               <button onClick={handlePrevMonth} className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               </button>
-              <button onClick={handleToday} className="px-2 md:px-4 py-2 h-10 text-sm font-bold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                {t('eventsPage.today')}
-              </button>
+              
+              <span className="text-base md:text-lg font-bold text-[#0B1B3D] min-w-[110px] md:min-w-[150px] text-center">
+                {monthName} {year}
+              </span>
+
               <button onClick={handleNextMonth} className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
             </div>
-
-            {/* Right Side: Divider & Month Text */}
-            <div className="flex items-center">
-              <div className="h-6 w-px bg-gray-200 mx-2 md:mx-3"></div>
-              <span className="text-base md:text-lg font-bold text-[#0B1B3D] min-w-[90px] md:min-w-[140px] text-right md:text-center pr-2 md:pr-0">
-                {monthName} {year}
-              </span>
-            </div>
-
+            
           </div>
 
         </div>
@@ -265,8 +259,12 @@ export default function EventsPage() {
                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
                  {selectedEvent.description 
                    ? selectedEvent.description
-                       .replace(/IMAGE:\s*([^\s<]+)/, "") 
-                       .replace(/<[^>]*>/g, "") 
+                       .replace(/<br\s*\/?>/gi, "\n")
+                       .replace(/<\/p>/gi, "\n")
+                       .replace(/&nbsp;/g, " ")
+                       .replace(/\u00A0/g, " ")
+                       .replace(/<[^>]*>/g, "")           // Removes HTML tags
+                       .replace(/IMAGE:\s*(\S+)/i, "")    // Safely removes the image link
                        .trim() 
                    : t('eventsPage.noDetails')}
                </p>

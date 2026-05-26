@@ -233,8 +233,8 @@ const Hero = () => {
   async function fetchEvents() {
     try {
       const calendarId =
-        "a66e982c9e48fb6b2a3430011b5e533e594f6b1ad3b96f30a789ca859d276099@group.calendar.google.com";
-        //  "deutronix.my@gmail.com";
+        // "a66e982c9e48fb6b2a3430011b5e533e594f6b1ad3b96f30a789ca859d276099@group.calendar.google.com";
+         "deutronix.my@gmail.com";
 
       const apiKey = "AIzaSyDYq3LG8CmviV5oOK6SLuNrn008VJW9MN8";
 
@@ -676,21 +676,35 @@ const Hero = () => {
                     ? t('events.allDay')
                     : startDate.toLocaleTimeString(language === 'zh' ? 'zh-CN' : "en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 
+                  // --- 1. Clean Google's HTML into pure text FIRST ---
                   let rawDescription = event.description || "";
+                  
+                  let processedText = rawDescription
+                    .replace(/<br\s*\/?>/gi, "\n")   // Convert break tags to real newlines
+                    .replace(/<\/p>/gi, "\n")        // Convert paragraph ends to newlines
+                    .replace(/&nbsp;/g, " ")         // Convert HTML non-breaking spaces
+                    .replace(/\u00A0/g, " ");        // Convert special encoded spaces
+
+                  // Strip all remaining HTML tags (like Google's hidden <a> links)
+                  processedText = processedText.replace(/<[^>]*>/g, "");
+
+                  // --- 2. Now the text is 100% clean, we can safely extract the image ---
                   let imageUrl = "/images/mountain01.jpg"; 
                   let category = t('events.event');
 
-                  const imgMatch = rawDescription.match(/IMAGE:\s*([^\s<]+)/);
+                  // \S+ will perfectly grab the URL until it hits a space or newline
+                  const imgMatch = processedText.match(/IMAGE:\s*(\S+)/i);
                   if (imgMatch) {
                     imageUrl = imgMatch[1];
-                    rawDescription = rawDescription.replace(/IMAGE:\s*([^\s<]+)/, "");
+                    // Remove the IMAGE tag and URL from the final text
+                    processedText = processedText.replace(/IMAGE:\s*(\S+)/i, "");
                   }
 
                   if (event.summary?.toLowerCase().includes("webinar") || event.summary?.toLowerCase().includes("online")) {
                     category = t('events.webinar');
                   }
 
-                  const cleanDescription = rawDescription.replace(/<[^>]*>/g, "").trim();
+                  const cleanDescription = processedText.trim();
 
                   return (
                     <div
@@ -815,8 +829,12 @@ const Hero = () => {
                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
                  {selectedEvent.description 
                    ? selectedEvent.description
-                       .replace(/IMAGE:\s*([^\s<]+)/, "") // 1. Remove the image link
-                       .replace(/<[^>]*>/g, "") // 2. Remove HTML tags
+                       .replace(/<br\s*\/?>/gi, "\n")
+                       .replace(/<\/p>/gi, "\n")
+                       .replace(/&nbsp;/g, " ")
+                       .replace(/\u00A0/g, " ")
+                       .replace(/<[^>]*>/g, "")           // 1. Remove all auto-generated HTML tags FIRST
+                       .replace(/IMAGE:\s*(\S+)/i, "")    // 2. Safely remove the image link
                        .trim() 
                    : t('events.modal.noDetails')}
                </p>
