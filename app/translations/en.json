@@ -478,7 +478,7 @@
     }
   },
   "eventsPage": {
-    "title": "Full Event Calendar",
+    "title": "Event Calendar",
     "backHome": "Back to Home",
     "today": "Today",
     "dateTime": "Date & Time",

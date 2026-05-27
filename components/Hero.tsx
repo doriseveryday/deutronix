@@ -12,6 +12,21 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+interface CalendarEvent {
+  id: string;
+  summary: string;
+  description?: string;
+  location?: string;
+  start: {
+    dateTime?: string;
+    date?: string;
+  };
+  end?: {
+    dateTime?: string;
+    date?: string;
+  };
+}
+
 const Hero = () => {
   const { t, language } = useLanguage();
 
@@ -93,13 +108,97 @@ const Hero = () => {
     },
   ];
 
+  // Helper function to check if an event is a webinar (checks title AND description)
+  const isWebinarEvent = (event: CalendarEvent): boolean => {
+    const title = event.summary?.toLowerCase() || '';
+    const hasWebinarInTitle = title.includes('webinar') || title.includes('online') || title.includes('zoom') || title.includes('virtual');
+    
+    const description = event.description?.toLowerCase() || '';
+    const hasWebinarInDescription = description.includes('webinar') || 
+                                    description.includes('online') ||
+                                    description.includes('zoom') ||
+                                    description.includes('virtual') ||
+                                    description.includes('live stream') ||
+                                    description.includes('join us online');
+    
+    return hasWebinarInTitle || hasWebinarInDescription;
+  };
+
+  // Helper function to safely parse event dates with timezone safety
+  const getSafeEventDate = (event: CalendarEvent, isEndDate: boolean = false): Date | null => {
+    const dateObj = isEndDate ? event.end : event.start;
+    if (!dateObj) return null;
+    
+    if (dateObj.date && !dateObj.dateTime) {
+      const [y, m, d] = dateObj.date.split('-');
+      return new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+    }
+    
+    if (dateObj.dateTime) {
+      return new Date(dateObj.dateTime);
+    }
+    
+    return null;
+  };
+
+  // Helper function to check if event is multi-day
+  const isMultiDayEvent = (event: CalendarEvent): boolean => {
+    const startDate = getSafeEventDate(event, false);
+    const endDate = getSafeEventDate(event, true);
+    
+    if (!startDate || !endDate) return false;
+    
+    // For all-day events, adjust end date
+    let adjustedEndDate = new Date(endDate);
+    if (event.end?.date && !event.end?.dateTime) {
+      adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
+    }
+    
+    return startDate.toDateString() !== adjustedEndDate.toDateString();
+  };
+
+  // Helper function to format event date range for display
+  const formatEventDateRange = (event: CalendarEvent): string => {
+    const startDate = getSafeEventDate(event, false);
+    const endDate = getSafeEventDate(event, true);
+    
+    if (!startDate) return '';
+    
+    const isAllDay = !event.start?.dateTime;
+    const isMultiDay = isMultiDayEvent(event);
+    
+    if (isMultiDay && endDate) {
+      let adjustedEndDate = new Date(endDate);
+      if (event.end?.date && !event.end?.dateTime) {
+        adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
+      }
+      
+      const startStr = startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-MY', {
+        month: 'short', day: 'numeric'
+      });
+      const endStr = adjustedEndDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-MY', {
+        month: 'short', day: 'numeric'
+      });
+      return `${startStr} - ${endStr}`;
+    } else if (isAllDay) {
+      return startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-MY', {
+        month: 'long', day: 'numeric', year: 'numeric'
+      });
+    } else {
+      return startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-MY', {
+        month: 'long', day: 'numeric', year: 'numeric'
+      }) + ` • ${startDate.toLocaleTimeString(language === 'zh' ? 'zh-CN' : 'en-MY', {
+        hour: 'numeric', minute: '2-digit', hour12: true
+      })}`;
+    }
+  };
+
   // FIX: Fetch exact strings using index dot-notation instead of fetching the whole array
   const localizedTestimonials = baseTestimonials.map((baseTest, index) => {
     const tName = t(`testimonials.testimonials.${index}.name`);
-    const tRole = t(`testimonials.testimonials.${index}.title`); // Maps JSON "title" to "role"
+    const tRole = t(`testimonials.testimonials.${index}.title`);
     const tQuote = t(`testimonials.testimonials.${index}.quote`);
 
-    // Helper to ensure the translation hook didn't just return the key name
     const isValid = (val: any) => val && typeof val === 'string' && !val.includes('testimonials.testimonials');
 
     return {
@@ -128,8 +227,8 @@ const Hero = () => {
   const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
   
 
-  const [events, setEvents] = useState<any[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<any | null>(null); 
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null); 
 
   // -- NEW HERO REFS --
   const heroDescriptionRef = useRef<HTMLDivElement>(null);
@@ -144,6 +243,7 @@ const Hero = () => {
   const certsContainerRef = useRef<HTMLDivElement>(null);
   const eventsRef = useRef<HTMLElement>(null);
   const eventsScrollContainerRef = useRef<HTMLDivElement>(null);
+  
   // ==========================
   // 3. LOGIC & EFFECTS
   // ==========================
@@ -230,36 +330,35 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-  async function fetchEvents() {
-    try {
-      const calendarId =
-        // "a66e982c9e48fb6b2a3430011b5e533e594f6b1ad3b96f30a789ca859d276099@group.calendar.google.com";
-         "deutronix.my@gmail.com";
+    async function fetchEvents() {
+      try {
+        // const calendarId ="a66e982c9e48fb6b2a3430011b5e533e594f6b1ad3b96f30a789ca859d276099@group.calendar.google.com";
+        const calendarId = "deutronix.my@gmail.com";
 
-      const apiKey = "AIzaSyDYq3LG8CmviV5oOK6SLuNrn008VJW9MN8";
+        const apiKey = "AIzaSyDYq3LG8CmviV5oOK6SLuNrn008VJW9MN8";
 
-      const now = new Date().toISOString();
+        const now = new Date().toISOString();
 
-      const url =
-        `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-          calendarId
-        )}/events?key=${apiKey}` +
-        `&singleEvents=true` +
-        `&orderBy=startTime` +
-        `&timeMin=${now}` +
-        `&maxResults=6`;
+        const url =
+          `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
+            calendarId
+          )}/events?key=${apiKey}` +
+          `&singleEvents=true` +
+          `&orderBy=startTime` +
+          `&timeMin=${now}` +
+          `&maxResults=6`;
 
-      const res = await fetch(url);
-      const data = await res.json();
+        const res = await fetch(url);
+        const data = await res.json();
 
-      setEvents(data.items || []);
-    } catch (err) {
-      console.error("Calendar fetch failed:", err);
+        setEvents(data.items || []);
+      } catch (err) {
+        console.error("Calendar fetch failed:", err);
+      }
     }
-  }
 
-  fetchEvents();
-}, []);
+    fetchEvents();
+  }, []);
 
   // --- GSAP ANIMATIONS ---
   useGSAP(() => {
@@ -624,13 +723,12 @@ const Hero = () => {
         </div>
       </section>
 
-{/* Upcoming events section */}
-     <section
+      {/* Upcoming events section */}
+      <section
         id="upcoming-events"
         ref={eventsRef}
         className="relative z-10 w-full bg-white py-20 px-6 border-t border-gray-100"
       >
-        {/* FIX: Changed lg:items-stretch to lg:items-center to perfectly middle-align left and right sides */}
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 lg:items-center">
           
           {/* LEFT COLUMN: Text and Button */}
@@ -662,46 +760,38 @@ const Hero = () => {
                 className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide py-4"
               >
                 {events.map((event, index) => {
-                  const startStr = event.start?.dateTime || event.start?.date;
                   const isAllDay = !event.start?.dateTime;
-                  const startDate = new Date(startStr);
+                  const isMultiDay = isMultiDayEvent(event);
+                  const dateRangeText = formatEventDateRange(event);
                   
-                  const displayDay = language === 'zh' 
+                  // Get the start date for the date box display
+                  const startDate = getSafeEventDate(event, false);
+                  const displayDay = startDate ? (language === 'zh' 
                     ? startDate.getDate().toString() 
-                    : startDate.toLocaleDateString("en-US", { day: "2-digit" });
-                  const displayMonth = startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : "en-US", { month: "short" }).toUpperCase();
-                  const displayYear = startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : "en-US", { year: "numeric" });
-                  
-                  const timeFormatted = isAllDay 
-                    ? t('events.allDay')
-                    : startDate.toLocaleTimeString(language === 'zh' ? 'zh-CN' : "en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+                    : startDate.toLocaleDateString("en-US", { day: "2-digit" })) : '';
+                  const displayMonth = startDate ? startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : "en-US", { month: "short" }).toUpperCase() : '';
+                  const displayYear = startDate ? startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : "en-US", { year: "numeric" }) : '';
 
                   // --- 1. Clean Google's HTML into pure text FIRST ---
                   let rawDescription = event.description || "";
                   
                   let processedText = rawDescription
-                    .replace(/<br\s*\/?>/gi, "\n")   // Convert break tags to real newlines
-                    .replace(/<\/p>/gi, "\n")        // Convert paragraph ends to newlines
-                    .replace(/&nbsp;/g, " ")         // Convert HTML non-breaking spaces
-                    .replace(/\u00A0/g, " ");        // Convert special encoded spaces
+                    .replace(/<br\s*\/?>/gi, "\n")
+                    .replace(/<\/p>/gi, "\n")
+                    .replace(/&nbsp;/g, " ")
+                    .replace(/\u00A0/g, " ")
+                    .replace(/<[^>]*>/g, "");
 
-                  // Strip all remaining HTML tags (like Google's hidden <a> links)
-                  processedText = processedText.replace(/<[^>]*>/g, "");
-
-                  // --- 2. Now the text is 100% clean, we can safely extract the image ---
+                  // --- 2. Extract image URL ---
                   let imageUrl = "/images/mountain01.jpg"; 
-                  let category = t('events.event');
+                  
+                  const isWebinar = isWebinarEvent(event);
+                  let category = isWebinar ? t('events.webinar') : t('events.event');
 
-                  // \S+ will perfectly grab the URL until it hits a space or newline
                   const imgMatch = processedText.match(/IMAGE:\s*(\S+)/i);
                   if (imgMatch) {
                     imageUrl = imgMatch[1];
-                    // Remove the IMAGE tag and URL from the final text
                     processedText = processedText.replace(/IMAGE:\s*(\S+)/i, "");
-                  }
-
-                  if (event.summary?.toLowerCase().includes("webinar") || event.summary?.toLowerCase().includes("online")) {
-                    category = t('events.webinar');
                   }
 
                   const cleanDescription = processedText.trim();
@@ -713,9 +803,9 @@ const Hero = () => {
                       onClick={() => setSelectedEvent(event)}
                     >
                       <div className="relative h-48 w-full bg-gray-200">
-                        <Image src={imageUrl} alt={event.summary} fill className="object-cover group-hover:scale-105 transition-transform duration-500"/>
+                        <Image src={imageUrl} alt={event.summary || 'Event'} fill className="object-cover group-hover:scale-105 transition-transform duration-500"/>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        <div className="absolute top-4 left-4 bg-[#0052cc] text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">{category}</div>
+                        <div className="absolute top-4 left-4 bg-[#009FE3] text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">{category}</div>
                         <div className="absolute top-4 right-4 bg-white rounded-lg flex flex-col items-center justify-center p-2 shadow-lg w-14">
                           <span className="text-xl font-extrabold text-[#0B1B3D] leading-none">{displayDay}</span>
                           <span className="text-[10px] font-bold text-gray-500">{displayMonth}</span>
@@ -723,19 +813,20 @@ const Hero = () => {
                         </div>
                         <div className="absolute bottom-4 left-4 right-4">
                           <h3 className="text-white font-bold text-xl leading-tight line-clamp-2 drop-shadow-md">{event.summary}</h3>
+                         
                         </div>
                       </div>
 
                       <div className="p-6 flex flex-col flex-grow bg-white">
                         <div className="flex items-center gap-2 text-xs font-bold text-gray-500 mb-3">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                          <span>{timeFormatted}</span>
+                          <span>{dateRangeText}</span>
                         </div>
                         <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-6 flex-grow">
                           {cleanDescription || t('events.modal.noDetails')}
                         </p>
-                        <div className="flex items-center text-[#0052cc] font-bold text-sm group/link mt-auto">
-                          {category === t('events.webinar') ? t('events.registerNow') : t('events.viewDetails')}
+                        <div className="flex items-center text-[#009FE3] font-bold text-sm group/link mt-auto">
+                          {isWebinar ? t('events.registerNow') : t('events.viewDetails')}
                           <svg className="w-4 h-4 ml-2 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
                         </div>
                       </div>
@@ -757,7 +848,6 @@ const Hero = () => {
                 <div className="w-4 flex-shrink-0"></div>
               </div>
             ) : (
-              /* FIX: When 0 events, this box perfectly centers itself vertically against the text on the left */
               <div className="flex items-center justify-center w-full h-full min-h-[250px]">
                 <div className="px-8 py-5 bg-gray-50 rounded-xl border border-gray-100 text-gray-400 font-medium shadow-sm w-full max-w-md text-center">
                   {t('events.noEvents')}
@@ -767,81 +857,152 @@ const Hero = () => {
           </div>
         </div>
       </section>
+      
       {/* 8. EVENT DETAILS MODAL */}
-      {selectedEvent && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-sm transition-opacity"
-          onClick={() => setSelectedEvent(null)} // Closes modal if clicking outside
-        >
+      {selectedEvent && (() => {
+        let modalImageUrl = "/images/mountain01.jpg";
+        let modalCleanDesc = selectedEvent.description || "";
+
+        if (modalCleanDesc) {
+            let pText = modalCleanDesc
+                .replace(/<br\s*\/?>/gi, "\n")
+                .replace(/<\/p>/gi, "\n")
+                .replace(/&nbsp;/g, " ")
+                .replace(/\u00A0/g, " ")
+                .replace(/<[^>]*>/g, "");
+                
+            const match = pText.match(/IMAGE:\s*([^\s]+?\.(?:jpg|jpeg|png|gif|webp))/i);
+            if (match) {
+                modalImageUrl = match[1];
+                pText = pText.replace(/IMAGE:\s*([^\s]+?\.(?:jpg|jpeg|png|gif|webp))/i, "");
+            }
+            modalCleanDesc = pText.trim();
+        }
+
+        const isDefaultImage = modalImageUrl === "/images/mountain01.jpg";
+        
+        // Get date information for modal
+        const startDate = getSafeEventDate(selectedEvent, false);
+        const endDate = getSafeEventDate(selectedEvent, true);
+        const isAllDay = !selectedEvent.start?.dateTime;
+        const isMultiDay = isMultiDayEvent(selectedEvent);
+        
+        // Format end date for multi-day events
+        let adjustedEndDate = endDate ? new Date(endDate) : null;
+        if (selectedEvent.end?.date && !selectedEvent.end?.dateTime && adjustedEndDate) {
+          adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
+        }
+        
+        const isWebinar = isWebinarEvent(selectedEvent);
+
+        return (
           <div 
-            className="bg-white rounded-3xl p-8 md:p-10 max-w-2xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside the box
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setSelectedEvent(null)}
           >
-            {/* Close Button */}
-            <button 
-              onClick={() => setSelectedEvent(null)}
-              className="absolute top-6 right-6 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors"
+            <div 
+              className={`bg-white rounded-3xl w-full shadow-2xl relative max-h-[90vh] overflow-hidden flex ${
+                isDefaultImage 
+                  ? 'max-w-2xl flex-col' 
+                  : 'max-w-5xl md:min-h-[550px] flex-col-reverse md:flex-row'
+              }`}
+              onClick={(e) => e.stopPropagation()}
             >
-              ✕
-            </button>
-
-            <h3 className="text-3xl font-extrabold text-[#009FE3] pr-10 mb-6">
-              {selectedEvent.summary}
-            </h3>
-
-            <div className="flex flex-col gap-4 mb-8 bg-gray-50 p-6 rounded-2xl">
-              <div className="flex items-start gap-3">
-                <span className="text-xl">📅</span>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
-                    {t('events.modal.dateTime')}
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {new Date(selectedEvent.start?.dateTime || selectedEvent.start?.date).toLocaleDateString(
-                      language === 'zh' ? 'zh-CN' : 'en-MY',
-                      { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
-                    )}
-                    {!selectedEvent.start?.date && ` • ${new Date(selectedEvent.start?.dateTime).toLocaleTimeString(
-                      language === 'zh' ? 'zh-CN' : 'en-MY',
-                      { hour: "numeric", minute: "2-digit", hour12: true }
-                    )}`}
-                  </p>
-                </div>
-              </div>
-
-              {selectedEvent.location && (
-                <div className="flex items-start gap-3 mt-2">
-                  <span className="text-xl">📍</span>
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
-                      {t('events.modal.location')}
-                    </p>
-                    <p className="text-gray-800 font-medium">{selectedEvent.location}</p>
-                  </div>
+              
+              {/* IMAGE SECTION: 50% width on Desktop */}
+              {!isDefaultImage && (
+                <div className="w-full md:w-1/2 h-[35vh] md:h-auto min-h-[250px] relative bg-gray-50 flex-shrink-0 border-t md:border-t-0 md:border-r border-gray-100">
+                  <Image 
+                    src={modalImageUrl} 
+                    alt={selectedEvent.summary || 'Event'} 
+                    fill 
+                    className="object-contain p-4 md:p-8"
+                  />
                 </div>
               )}
-            </div>
 
-           <div>
-               <h4 className="text-lg font-bold text-gray-800 mb-3">
-                 {t('events.modal.details')}
-               </h4>
-               <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
-                 {selectedEvent.description 
-                   ? selectedEvent.description
-                       .replace(/<br\s*\/?>/gi, "\n")
-                       .replace(/<\/p>/gi, "\n")
-                       .replace(/&nbsp;/g, " ")
-                       .replace(/\u00A0/g, " ")
-                       .replace(/<[^>]*>/g, "")           // 1. Remove all auto-generated HTML tags FIRST
-                       .replace(/IMAGE:\s*(\S+)/i, "")    // 2. Safely remove the image link
-                       .trim() 
-                   : t('events.modal.noDetails')}
-               </p>
+              {/* CONTENT SECTION: 50% width on Desktop */}
+              <div className={`w-full ${!isDefaultImage ? 'md:w-1/2' : ''} p-6 md:p-10 flex flex-col overflow-y-auto relative`}>
+                
+                {/* Close Button */}
+                <button 
+                  onClick={() => setSelectedEvent(null)}
+                  className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors z-10"
+                >
+                  ✕
+                </button>
+
+                <h3 className={`font-extrabold text-[#009FE3] pr-12 mb-6 ${isDefaultImage ? 'text-3xl' : 'text-2xl md:text-3xl'}`}>
+                  {selectedEvent.summary}
+                
+                 
+                </h3>
+
+                <div className="flex flex-col gap-4 mb-6 bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">📅</span>
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                        {isMultiDay ? (t('events.modal.dateTime') || 'Date Time') : t('events.modal.dateTime')}
+                      </p>
+                      <p className="text-gray-800 font-medium text-sm md:text-base">
+                        {startDate ? startDate.toLocaleDateString(
+                          language === 'zh' ? 'zh-CN' : 'en-MY',
+                          { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+                        ) : t('events.modal.noDetails')}
+                        
+                        {isMultiDay && adjustedEndDate && (
+                          <>
+                            <span className="mx-2 font-normal text-gray-400">→</span>
+                            {adjustedEndDate.toLocaleDateString(
+                              language === 'zh' ? 'zh-CN' : 'en-MY',
+                              { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+                            )}
+                          </>
+                        )}
+                        
+                        {!isMultiDay && !isAllDay && startDate && (
+                          ` • ${startDate.toLocaleTimeString(
+                            language === 'zh' ? 'zh-CN' : 'en-MY',
+                            { hour: "numeric", minute: "2-digit", hour12: true }
+                          )}`
+                        )}
+                        
+                        {!isMultiDay && isAllDay && (
+                          <span className="ml-2 text-sm text-gray-500">({t('events.allDay') || 'All day'})</span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
+                  {selectedEvent.location && (
+                    <div className="flex items-start gap-3 mt-1">
+                      <span className="text-xl">📍</span>
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                          {t('events.modal.location')}
+                        </p>
+                        <p className="text-gray-800 font-medium text-sm md:text-base">{selectedEvent.location}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+               <div>
+                   <h4 className="text-lg font-bold text-gray-800 mb-2">
+                     {t('events.modal.details')}
+                   </h4>
+                   <p className="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm md:text-base">
+                     {modalCleanDesc || t('events.modal.noDetails')}
+                   </p>
+                
+                </div>
+                
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* 7. ABOUT US SECTION */}
       <section className="relative z-20 w-full bg-white px-6 py-12 md:py-24 overflow-visible">
@@ -880,30 +1041,30 @@ const Hero = () => {
       </section>
 
       {/* Floating Events Button */}
-<button
-  onClick={scrollToEvents}
-  className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#009FE3] text-white shadow-xl hover:scale-110 hover:bg-[#0077B3] transition-all duration-300 flex items-center justify-center group"
-  aria-label="Upcoming Events"
->
-  <svg
-    className="w-7 h-7"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-    />
-  </svg>
+      <button
+        onClick={scrollToEvents}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#009FE3] text-white shadow-xl hover:scale-110 hover:bg-[#0077B3] transition-all duration-300 flex items-center justify-center group"
+        aria-label="Upcoming Events"
+      >
+        <svg
+          className="w-7 h-7"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
 
-  {/* Tooltip */}
-  <span className="absolute right-16 whitespace-nowrap bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-    {t('events.floatingButton')}
-  </span>
-</button>
+        {/* Tooltip */}
+        <span className="absolute right-16 whitespace-nowrap bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+          {t('events.floatingButton')}
+        </span>
+      </button>
 
     </div>
   );
