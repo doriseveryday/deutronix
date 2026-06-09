@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/app/LanguageContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import { client, urlFor } from '@/lib/sanity'; // <-- SANITY IMPORT
+import { client, urlFor } from '@/lib/sanity'; 
 
-// --- UPDATED SANITY INTERFACE ---
 interface SanityEvent {
   _id: string;
   title: string;
@@ -21,103 +20,31 @@ interface SanityEvent {
 export default function EventsPage() {
   const { t, language } = useLanguage();
   
-  const [events, setEvents] = useState<SanityEvent[]>([]);
+  // We only need one list of events now!
+  const [allEvents, setAllEvents] = useState<SanityEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<SanityEvent | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [changingMonth, setChangingMonth] = useState(false);
-  
-  const eventsCacheRef = useRef<Map<string, SanityEvent[]>>(new Map());
-  const initialLoadRef = useRef(false);
 
-  // --- SANITY FETCH LOGIC ---
-  const fetchEventsForRange = useCallback(async (year: number, month: number): Promise<SanityEvent[]> => {
-    const cacheKey = `${year}-${month}`;
-    
-    if (eventsCacheRef.current.has(cacheKey)) {
-      return eventsCacheRef.current.get(cacheKey)!;
-    }
-
-    const startDate = new Date(year, month - 2, 1).toISOString();
-    const endDate = new Date(year, month + 3, 0).toISOString();
-    
-    try {
-      // Fetch events from Sanity that fall within our 5-month viewing window
-      const query = `*[_type == "event" && ((startDate >= $startDate && startDate <= $endDate) || (endDate >= $startDate && endDate <= $endDate))] | order(startDate asc)`;
-      const fetchedEvents = await client.fetch(query, { startDate, endDate });
-      
-      for (let m = month - 2; m <= month + 2; m++) {
-        const monthKey = `${year}-${m}`;
-        if (!eventsCacheRef.current.has(monthKey)) {
-          const monthEvents = fetchedEvents.filter((event: SanityEvent) => {
-            if (!event.startDate) return false;
-            const eventDate = new Date(event.startDate);
-            return eventDate.getFullYear() === year && eventDate.getMonth() === m;
-          });
-          eventsCacheRef.current.set(monthKey, monthEvents);
-        }
+  // FETCH EVERYTHING EXACTLY ONCE
+  useEffect(() => {
+    async function fetchAllEvents() {
+      try {
+        // Grab all events at once. Sanity is fast enough to handle this instantly.
+        const query = `*[_type == "event"] | order(startDate asc)`;
+        const data = await client.fetch(query);
+        setAllEvents(data || []);
+      } catch (err) {
+        console.error("Sanity Calendar fetch failed:", err);
+      } finally {
+        setLoading(false); // Only ever loads once when the page first opens
       }
-      
-      return fetchedEvents;
-    } catch (err) {
-      console.error("Sanity Calendar fetch failed:", err);
-      return [];
     }
+
+    fetchAllEvents();
   }, []);
 
-  useEffect(() => {
-    let isMounted = true;
-    
-    const loadEvents = async () => {
-      if (!initialLoadRef.current) {
-        setLoading(true);
-      } else {
-        setChangingMonth(true);
-      }
-      
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth();
-      const cacheKey = `${year}-${month}`;
-      
-      let monthEvents = eventsCacheRef.current.get(cacheKey);
-      
-      if (!monthEvents) {
-        await fetchEventsForRange(year, month);
-        monthEvents = eventsCacheRef.current.get(cacheKey) || [];
-      }
-      
-      if (isMounted) {
-        setEvents(monthEvents);
-        setLoading(false);
-        setChangingMonth(false);
-        initialLoadRef.current = true;
-      }
-    };
-    
-    loadEvents();
-    return () => { isMounted = false; };
-  }, [currentDate, fetchEventsForRange]);
-
-  useEffect(() => {
-    if (!initialLoadRef.current) return;
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    
-    const adjacentMonths = [
-      { year, month: month - 1 },
-      { year, month: month + 1 },
-      { year: month === 11 ? year + 1 : year, month: month === 11 ? 0 : month + 2 },
-      { year: month === 0 ? year - 1 : year, month: month === 0 ? 11 : month - 2 }
-    ];
-    
-    adjacentMonths.forEach(({ year: y, month: m }) => {
-      const cacheKey = `${y}-${m}`;
-      if (!eventsCacheRef.current.has(cacheKey)) {
-        fetchEventsForRange(y, m).catch(console.error);
-      }
-    });
-  }, [currentDate, fetchEventsForRange]);
-
+  // Calendar math
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
   const monthName = currentDate.toLocaleString(language === 'zh' ? 'zh-CN' : 'en-US', { month: 'long' });
@@ -155,7 +82,8 @@ export default function EventsPage() {
       const currentCellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
       currentCellDate.setHours(0, 0, 0, 0);
       
-      const dayEvents = events.filter(event => {
+      // Filter the instant local array instead of re-fetching!
+      const dayEvents = allEvents.filter(event => {
         if (!event.startDate) return false;
 
         const startDate = new Date(event.startDate);
@@ -250,8 +178,7 @@ export default function EventsPage() {
           <div className="flex w-full md:w-auto items-center justify-between md:justify-end gap-2 md:gap-6 bg-white p-2 rounded-xl shadow-sm border border-gray-100">
             <button 
               onClick={handleToday} 
-              disabled={changingMonth}
-              className="px-3 md:px-5 py-2 h-10 text-sm font-bold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors border border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 md:px-5 py-2 h-10 text-sm font-bold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors border border-gray-100"
             >
               {t('eventsPage.today')}
             </button>
@@ -259,24 +186,18 @@ export default function EventsPage() {
             <div className="flex items-center gap-1">
               <button 
                 onClick={handlePrevMonth} 
-                disabled={changingMonth}
-                className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               </button>
               
               <span className="text-base md:text-lg font-bold text-[#0B1B3D] min-w-[110px] md:min-w-[150px] text-center">
-                {changingMonth ? (
-                  <div className="inline-block w-5 h-5 border-2 border-gray-300 border-t-[#009FE3] rounded-full animate-spin"></div>
-                ) : (
-                  `${monthName} ${year}`
-                )}
+                {`${monthName} ${year}`}
               </span>
 
               <button 
                 onClick={handleNextMonth} 
-                disabled={changingMonth}
-                className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </button>
@@ -300,11 +221,9 @@ export default function EventsPage() {
 
       {/* Event Details Modal */}
       {selectedEvent && (() => {
-        // --- CLEAN SANITY IMAGE LOGIC ---
         const isDefaultImage = !selectedEvent.image;
         const modalImageUrl = isDefaultImage ? "/images/mountain01.jpg" : urlFor(selectedEvent.image).url();
         
-        // --- CLEAN SANITY DATE LOGIC ---
         const startDate = new Date(selectedEvent.startDate);
         const endDate = selectedEvent.endDate ? new Date(selectedEvent.endDate) : null;
         const isMultiDay = endDate && startDate.toDateString() !== endDate.toDateString();
