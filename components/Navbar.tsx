@@ -57,14 +57,14 @@ const Navbar = () => {
             alt="Deutronix Logo" 
             width={160}
             height={35}
-            className="h-5 sm:h-6 md:h-7 lg:h-9 w-auto"
+            className="h-5 sm:h-6 md:h-7 xl:h-9 w-auto"
             priority
           />
         </Link>
       </div>
 
-      {/* Desktop Navigation Links */}
-      <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-6 xl:space-x-8 text-sm font-medium text-gray-600">
+      {/* Desktop Navigation Links - Fixed positioning with better spacing */}
+      <div className="hidden xl:flex absolute left-1/2 transform -translate-x-1/2 space-x-4 xl:space-x-6 2xl:space-x-8 text-sm font-medium text-gray-600">
         <Link href="/about" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
           {t('nav.about')}
         </Link>
@@ -118,13 +118,13 @@ const Navbar = () => {
       </div>
 
       {/* Right Side: Login Button + Language Switcher + Hamburger */}
-      <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-6 sm:ml-8">
+      <div className="flex items-center gap-2 sm:gap-3 xl:gap-4 ml-4 sm:ml-6 xl:ml-8 flex-shrink-0">
         
         {/* Language Switcher (Hidden on Mobile, Shows on Desktop) */}
-        <div className="hidden lg:flex items-center border border-gray-300 rounded-full p-0.5">
+        <div className="hidden xl:flex items-center border border-gray-300 rounded-full p-0.5">
           <button
             onClick={() => setLanguage('en')}
-            className={`px-3 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
+            className={`px-2 xl:px-3 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
               language === 'en'
                 ? 'bg-[#009FE3] text-white'
                 : 'text-gray-600 hover:text-[#009FE3]'
@@ -134,7 +134,7 @@ const Navbar = () => {
           </button>
           <button
             onClick={() => setLanguage('zh')}
-            className={`px-3 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
+            className={`px-2 xl:px-3 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
               language === 'zh'
                 ? 'bg-[#009FE3] text-white'
                 : 'text-gray-600 hover:text-[#009FE3]'
@@ -148,14 +148,14 @@ const Navbar = () => {
           href="https://deutronix.my/sign-in" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="inline-block bg-gradient-to-r from-[#0077B6] to-[#009FE3] hover:from-[#006699] hover:to-[#0086c9] text-white text-xs sm:text-sm font-semibold py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-8 rounded-full transition-all duration-300 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-md hover:shadow-lg"
+          className="inline-block bg-gradient-to-r from-[#0077B6] to-[#009FE3] hover:from-[#006699] hover:to-[#0086c9] text-white text-xs sm:text-sm font-semibold py-2 px-3 sm:px-4 md:px-5 xl:px-6 rounded-full transition-all duration-300 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shadow-md hover:shadow-lg"
         >
-          {t('nav.member')} <span className="text-xs">↓</span>
+          {t('nav.member')} <span className="text-xs hidden sm:inline">↓</span>
         </a>
 
         <button 
           ref={buttonRef}
-          className="lg:hidden flex flex-col justify-center items-center w-7 h-7 sm:w-8 sm:h-8 ml-1 mr-2 flex-shrink-0 p-1 overflow-visible relative"
+          className="xl:hidden flex flex-col justify-center items-center w-7 h-7 sm:w-8 sm:h-8 ml-1 mr-2 flex-shrink-0 p-1 overflow-visible relative"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -171,9 +171,9 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu Dropdown - KEPT EXACTLY AS ORIGINAL */}
       {isMenuOpen && (
-        <div ref={menuRef} className="absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg lg:hidden z-40">
+        <div ref={menuRef} className="absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg xl:hidden z-40">
           <div className="flex flex-col py-4 px-6 space-y-4">
             <Link 
               href="/about" 

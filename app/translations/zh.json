@@ -120,7 +120,8 @@
     "footer": {
       "about": "关于 Deutronix",
       "science": "DDW 科学",
-      "source": "来源与标准"
+      "source": "来源与标准",
+      "additionalInfo": "更多资料"
     }
   },
   "footer": {
@@ -522,5 +523,10 @@
     },
 
     "floatingButton": "即将举行的活动"
-  }
+  },
+  "additionalInformationPage": {
+      "title": "更多资料",
+      "description": "浏览与DDW科学及其应用相关的可下载资源、研究论文及教育材料。",
+      "download": "下载PDF"
+    }
 }

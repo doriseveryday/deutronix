@@ -52,6 +52,9 @@ const Footer = () => {
                   <a href="/source" className="block hover:text-gray-900">
                     {safeT('aboutUs.footer.source', 'Source & Standards')}
                   </a>
+                  <a href="/additional-information" className="block hover:text-gray-900">
+                    {safeT('aboutUs.footer.additionalInfo', 'Additional Informations')}
+                  </a>
                 </div>
               </div>
 
