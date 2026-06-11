@@ -6,7 +6,7 @@
     "easymoveGel": "EasyMove Gel",
     "science": "DDW Science",
     "source": "Standards",
-    "additionalInfo": "Additional Information",
+    "additionalInfo": "Downloads",
     "testimonials": "Testimonials",
     "contact": "Contact Us",
     "member": "Member Login",
@@ -118,11 +118,11 @@
     "title": "About Us",
     "description": "Deutronix is a health-focused company dedicated to the research, development, and education of deuterium-depleted water applications. Guided by science, quality, and long-term responsibility, we develop wellness solutions designed to support modern lifestyles with clarity and care.",
     "learnMore": "Learn about Us",
-    "footer": {
+      "footer": {
       "about": "About Deutronix",
       "science": "DDW Science",
       "source": "Source & Standards",
-      "additionalInfo": "Additional Informations"
+      "additionalInfo": "Downloads"
     }
   },
   "footer": {

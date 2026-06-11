@@ -34,6 +34,18 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [isMenuOpen]);
 
+  // When logo is clicked and user is already on the homepage, scroll to top.
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (typeof window !== 'undefined' && window.location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // close mobile menu if open
+      setIsMenuOpen(false);
+      setIsMobileProductsOpen(false);
+      setIsProductsOpen(false);
+    }
+  };
+
   // Close products dropdown when clicking outside
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -51,7 +63,7 @@ const Navbar = () => {
   return (
     <nav className="w-full bg-white border-b border-gray-100 py-3 px-4 sm:py-4 sm:px-6 flex justify-between items-center fixed top-0 left-0 z-[9999] overflow-visible">
       <div className="flex items-center flex-shrink-0">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center" onClick={handleLogoClick}>
           <Image 
             src="/images/Deutronix-Logo.png" 
             alt="Deutronix Logo" 
@@ -176,7 +188,7 @@ const Navbar = () => {
 
       {/* Mobile Menu Dropdown - KEPT EXACTLY AS ORIGINAL */}
       {isMenuOpen && (
-        <div ref={menuRef} className="absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg 2xl:hidden z-40">
+        <div ref={menuRef} className="absolute top-full right-0 bg-white border-l border-gray-100 shadow-lg 2xl:hidden z-40 w-64 sm:w-80 rounded-bl-xl overflow-hidden">
           <div className="flex flex-col py-4 px-6 space-y-4">
             <Link 
               href="/about" 

@@ -244,21 +244,21 @@ const Science = () => {
         {/* Top section — Why Deuterium Levels Matter */}
         <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-14 md:pt-20 pb-4 md:pb-8">
           <div className="sci-reveal">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">{t('sciencePage.whyMatter.title')}</h2>
-            <p className="text-sm md:text-base text-gray-800 leading-relaxed mb-3">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-3">{t('sciencePage.whyMatter.title')}</h2>
+            <p className="text-sm md:text-base text-white leading-relaxed mb-3">
               {t('sciencePage.whyMatter.p1')}
             </p>
-            <p className="text-sm md:text-base text-gray-800 leading-relaxed mb-3 md:mb-4">
+            <p className="text-sm md:text-base text-white leading-relaxed mb-3 md:mb-4">
               {t('sciencePage.whyMatter.p2')}
             </p>
             {whyMatterList.length > 0 && (
-              <ul className="list-disc list-inside text-sm md:text-base text-gray-800 space-y-1 mb-3 md:mb-4 pl-2">
+              <ul className="list-disc list-inside text-sm md:text-base text-white space-y-1 mb-3 md:mb-4 pl-2">
                 {whyMatterList.map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
             )}
-            <p className="text-sm md:text-base text-gray-800 leading-relaxed">
+            <p className="text-sm md:text-base text-white leading-relaxed">
               {t('sciencePage.whyMatter.p3')}
             </p>
           </div>
@@ -269,14 +269,14 @@ const Science = () => {
         {/* Bottom section — Natural vs Artificial */}
         <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-4 md:pt-8 pb-14 md:pb-20">
           <div className="sci-reveal">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">{t('sciencePage.naturalVsArtificial.title')}</h2>
-            <p className="text-sm md:text-base text-gray-800 leading-relaxed mb-3">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-3">{t('sciencePage.naturalVsArtificial.title')}</h2>
+            <p className="text-sm md:text-base text-white leading-relaxed mb-3">
               {t('sciencePage.naturalVsArtificial.p1')}
             </p>
-            <p className="text-sm md:text-base text-gray-800 leading-relaxed mb-3">
+            <p className="text-sm md:text-base text-white leading-relaxed mb-3">
               {t('sciencePage.naturalVsArtificial.p2')}
             </p>
-            <p className="text-sm md:text-base text-gray-800 leading-relaxed">
+            <p className="text-sm md:text-base text-white leading-relaxed">
               {t('sciencePage.naturalVsArtificial.p3')}
             </p>
           </div>

@@ -481,7 +481,7 @@ const Hero = () => {
       
       {/* 1. PROMOTIONAL BANNERS (Native Horizontal Scroll) */}
       {banners.length > 0 && (
-        <div className="w-full relative z-20">
+        <div className="w-full relative z-20 pt-2">
           
           <div className="w-full relative aspect-[2/1] sm:aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-[#ffffff]">
             
@@ -531,7 +531,7 @@ const Hero = () => {
       )}
 
      {/* 2. HERO SECTION */}
-      <section className="w-full max-w-7xl mx-auto px-8 py-6 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-4">
+      <section className="w-full max-w-7xl mx-auto px-8 py-4 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-0">
         <div className="text-center mb-6 md:mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">{t('hero.tagline')}</h1>
           <p ref={heroDescriptionRef} className="text-lg md:text-2xl text-gray-600 font-medium">{t('hero.description')}</p>
@@ -1088,7 +1088,7 @@ const Hero = () => {
         </svg>
 
         {/* Tooltip */}
-        <span className="absolute right-16 whitespace-nowrap bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="absolute right-16 whitespace-nowrap bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
           {t('events.floatingButton')}
         </span>
       </button>

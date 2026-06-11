@@ -20,7 +20,7 @@ export default function AdditionalInformation() {
   const [loading, setLoading] = useState(true);
 
   // Translations
-  const pageTitle = language === 'zh' ? "附加信息" : "Additional Information";
+  const pageTitle = language === 'zh' ? "文件下载" : "Downloads";
   const pageDescription = language === 'zh' 
     ? "探索与低氘水（DDW）科学及应用相关的可下载资源、研究论文和教育材料。" 
     : "Explore downloadable resources, research papers, and educational materials related to DDW science and applications.";
