@@ -6,6 +6,7 @@
     "easymoveGel": "EasyMove Gel",
     "science": "DDW Science",
     "source": "Standards",
+    "additionalInfo": "Additional Information",
     "testimonials": "Testimonials",
     "contact": "Contact Us",
     "member": "Member Login",
@@ -120,7 +121,8 @@
     "footer": {
       "about": "About Deutronix",
       "science": "DDW Science",
-      "source": "Source & Standards"
+      "source": "Source & Standards",
+      "additionalInfo": "Additional Informations"
     }
   },
   "footer": {
@@ -522,5 +524,10 @@
     },
 
     "floatingButton": "Upcoming Events"
-  }
+  },
+    "additionalInformationPage": {
+      "title": "Additional Information",
+      "description": "Explore downloadable resources, research papers, and educational materials related to DDW science and applications.",
+      "download": "Download PDF"
+    }
 }

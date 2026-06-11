@@ -55,16 +55,16 @@ const Navbar = () => {
           <Image 
             src="/images/Deutronix-Logo.png" 
             alt="Deutronix Logo" 
-            width={160}
-            height={35}
-            className="h-5 sm:h-6 md:h-7 xl:h-9 w-auto"
+            width={140}
+            height={32}
+            className="h-5 sm:h-6 md:h-7 xl:h-8 2xl:h-9 w-auto"
             priority
           />
         </Link>
       </div>
 
       {/* Desktop Navigation Links - Fixed positioning with better spacing */}
-      <div className="hidden xl:flex absolute left-1/2 transform -translate-x-1/2 space-x-4 xl:space-x-6 2xl:space-x-8 text-sm font-medium text-gray-600">
+      <div className="hidden 2xl:flex absolute left-1/2 transform -translate-x-1/2 space-x-3 xl:space-x-4 2xl:space-x-6 text-sm font-medium text-gray-600">
         <Link href="/about" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
           {t('nav.about')}
         </Link>
@@ -112,6 +112,9 @@ const Navbar = () => {
         <Link href="/events" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
           {t('nav.events')}
         </Link>
+        <Link href="/additional-information" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
+          {t('nav.additionalInfo')}
+        </Link>
         <Link href="/contact" className="hover:text-[#009FE3] transition-colors whitespace-nowrap">
           {t('nav.contact')}
         </Link>
@@ -121,7 +124,7 @@ const Navbar = () => {
       <div className="flex items-center gap-2 sm:gap-3 xl:gap-4 ml-4 sm:ml-6 xl:ml-8 flex-shrink-0">
         
         {/* Language Switcher (Hidden on Mobile, Shows on Desktop) */}
-        <div className="hidden xl:flex items-center border border-gray-300 rounded-full p-0.5">
+        <div className="hidden 2xl:flex items-center border border-gray-300 rounded-full p-0.5">
           <button
             onClick={() => setLanguage('en')}
             className={`px-2 xl:px-3 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 rounded-full ${
@@ -155,7 +158,7 @@ const Navbar = () => {
 
         <button 
           ref={buttonRef}
-          className="xl:hidden flex flex-col justify-center items-center w-7 h-7 sm:w-8 sm:h-8 ml-1 mr-2 flex-shrink-0 p-1 overflow-visible relative"
+          className="2xl:hidden flex flex-col justify-center items-center w-7 h-7 sm:w-8 sm:h-8 ml-1 mr-2 flex-shrink-0 p-1 overflow-visible relative"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -173,7 +176,7 @@ const Navbar = () => {
 
       {/* Mobile Menu Dropdown - KEPT EXACTLY AS ORIGINAL */}
       {isMenuOpen && (
-        <div ref={menuRef} className="absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg xl:hidden z-40">
+        <div ref={menuRef} className="absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg 2xl:hidden z-40">
           <div className="flex flex-col py-4 px-6 space-y-4">
             <Link 
               href="/about" 
@@ -248,6 +251,13 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               {t('nav.events')}
+            </Link>
+            <Link 
+              href="/additional-information" 
+              className="text-gray-600 hover:text-[#009FE3] py-2 transition-colors text-base"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t('nav.additionalInfo')}
             </Link>
             <Link
               href="/contact"

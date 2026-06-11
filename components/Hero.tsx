@@ -109,7 +109,6 @@ const Hero = () => {
     },
   ];
 
-  // Helper function to check if an event is a webinar (checks title AND description)
   const isWebinarEvent = (event: CalendarEvent): boolean => {
     const title = event.summary?.toLowerCase() || '';
     const hasWebinarInTitle = title.includes('webinar') || title.includes('online') || title.includes('zoom') || title.includes('virtual');
@@ -125,7 +124,6 @@ const Hero = () => {
     return hasWebinarInTitle || hasWebinarInDescription;
   };
 
-  // Helper function to safely parse event dates with timezone safety
   const getSafeEventDate = (event: CalendarEvent, isEndDate: boolean = false): Date | null => {
     const dateObj = isEndDate ? event.end : event.start;
     if (!dateObj) return null;
@@ -142,14 +140,12 @@ const Hero = () => {
     return null;
   };
 
-  // Helper function to check if event is multi-day
   const isMultiDayEvent = (event: CalendarEvent): boolean => {
     const startDate = getSafeEventDate(event, false);
     const endDate = getSafeEventDate(event, true);
     
     if (!startDate || !endDate) return false;
     
-    // For all-day events, adjust end date
     let adjustedEndDate = new Date(endDate);
     if (event.end?.date && !event.end?.dateTime) {
       adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
@@ -158,7 +154,6 @@ const Hero = () => {
     return startDate.toDateString() !== adjustedEndDate.toDateString();
   };
 
-  // Helper function to format event date range for display
   const formatEventDateRange = (event: CalendarEvent): string => {
     const startDate = getSafeEventDate(event, false);
     const endDate = getSafeEventDate(event, true);
@@ -194,7 +189,6 @@ const Hero = () => {
     }
   };
 
-  // FIX: Fetch exact strings using index dot-notation instead of fetching the whole array
   const localizedTestimonials = baseTestimonials.map((baseTest, index) => {
     const tName = t(`testimonials.testimonials.${index}.name`);
     const tRole = t(`testimonials.testimonials.${index}.title`);
@@ -227,20 +221,17 @@ const Hero = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
   
-  // --- STATE ---
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null); 
   
-  // NEW BANNER STATES
   const [banners, setBanners] = useState<any[]>([]); 
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+  const bannerScrollRef = useRef<HTMLDivElement>(null); // New ref for the banner container
 
-  // -- NEW HERO REFS --
   const heroDescriptionRef = useRef<HTMLDivElement>(null);
   const heroCompanyDescRef = useRef<HTMLDivElement>(null);
   const heroProductImageRef = useRef<HTMLDivElement>(null);
 
-  // -- OTHER REFS --
   const scienceSectionRef = useRef<HTMLElement>(null);
   const scienceBgRef = useRef<HTMLDivElement>(null);
   const scienceContentRef = useRef<HTMLDivElement>(null);
@@ -334,15 +325,12 @@ const Hero = () => {
     };
   }, []);
 
-  // --- FETCH SANITY DATA ---
   useEffect(() => {
     async function fetchSanityData() {
       try {
-        // 1. Fetch ALL active banners
         const bannerData = await client.fetch(`*[_type == "banner" && isActive == true]`);
         setBanners(bannerData || []);
 
-        // 2. Fetch the upcoming events
         const eventsData = await client.fetch(`*[_type == "event" && startDate >= now()] | order(startDate asc)[0...6]`);
         setEvents(eventsData || []);
       } catch (err) {
@@ -353,14 +341,41 @@ const Hero = () => {
     fetchSanityData();
   }, []);
 
-  // --- AUTO-SLIDE BANNER EFFECT ---
+  // --- NEW NATIVE BANNER SCROLL LOGIC ---
+  const handleBannerScroll = () => {
+    if (bannerScrollRef.current) {
+      const scrollLeft = bannerScrollRef.current.scrollLeft;
+      const width = bannerScrollRef.current.clientWidth;
+      const index = Math.round(scrollLeft / width);
+      setCurrentBannerIndex((prev) => (prev !== index ? index : prev));
+    }
+  };
+
+  const scrollToBanner = (index: number) => {
+    if (bannerScrollRef.current) {
+      bannerScrollRef.current.scrollTo({
+        left: bannerScrollRef.current.clientWidth * index,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   useEffect(() => {
-    // Only run the slider if there is more than 1 banner!
     if (banners.length <= 1) return;
     
     const interval = setInterval(() => {
-      setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % banners.length);
-    }, 5000); // Changes banner every 5 seconds (5000ms)
+      if (bannerScrollRef.current) {
+        const container = bannerScrollRef.current;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        
+        // If we are at the end, scroll back to the start. Otherwise, scroll one width over.
+        if (container.scrollLeft >= maxScroll - 10) {
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
+        }
+      }
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [banners.length]);
@@ -464,44 +479,46 @@ const Hero = () => {
   return (
     <div className="w-full flex flex-col font-sans text-gray-700 bg-white overflow-x-hidden">
       
-      {/* 1. PROMOTIONAL BANNERS (Auto-sliding) */}
+      {/* 1. PROMOTIONAL BANNERS (Native Horizontal Scroll) */}
       {banners.length > 0 && (
         <div className="w-full relative z-20">
           
-          {/* THE SAFE ROUTE: Fixed aspect ratio so layout never breaks, with a dark branded background */}
-          <div className="w-full relative aspect-[3/1] md:aspect-[5/1] overflow-hidden bg-[#ffffff]">
+          <div className="w-full relative aspect-[2/1] sm:aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-[#ffffff]">
             
-            {banners.map((banner, index) => (
-              <Link 
-                key={banner._id || index}
-                href={banner.link || "#"} 
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                  index === currentBannerIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                }`}
-              >
-                {banner.bannerImage && (
-                  <Image
-                    src={urlFor(banner.bannerImage).url()}
-                    alt={banner.altText || "Promotional Banner"}
-                    fill
-                    // object-contain ensures the image is never cropped
-                    // p-2 adds a tiny breathing room around the edges so text doesn't hit the screen edge
-                    className="object-contain p-2" 
-                    unoptimized
-                  />
-                )}
-              </Link>
-            ))}
+            {/* The Physical Slider Container - WITH SCROLLBAR HIDDEN */}
+            <div 
+              ref={bannerScrollRef}
+              onScroll={handleBannerScroll}
+              className="flex w-full h-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            >
+              {banners.map((banner, index) => (
+                <Link 
+                  key={banner._id || index}
+                  href={banner.link || "#"} 
+                  className="relative w-full h-full flex-shrink-0 snap-center block"
+                >
+                  {banner.bannerImage && (
+                    <Image
+                      src={urlFor(banner.bannerImage).url()}
+                      alt={banner.altText || "Promotional Banner"}
+                      fill
+                      className="object-contain" 
+                      unoptimized
+                    />
+                  )}
+                </Link>
+              ))}
+            </div>
 
             {/* Navigation Dots */}
             {banners.length > 1 && (
-              <div className="absolute bottom-2 md:bottom-4 left-0 right-0 z-20 flex justify-center gap-2">
+              <div className="absolute bottom-2 md:bottom-4 left-0 right-0 z-20 flex justify-center gap-2 pointer-events-none">
                 {banners.map((_, index) => (
                   <button
                     key={index}
-                    onClick={() => setCurrentBannerIndex(index)}
-                    className={`h-1.5 md:h-2 rounded-full transition-all duration-300 ${
-                      index === currentBannerIndex ? 'bg-[#ffffff] w-6 md:w-8 opacity-100' : 'bg-white/50 w-2 hover:bg-white/80'
+                    onClick={() => scrollToBanner(index)}
+                    className={`h-1.5 md:h-2 rounded-full transition-all duration-300 pointer-events-auto ${
+                      index === currentBannerIndex ? 'bg-[#009FE3] w-6 md:w-8 opacity-100' : 'bg-gray-300 w-2 hover:bg-gray-400'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
@@ -815,7 +832,7 @@ const Hero = () => {
               >
                 {events.map((event, index) => {
                   // --- SANITY DATA MAPPING ---
-                  const isAllDay = false; // Sanity handles specific times directly
+                  const isAllDay = false; 
                   const isMultiDay = event.endDate && new Date(event.startDate).toDateString() !== new Date(event.endDate).toDateString();
                   
                   const startDate = new Date(event.startDate);
@@ -827,7 +844,6 @@ const Hero = () => {
                   const displayMonth = startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : "en-US", { month: "short" }).toUpperCase();
                   const displayYear = startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : "en-US", { year: "numeric" });
 
-                  // Much easier image logic!
                   let imageUrl = "/images/mountain01.jpg"; 
                   if (event.image) {
                     imageUrl = urlFor(event.image).url();
