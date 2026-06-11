@@ -7,7 +7,6 @@ import { useLanguage } from '@/app/LanguageContext'; // Added translation hook
 
 const Footer = () => {
   const { t } = useLanguage();
-``
   const safeT = (key: string, fallback: string) => {
     const val = t(key);
     // If translation fails (returns the key itself) or is empty, use the fallback
@@ -130,8 +129,9 @@ const Footer = () => {
         {/* Bottom section with copyright and links */}
         <div className="pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
           {/* Left: Copyright */}
-          <div className="text-xs text-gray-500">
-            {safeT('footer.copyright', '© 2026 Deutronix Sdn. Bhd. All rights reserved.')}
+          <div className="w-full md:w-auto text-xs text-gray-500 text-center md:text-left">
+            <div>© 2026 Deutronix Sdn. Bhd. All rights reserved.</div>
+            <div>SSM: 202501004617 (1606030-K)</div>
           </div>
 
           {/* Center: Policy links */}
