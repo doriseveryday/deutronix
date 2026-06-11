@@ -3,11 +3,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import gsap from 'gsap';
 import { useLanguage } from '@/app/LanguageContext';
 
 const Navbar = () => {
   const { language, setLanguage, t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   // Separate state for mobile submenu toggle
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
@@ -17,7 +19,7 @@ const Navbar = () => {
   const productsDropdownRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (!isMenuOpen) return;
+    if (!menuVisible) return;
     function handleClick(event: MouseEvent) {
       if (
         menuRef.current &&
@@ -32,7 +34,35 @@ const Navbar = () => {
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
+  }, [menuVisible]);
+
+  // Animate menu in/out using GSAP and keep it mounted while animating
+  React.useEffect(() => {
+    const el = menuRef.current;
+    if (isMenuOpen) {
+      // ensure menu is mounted; animation will run in the menuVisible effect once mounted
+      setMenuVisible(true);
+      return;
+    }
+
+    if (!isMenuOpen && menuVisible) {
+      if (el) {
+        gsap.killTweensOf(el);
+        gsap.to(el, { x: '100%', duration: 0.28, ease: 'power3.in', onComplete: () => setMenuVisible(false) });
+      } else {
+        setMenuVisible(false);
+      }
+    }
   }, [isMenuOpen]);
+
+  // Run the entrance animation after the menu is mounted
+  React.useEffect(() => {
+    const el = menuRef.current;
+    if (menuVisible && isMenuOpen && el) {
+      gsap.killTweensOf(el);
+      gsap.fromTo(el, { x: '100%' }, { x: '0%', duration: 0.35, ease: 'power3.out' });
+    }
+  }, [menuVisible]);
 
   // When logo is clicked and user is already on the homepage, scroll to top.
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -187,8 +217,8 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu Dropdown - KEPT EXACTLY AS ORIGINAL */}
-      {isMenuOpen && (
-        <div ref={menuRef} className="absolute top-full right-0 bg-white border-l border-gray-100 shadow-lg 2xl:hidden z-40 w-64 sm:w-80 rounded-bl-xl overflow-hidden">
+      {menuVisible && (
+        <div ref={menuRef} className="absolute top-full right-0 bg-white border-l border-gray-100 shadow-2xl shadow-[0_20px_60px_rgba(11,27,61,0.25)] 2xl:hidden z-40 w-64 sm:w-80 rounded-bl-xl overflow-hidden">
           <div className="flex flex-col py-4 px-6 space-y-4">
             <Link 
               href="/about" 
