@@ -131,7 +131,7 @@ const Footer = () => {
           {/* Left: Copyright */}
           <div className="w-full md:w-auto text-xs text-gray-500 text-center md:text-left">
             <div>© 2026 Deutronix Sdn. Bhd. All rights reserved.</div>
-            <div>SSM: 202501004617 (1606030-K)</div>
+            <div>202501004617 (1606030-K)</div>
           </div>
 
           {/* Center: Policy links */}
