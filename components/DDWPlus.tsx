@@ -188,8 +188,32 @@ const DDWPlus = () => {
         </h2>
 
         <div className="flex flex-col gap-0">
-          {/* --- Athletes --- */}
+          {/* --- Babies & Growing Children --- */}
           <div className="relative w-full overflow-hidden rounded-t-xl">
+            <div className="w-full overflow-hidden">
+              <div className="w-[110%] translate-x-1 md:translate-x-0 scale-110 md:scale-100">
+                <Image
+                  src="/images/ddwplus/08.png"
+                  alt="Babies & Growing Children"
+                  width={1200}
+                  height={400}
+                  className="object-cover w-full h-[110px] md:h-auto"
+                />
+              </div>
+            </div>
+            <div className="absolute inset-0 flex flex-col justify-center items-end px-3 md:px-12 text-right ml-auto ddwplus-banner-overlay">
+              <h3 className="text-sm md:text-3xl font-bold text-black mb-0 md:mb-2">
+                {safeT('ddwPlusPage.suitable.cards.c0.title', 'Babies & Growing Children')}
+              </h3>
+              <p
+                className="text-black/90 text-[11px] md:text-base leading-tight md:leading-relaxed max-w-[52%] md:max-w-md"
+                dangerouslySetInnerHTML={{ __html: safeT('ddwPlusPage.suitable.cards.c0.desc', 'Growing minds and bodies need quality hydration. DDW+ helps support daily hydration, focus, vitality, and healthy development throughout every stage of growth.<br /><br />宝宝与成长中的孩子\n成长中的身体与大脑需要优质的水分支持。DDW+ 帮助维持日常补水、专注力、活力表现及健康成长，陪伴孩子每一个成长阶段。') }}
+              />
+            </div>
+          </div>
+
+          {/* --- Athletes --- */}
+          <div className="relative w-full overflow-hidden">
             <Image
               src="/images/ddwplus/02.png"
               alt="Athletes"

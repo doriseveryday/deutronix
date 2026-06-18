@@ -360,6 +360,10 @@
     "suitable": {
       "title": "Who Is DDW+ Suitable For?",
       "cards": {
+        "c0": {
+          "title": "Babies & Growing Children",
+          "desc": "Growing minds and bodies need quality hydration. DDW+ helps support daily hydration, focus, vitality, and healthy development throughout every stage of growth."
+        },
         "c1": {
           "title": "Athletes",
           "desc": "Training and competition put stress on the body. DDW+ helps optimize cellular energy and reduce oxidative stress, promoting faster recovery and enhanced performance."

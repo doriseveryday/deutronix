@@ -5,7 +5,6 @@ import { useLanguage } from '@/app/LanguageContext';
 import Link from 'next/link';
 import { client } from '@/lib/sanity'; 
 
-// 1. ADDED productCategory TO THE INTERFACE
 interface DownloadableFile {
   _id: string;
   title: string;
@@ -29,6 +28,10 @@ export default function AdditionalInformation() {
   const noDocuments = language === 'zh' 
     ? "当前暂无可用下载文件。" 
     : "No documents are currently available for download.";
+
+  // Section titles for product groups
+  const ddwPlusTitle = language === 'zh' ? 'DDW+ 低氘水' : 'DDW+ Water';
+  const ddwGelTitle = language === 'zh' ? 'DDW+ 关节膏' : 'DDW+ EasyMove Gel';
 
   useEffect(() => {
     async function fetchFiles() {
@@ -129,7 +132,7 @@ export default function AdditionalInformation() {
             {ddwPlusFiles.length > 0 && (
               <section className="md:w-1/2">
                 <h2 className="text-2xl font-extrabold text-[#0B1B3D] mb-6 border-b border-gray-200 pb-3">
-                  DDW+
+                  {ddwPlusTitle}
                 </h2>
                 <div className="flex flex-col gap-3">
                   {ddwPlusFiles.map((file) => (
@@ -143,7 +146,7 @@ export default function AdditionalInformation() {
             {ddwGelFiles.length > 0 && (
               <section className="md:w-1/2">
                 <h2 className="text-2xl font-extrabold text-[#0B1B3D] mb-6 border-b border-gray-200 pb-3">
-                  DDW Gel
+                  {ddwGelTitle}
                 </h2>
                 <div className="flex flex-col gap-3">
                   {ddwGelFiles.map((file) => (

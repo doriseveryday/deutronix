@@ -947,6 +947,13 @@ const Hero = () => {
         }`}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Move Close Button to modal wrapper so it stays fixed while content scrolls */}
+        <button 
+          onClick={() => setSelectedEvent(null)}
+          className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 bg-white/90 backdrop-blur-sm md:bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors z-50 shadow-md md:shadow-none"
+        >
+          ✕
+        </button>
         
         {/* IMAGE SECTION: 50% width on Desktop */}
         {!isDefaultImage && (
@@ -963,14 +970,6 @@ const Hero = () => {
 
         {/* CONTENT SECTION: 50% width on Desktop */}
         <div className={`w-full ${!isDefaultImage ? 'md:w-1/2' : ''} p-6 md:p-10 flex flex-col overflow-y-auto relative`}>
-          
-          {/* Close Button */}
-          <button 
-            onClick={() => setSelectedEvent(null)}
-            className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors z-10"
-          >
-            ✕
-          </button>
 
           <h3 className={`font-extrabold text-[#009FE3] pr-12 mb-6 ${isDefaultImage ? 'text-3xl' : 'text-2xl md:text-3xl'}`}>
             {selectedEvent.title}

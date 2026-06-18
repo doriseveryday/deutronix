@@ -196,139 +196,142 @@ export default function EventsPage() {
               </span>
 
               <button 
-                onClick={handleNextMonth} 
-                className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-              </button>
-            </div>
+              onClick={handleNextMonth} 
+              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      {/* Calendar Grid Section */}
-      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 mt-8">
-        {loading ? (
-          <LoadingSkeleton />
-        ) : (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transition-opacity duration-200">
-            <div className="grid grid-cols-7 w-full">
-              {renderCalendarCells()}
-            </div>
+    {/* Calendar Grid Section */}
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 mt-8">
+      {loading ? (
+        <LoadingSkeleton />
+      ) : (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transition-opacity duration-200">
+          <div className="grid grid-cols-7 w-full">
+            {renderCalendarCells()}
           </div>
-        )}
-      </div>
+        </div>
+      )}
+    </div>
 
-      {/* Event Details Modal */}
-      {selectedEvent && (() => {
-        const isDefaultImage = !selectedEvent.image;
-        const modalImageUrl = isDefaultImage ? "/images/mountain01.jpg" : urlFor(selectedEvent.image).url();
-        
-        const startDate = new Date(selectedEvent.startDate);
-        const endDate = selectedEvent.endDate ? new Date(selectedEvent.endDate) : null;
-        const isMultiDay = endDate && startDate.toDateString() !== endDate.toDateString();
+    {/* Event Details Modal */}
+    {selectedEvent && (() => {
+      const isDefaultImage = !selectedEvent.image;
+      const modalImageUrl = isDefaultImage ? "/images/mountain01.jpg" : urlFor(selectedEvent.image).url();
+      
+      const startDate = new Date(selectedEvent.startDate);
+      const endDate = selectedEvent.endDate ? new Date(selectedEvent.endDate) : null;
+      const isMultiDay = endDate && startDate.toDateString() !== endDate.toDateString();
 
-        return (
+      return (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 pt-20 md:pt-24 bg-black/60 backdrop-blur-sm transition-opacity"
+          onClick={() => setSelectedEvent(null)}
+        >
           <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-sm transition-opacity"
-            onClick={() => setSelectedEvent(null)}
+            className={`bg-white rounded-3xl w-full shadow-2xl relative max-h-[85vh] overflow-hidden flex ${
+              isDefaultImage 
+                ? 'max-w-2xl flex-col' 
+                : 'max-w-5xl md:min-h-[550px] flex-col-reverse md:flex-row'
+            }`}
+            onClick={(e) => e.stopPropagation()}
           >
-            <div 
-              className={`bg-white rounded-3xl w-full shadow-2xl relative max-h-[90vh] overflow-hidden flex ${
-                isDefaultImage 
-                  ? 'max-w-2xl flex-col' 
-                  : 'max-w-5xl md:min-h-[550px] flex-col-reverse md:flex-row'
-              }`}
-              onClick={(e) => e.stopPropagation()}
+            
+            {/* 1. MOVE THE BUTTON HERE (Directly inside the main modal wrapper) */}
+            <button 
+              onClick={() => setSelectedEvent(null)}
+              className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 bg-white/90 backdrop-blur-sm md:bg-gray-100 rounded-full flex items-center justify-center text-gray-800 hover:bg-gray-200 transition-colors z-50 shadow-md md:shadow-none"
             >
-              
-              {!isDefaultImage && (
-                <div className="w-full md:w-1/2 h-[35vh] md:h-auto min-h-[250px] relative bg-gray-50 flex-shrink-0 border-t md:border-t-0 md:border-r border-gray-100">
-                  <Image 
-                    src={modalImageUrl} 
-                    alt={selectedEvent.title || "Event image"} 
-                    fill 
-                    className="object-contain p-4 md:p-8"
-                    unoptimized 
-                  />
+              ✕
+            </button>
+
+            {!isDefaultImage && (
+              <div className="w-full md:w-1/2 h-[35vh] md:h-auto min-h-[250px] relative bg-gray-50 flex-shrink-0 border-t md:border-t-0 md:border-r border-gray-100">
+                <Image 
+                  src={modalImageUrl} 
+                  alt={selectedEvent.title || "Event image"} 
+                  fill 
+                  className="object-contain p-4 md:p-8"
+                  unoptimized 
+                />
+              </div>
+            )}
+
+            {/* 2. KEEP YOUR ORIGINAL TEXT CONTAINER (Just delete the old button from inside here) */}
+            <div className={`w-full ${!isDefaultImage ? 'md:w-1/2' : ''} p-6 md:p-10 flex flex-col overflow-y-auto relative`}>
+
+              <h3 className={`font-extrabold text-[#009FE3] pr-12 mb-6 ${isDefaultImage ? 'text-3xl' : 'text-2xl md:text-3xl'}`}>
+                {selectedEvent.title}
+              </h3>
+
+              <div className="flex flex-col gap-4 mb-6 bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                <div className="flex items-start gap-3">
+                  <span className="text-xl">📅</span>
+                  <div>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                      {isMultiDay ? t('eventsPage.dateTime') || 'Date Range' : t('eventsPage.dateTime')}
+                    </p>
+                    
+                    <p className="text-gray-800 font-medium text-sm md:text-base">
+                      {startDate.toLocaleDateString(
+                        language === 'zh' ? 'zh-CN' : 'en-MY',
+                        { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+                      )}
+
+                      {isMultiDay && endDate && (
+                        <>
+                          <span className="mx-2 font-normal text-gray-400">→</span>
+                          {endDate.toLocaleDateString(
+                            language === 'zh' ? 'zh-CN' : 'en-MY',
+                            { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+                          )}
+                        </>
+                      )}
+
+                      {!isMultiDay && (
+                        ` • ${startDate.toLocaleTimeString(
+                          language === 'zh' ? 'zh-CN' : 'en-MY',
+                          { hour: "numeric", minute: "2-digit", hour12: true }
+                        )}`
+                      )}
+                    </p>
+                  </div>
                 </div>
-              )}
 
-              <div className={`w-full ${!isDefaultImage ? 'md:w-1/2' : ''} p-6 md:p-10 flex flex-col overflow-y-auto relative`}>
-                <button 
-                  onClick={() => setSelectedEvent(null)}
-                  className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors z-10"
-                >
-                  ✕
-                </button>
-
-                <h3 className={`font-extrabold text-[#009FE3] pr-12 mb-6 ${isDefaultImage ? 'text-3xl' : 'text-2xl md:text-3xl'}`}>
-                  {selectedEvent.title}
-                </h3>
-
-                <div className="flex flex-col gap-4 mb-6 bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                  <div className="flex items-start gap-3">
-                    <span className="text-xl">📅</span>
+                {selectedEvent.location && (
+                  <div className="flex items-start gap-3 mt-1">
+                    <span className="text-xl">📍</span>
                     <div>
                       <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
-                        {isMultiDay ? t('eventsPage.dateTime') || 'Date Range' : t('eventsPage.dateTime')}
+                        {t('eventsPage.location')}
                       </p>
-                      
-                      <p className="text-gray-800 font-medium text-sm md:text-base">
-                        {startDate.toLocaleDateString(
-                          language === 'zh' ? 'zh-CN' : 'en-MY',
-                          { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
-                        )}
-
-                        {isMultiDay && endDate && (
-                          <>
-                            <span className="mx-2 font-normal text-gray-400">→</span>
-                            {endDate.toLocaleDateString(
-                              language === 'zh' ? 'zh-CN' : 'en-MY',
-                              { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
-                            )}
-                          </>
-                        )}
-
-                        {!isMultiDay && (
-                          ` • ${startDate.toLocaleTimeString(
-                            language === 'zh' ? 'zh-CN' : 'en-MY',
-                            { hour: "numeric", minute: "2-digit", hour12: true }
-                          )}`
-                        )}
-                      </p>
+                      <p className="text-gray-800 font-medium text-sm md:text-base">{selectedEvent.location}</p>
                     </div>
                   </div>
-
-                  {selectedEvent.location && (
-                    <div className="flex items-start gap-3 mt-1">
-                      <span className="text-xl">📍</span>
-                      <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
-                          {t('eventsPage.location')}
-                        </p>
-                        <p className="text-gray-800 font-medium text-sm md:text-base">{selectedEvent.location}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-               {selectedEvent.description && (
-                 <div>
-                     <h4 className="text-lg font-bold text-gray-800 mb-2">
-                       {t('eventsPage.eventDetails')}
-                     </h4>
-                     <p className="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm md:text-base">
-                       {selectedEvent.description}
-                     </p>
-                  </div>
-               )}
-                
+                )}
               </div>
+
+              {selectedEvent.description && (
+                <div>
+                  <h4 className="text-lg font-bold text-gray-800 mb-2">
+                    {t('eventsPage.eventDetails')}
+                  </h4>
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm md:text-base">
+                    {selectedEvent.description}
+                  </p>
+                </div>
+              )}
+              
             </div>
           </div>
-        );
-      })()}
-    </div>
-  );
+        </div>
+      );
+    })()}
+  </div>
+);
 }
