@@ -226,7 +226,8 @@ const Hero = () => {
   
   const [banners, setBanners] = useState<any[]>([]); 
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-  const bannerScrollRef = useRef<HTMLDivElement>(null); // New ref for the banner container
+  const bannerScrollRefMobile = useRef<HTMLDivElement>(null);
+  const bannerScrollRefDesktop = useRef<HTMLDivElement>(null);
 
   const heroDescriptionRef = useRef<HTMLDivElement>(null);
   const heroCompanyDescRef = useRef<HTMLDivElement>(null);
@@ -343,18 +344,22 @@ const Hero = () => {
 
   // --- NEW NATIVE BANNER SCROLL LOGIC ---
   const handleBannerScroll = () => {
-    if (bannerScrollRef.current) {
-      const scrollLeft = bannerScrollRef.current.scrollLeft;
-      const width = bannerScrollRef.current.clientWidth;
+    const active = (ref: any) => ref && ref.current && ref.current.clientWidth > 0 ? ref.current : null;
+    const container = active(bannerScrollRefMobile) || active(bannerScrollRefDesktop);
+    if (container) {
+      const scrollLeft = container.scrollLeft;
+      const width = container.clientWidth || 1;
       const index = Math.round(scrollLeft / width);
       setCurrentBannerIndex((prev) => (prev !== index ? index : prev));
     }
   };
 
   const scrollToBanner = (index: number) => {
-    if (bannerScrollRef.current) {
-      bannerScrollRef.current.scrollTo({
-        left: bannerScrollRef.current.clientWidth * index,
+    const activeRef = (ref: any) => ref && ref.current && ref.current.clientWidth > 0 ? ref.current : null;
+    const container = activeRef(bannerScrollRefMobile) || activeRef(bannerScrollRefDesktop);
+    if (container) {
+      container.scrollTo({
+        left: container.clientWidth * index,
         behavior: 'smooth',
       });
     }
@@ -362,18 +367,24 @@ const Hero = () => {
 
   useEffect(() => {
     if (banners.length <= 1) return;
-    
+
+    const getActiveContainer = () => {
+      const m = bannerScrollRefMobile.current;
+      const d = bannerScrollRefDesktop.current;
+      if (m && m.clientWidth > 0) return m;
+      if (d && d.clientWidth > 0) return d;
+      return null;
+    };
+
     const interval = setInterval(() => {
-      if (bannerScrollRef.current) {
-        const container = bannerScrollRef.current;
-        const maxScroll = container.scrollWidth - container.clientWidth;
-        
-        // If we are at the end, scroll back to the start. Otherwise, scroll one width over.
-        if (container.scrollLeft >= maxScroll - 10) {
-          container.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
-        }
+      const container = getActiveContainer();
+      if (!container) return;
+
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (container.scrollLeft >= maxScroll - 10) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
       }
     }, 5000);
 
@@ -486,7 +497,7 @@ const Hero = () => {
           {/* Mobile-friendly banner: show full image (no crop) */}
           <div className="block md:hidden w-full relative overflow-hidden bg-[#ffffff]">
             <div
-              ref={bannerScrollRef}
+              ref={bannerScrollRefMobile}
               onScroll={handleBannerScroll}
               className="flex w-full h-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             >
@@ -531,7 +542,7 @@ const Hero = () => {
           <div className="hidden md:block w-full relative z-20 pt-2">
             <div className="w-full relative aspect-[2/1] sm:aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-[#ffffff]">
               <div
-                ref={bannerScrollRef}
+                ref={bannerScrollRefDesktop}
                 onScroll={handleBannerScroll}
                 className="flex w-full h-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
               >
