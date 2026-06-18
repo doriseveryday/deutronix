@@ -481,28 +481,29 @@ const Hero = () => {
       
       {/* 1. PROMOTIONAL BANNERS (Native Horizontal Scroll) */}
       {banners.length > 0 && (
-        <div className="w-full relative z-20 pt-2">
-          
-          <div className="w-full relative aspect-[2/1] sm:aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-[#ffffff]">
-            
-            {/* The Physical Slider Container - WITH SCROLLBAR HIDDEN */}
-            <div 
+        <div className="w-full relative z-20">
+
+          {/* Mobile-friendly banner: show full image (no crop) */}
+          <div className="block md:hidden w-full relative overflow-hidden bg-[#ffffff]">
+            <div
               ref={bannerScrollRef}
               onScroll={handleBannerScroll}
               className="flex w-full h-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             >
               {banners.map((banner, index) => (
-                <Link 
+                <Link
                   key={banner._id || index}
-                  href={banner.link || "#"} 
-                  className="relative w-full h-full flex-shrink-0 snap-center block"
+                  href={banner.link || "#"}
+                  className="relative w-full flex-shrink-0 snap-center block"
                 >
                   {banner.bannerImage && (
                     <Image
                       src={urlFor(banner.bannerImage).url()}
                       alt={banner.altText || "Promotional Banner"}
-                      fill
-                      className="object-contain" 
+                      width={1600}
+                      height={800}
+                      sizes="100vw"
+                      className="object-contain w-full h-auto"
                       unoptimized
                     />
                   )}
@@ -510,23 +511,66 @@ const Hero = () => {
               ))}
             </div>
 
-            {/* Navigation Dots */}
             {banners.length > 1 && (
-              <div className="absolute bottom-2 md:bottom-4 left-0 right-0 z-20 flex justify-center gap-2 pointer-events-none">
+              <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-2 pointer-events-none">
                 {banners.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => scrollToBanner(index)}
-                    className={`h-1.5 md:h-2 rounded-full transition-all duration-300 pointer-events-auto ${
-                      index === currentBannerIndex ? 'bg-[#009FE3] w-6 md:w-8 opacity-100' : 'bg-gray-300 w-2 hover:bg-gray-400'
+                    className={`h-1.5 rounded-full transition-all duration-300 pointer-events-auto ${
+                      index === currentBannerIndex ? 'bg-[#009FE3] w-6 opacity-100' : 'bg-gray-300 w-2 hover:bg-gray-400'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
                 ))}
               </div>
             )}
-
           </div>
+
+          {/* Desktop: original layout per your snippet (keep aspect ratio, not oversized) */}
+          <div className="hidden md:block w-full relative z-20 pt-2">
+            <div className="w-full relative aspect-[2/1] sm:aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-[#ffffff]">
+              <div
+                ref={bannerScrollRef}
+                onScroll={handleBannerScroll}
+                className="flex w-full h-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+              >
+                {banners.map((banner, index) => (
+                  <Link
+                    key={banner._id || index}
+                    href={banner.link || "#"}
+                    className="relative w-full h-full flex-shrink-0 snap-center block"
+                  >
+                    {banner.bannerImage && (
+                      <Image
+                        src={urlFor(banner.bannerImage).url()}
+                        alt={banner.altText || "Promotional Banner"}
+                        fill
+                        className="object-contain"
+                        unoptimized
+                      />
+                    )}
+                  </Link>
+                ))}
+              </div>
+
+              {banners.length > 1 && (
+                <div className="absolute bottom-2 md:bottom-4 left-0 right-0 z-20 flex justify-center gap-2 pointer-events-none">
+                  {banners.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => scrollToBanner(index)}
+                      className={`h-1.5 md:h-2 rounded-full transition-all duration-300 pointer-events-auto ${
+                        index === currentBannerIndex ? 'bg-[#009FE3] w-6 md:w-8 opacity-100' : 'bg-gray-300 w-2 hover:bg-gray-400'
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
         </div>
       )}
 
