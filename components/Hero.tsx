@@ -148,7 +148,7 @@ const Hero = () => {
   const bannerScrollRefMobile = useRef<HTMLDivElement>(null);
   const bannerScrollRefDesktop = useRef<HTMLDivElement>(null);
 
-  // New Hero State
+  // Hero State
   const [heroData, setHeroData] = useState<any>(null);
   const heroSectionRef = useRef<HTMLElement>(null);
   const heroMediaRef = useRef<HTMLDivElement>(null);
@@ -165,11 +165,9 @@ const Hero = () => {
   // 3. LOGIC & EFFECTS
   // ==========================
 
-  // --- FETCH SANITY DATA ---
   useEffect(() => {
     async function fetchSanityData() {
       try {
-        // Fetch Hero Video/Image
         const heroFetch = await client.fetch(`*[_type == "heroVideo" && isActive == true] | order(_createdAt desc)[0] {
           headline,
           subheadline,
@@ -182,11 +180,9 @@ const Hero = () => {
         }`);
         setHeroData(heroFetch);
 
-        // Fetch Banners[cite: 1]
         const bannerData = await client.fetch(`*[_type == "banner" && isActive == true]`);
         setBanners(bannerData || []);
 
-        // Fetch Events[cite: 1]
         const eventsData = await client.fetch(`*[_type == "event" && startDate >= now()] | order(startDate asc)[0...6]`);
         setEvents(eventsData || []);
       } catch (err) {
@@ -197,7 +193,6 @@ const Hero = () => {
     fetchSanityData();
   }, []);
 
-  // --- MEDIA RENDER HELPER ---
   const isVideo = (ext: string) => ['mp4', 'webm', 'mov'].includes(ext?.toLowerCase());
 
   const renderMedia = (url: string, ext: string, displayClass: string) => {
@@ -226,7 +221,6 @@ const Hero = () => {
     );
   };
 
-  // --- TESTIMONIAL SCROLL LOGIC ---
   const updateCounter = () => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
@@ -309,7 +303,6 @@ const Hero = () => {
     };
   }, []);
 
-  // --- BANNER SCROLL LOGIC ---[cite: 1]
   const handleBannerScroll = () => {
     const active = (ref: any) => ref && ref.current && ref.current.clientWidth > 0 ? ref.current : null;
     const container = active(bannerScrollRefMobile) || active(bannerScrollRefDesktop);
@@ -358,11 +351,8 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [banners.length]);
 
-  // --- GSAP ANIMATIONS ---[cite: 1]
   useGSAP(() => {
-    // 1. Cinematic Hero Parallax Effect
     if (heroMediaRef.current && heroSectionRef.current) {
-      // Makes the video scroll slower than the page (Parallax)
       gsap.to(heroMediaRef.current, {
         yPercent: 30,
         ease: "none",
@@ -375,7 +365,6 @@ const Hero = () => {
       });
     }
 
-    // Hero Text Fade In
     if (heroTextRef.current) {
       gsap.fromTo(heroTextRef.current, 
         { opacity: 0, y: 30 }, 
@@ -383,7 +372,6 @@ const Hero = () => {
       );
     }
 
-    // hero shade: add solid black layer that darkens with scroll for a clearer effect
     if (heroSectionRef.current && heroShadeRef.current) {
       gsap.set(heroShadeRef.current, { opacity: 0 });
       gsap.to(heroShadeRef.current, {
@@ -396,11 +384,9 @@ const Hero = () => {
           scrub: 0.6,
         }
       });
-      // ensure ScrollTrigger measurements are up-to-date
-      try { ScrollTrigger.refresh(); } catch (e) { /* ignore */ }
+      try { ScrollTrigger.refresh(); } catch (e) {}
     }
 
-    // Products Animation
     if (productsSectionRef.current) {
       const cards = gsap.utils.toArray('.product-card');
       cards.forEach((card: any) => {
@@ -412,7 +398,6 @@ const Hero = () => {
       });
     }
 
-    // Certs Animation
     if (certsContainerRef.current) {
       const certItems = gsap.utils.toArray('.cert-item');
       gsap.fromTo(certItems, 
@@ -430,8 +415,6 @@ const Hero = () => {
     }
   }, { scope: undefined, dependencies: [heroData] });
 
-  // NOTE: overlay animation is handled by GSAP ScrollTrigger below
-
   // ==========================
   // 4. RENDER
   // ==========================
@@ -443,23 +426,18 @@ const Hero = () => {
         ref={heroSectionRef} 
         className="relative w-full h-[100vh] min-h-[600px] overflow-hidden bg-black flex items-center justify-center z-0"
       >
-        {/* Background Media Container (Animated via GSAP Parallax) */}
         <div ref={heroMediaRef} className="absolute inset-0 w-full h-[120%] -top-[10%] z-0">
           {heroData && (
             <>
-              {/* Render Desktop Media */}
               {renderMedia(heroData.desktopUrl, heroData.desktopExtension, 'hidden md:block')}
-              {/* Render Mobile Media */}
               {renderMedia(heroData.mobileUrl, heroData.mobileExtension, 'block md:hidden')}
             </>
           )}
-          {/* Subtle gradient overlay to make text readable (opacity controlled on scroll) */}
           <div
             ref={heroOverlayRef}
             className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 z-10"
             style={{ opacity: 0.70, transition: 'opacity 200ms linear' }}
           />
-          {/* Solid shade layer for scroll-driven darkening (below text) */}
           <div
             ref={heroShadeRef}
             className="absolute inset-0 bg-black z-[15] pointer-events-none"
@@ -467,11 +445,9 @@ const Hero = () => {
           />
         </div>
 
-        {/* Hero Text Content overlay */}
-        {/* Centered static message overlay (always present) */}
         <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
           <div className="text-center px-4" style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial' }}>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl  text-white mb-3 drop-shadow-lg">{t('hero.tagline')}</h2>
+            <h2 className="text-5xl md:text-7xl lg:text-8xl text-white mb-3 drop-shadow-lg whitespace-pre-line md:whitespace-normal">{t('hero.tagline')}</h2>
             <p className="text-md md:text-xl text-white/90">{t('hero.description')}</p>
           </div>
         </div>
@@ -498,105 +474,110 @@ const Hero = () => {
             )}
           </div>
         )}
-
-       
       </section>
 
-      {/* 2. PROMOTIONAL BANNERS (Moved below Hero) */}
+      {/* 2. PROMOTIONAL BANNERS (Floating Card style) */}
       {banners.length > 0 && (
-        <div className="w-full relative z-20 bg-white border-b border-gray-100 shadow-sm">
-          {/* Mobile-friendly banner */}
-          <div className="block md:hidden w-full relative overflow-hidden bg-white">
-            <div
-              ref={bannerScrollRefMobile}
-              onScroll={handleBannerScroll}
-              className="flex w-full h-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-            >
-              {banners.map((banner, index) => (
-                <Link
-                  key={banner._id || index}
-                  href={banner.link || "#"}
-                  className="relative w-full flex-shrink-0 snap-center block"
+        <section className="w-full relative z-20 bg-white py-4 md:py-8 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            {/* The floating card container - Reduced corner rounding and shadow to look cleaner */}
+            <div className="w-full relative rounded-xl overflow-hidden bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100">
+              
+              {/* Mobile-friendly banner */}
+              <div className="block md:hidden w-full relative">
+                <div
+                  ref={bannerScrollRefMobile}
+                  onScroll={handleBannerScroll}
+                  className="flex w-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                 >
-                  {banner.bannerImage && (
-                    <Image
-                      src={urlFor(banner.bannerImage).url()}
-                      alt={banner.altText || "Promotional Banner"}
-                      width={1600}
-                      height={800}
-                      sizes="100vw"
-                      className="object-contain w-full h-auto"
-                      unoptimized
-                    />
-                  )}
-                </Link>
-              ))}
-            </div>
-
-            {banners.length > 1 && (
-              <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-2 pointer-events-none">
-                {banners.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => scrollToBanner(index)}
-                    className={`h-1.5 rounded-full transition-all duration-300 pointer-events-auto ${
-                      index === currentBannerIndex ? 'bg-[#009FE3] w-6 opacity-100' : 'bg-gray-300 w-2 hover:bg-gray-400'
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Desktop banner */}
-          <div className="hidden md:block w-full relative pt-2">
-            <div className="w-full relative aspect-[2/1] sm:aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-white">
-              <div
-                ref={bannerScrollRefDesktop}
-                onScroll={handleBannerScroll}
-                className="flex w-full h-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-              >
-                {banners.map((banner, index) => (
-                  <Link
-                    key={banner._id || index}
-                    href={banner.link || "#"}
-                    className="relative w-full h-full flex-shrink-0 snap-center block"
-                  >
-                    {banner.bannerImage && (
-                      <Image
-                        src={urlFor(banner.bannerImage).url()}
-                        alt={banner.altText || "Promotional Banner"}
-                        fill
-                        className="object-contain"
-                        unoptimized
-                      />
-                    )}
-                  </Link>
-                ))}
-              </div>
-
-              {banners.length > 1 && (
-                <div className="absolute bottom-2 md:bottom-4 left-0 right-0 z-20 flex justify-center gap-2 pointer-events-none">
-                  {banners.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => scrollToBanner(index)}
-                      className={`h-1.5 md:h-2 rounded-full transition-all duration-300 pointer-events-auto ${
-                        index === currentBannerIndex ? 'bg-[#009FE3] w-6 md:w-8 opacity-100' : 'bg-gray-300 w-2 hover:bg-gray-400'
-                      }`}
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
+                  {banners.map((banner, index) => (
+                    <Link
+                      key={banner._id || index}
+                      href={banner.link || "#"}
+                      className="relative w-full flex-shrink-0 snap-center block"
+                    >
+                      {banner.bannerImage && (
+                        <Image
+                          src={urlFor(banner.bannerImage).url()}
+                          alt={banner.altText || "Promotional Banner"}
+                          width={1200}
+                          height={1200}
+                          sizes="100vw"
+                          className="w-full h-auto object-contain"
+                          unoptimized
+                        />
+                      )}
+                    </Link>
                   ))}
                 </div>
-              )}
+
+                {banners.length > 1 && (
+                  <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-2 pointer-events-none">
+                    {banners.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => scrollToBanner(index)}
+                        className={`h-1.5 rounded-full transition-all duration-300 pointer-events-auto shadow-sm ${
+                          index === currentBannerIndex ? 'bg-[#009FE3] w-6 opacity-100' : 'bg-gray-300/80 w-2 hover:bg-gray-400'
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop banner  */}
+              <div className="hidden md:block w-full relative">
+                <div
+                  ref={bannerScrollRefDesktop}
+                  onScroll={handleBannerScroll}
+                  className="flex w-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                >
+                  {banners.map((banner, index) => (
+                    <Link
+                      key={banner._id || index}
+                      href={banner.link || "#"}
+                      className="relative w-full flex-shrink-0 snap-center block"
+                    >
+                      {banner.bannerImage && (
+                        <Image
+                          src={urlFor(banner.bannerImage).url()}
+                          alt={banner.altText || "Promotional Banner"}
+                          width={2400}
+                          height={800}
+                          sizes="100vw"
+                          className="w-full h-auto object-contain"
+                          unoptimized
+                        />
+                      )}
+                    </Link>
+                  ))}
+                </div>
+
+                {banners.length > 1 && (
+                  <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-2 pointer-events-none">
+                    {banners.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => scrollToBanner(index)}
+                        className={`h-2 rounded-full transition-all duration-300 pointer-events-auto shadow-sm ${
+                          index === currentBannerIndex ? 'bg-[#009FE3] w-8 opacity-100' : 'bg-gray-300/80 w-2 hover:bg-gray-400'
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
             </div>
           </div>
-        </div>
+        </section>
       )}
 
       {/* 3. PRODUCTS SECTION */}
-      <section ref={productsSectionRef} className="relative z-20 w-full bg-white pt-12 pb-16 px-6">
+      <section ref={productsSectionRef} className="relative z-20 w-full bg-white pt-4 pb-12 px-6">
         <div className="max-w-7xl mx-auto">
           
           <div className="text-center ">
