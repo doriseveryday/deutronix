@@ -193,7 +193,7 @@ const DDWPlus = () => {
             <div className="w-full overflow-hidden">
               <div className="w-[110%] translate-x-1 md:translate-x-0 scale-110 md:scale-100">
                 <Image
-                  src="/images/ddwplus/08.png"
+                  src="/images/ddwplus/09.png"
                   alt="Babies & Growing Children"
                   width={1200}
                   height={400}

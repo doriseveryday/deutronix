@@ -109,91 +109,10 @@ const Hero = () => {
     },
   ];
 
-  const isWebinarEvent = (event: CalendarEvent): boolean => {
-    const title = event.summary?.toLowerCase() || '';
-    const hasWebinarInTitle = title.includes('webinar') || title.includes('online') || title.includes('zoom') || title.includes('virtual');
-    
-    const description = event.description?.toLowerCase() || '';
-    const hasWebinarInDescription = description.includes('webinar') || 
-                                    description.includes('online') ||
-                                    description.includes('zoom') ||
-                                    description.includes('virtual') ||
-                                    description.includes('live stream') ||
-                                    description.includes('join us online');
-    
-    return hasWebinarInTitle || hasWebinarInDescription;
-  };
-
-  const getSafeEventDate = (event: CalendarEvent, isEndDate: boolean = false): Date | null => {
-    const dateObj = isEndDate ? event.end : event.start;
-    if (!dateObj) return null;
-    
-    if (dateObj.date && !dateObj.dateTime) {
-      const [y, m, d] = dateObj.date.split('-');
-      return new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
-    }
-    
-    if (dateObj.dateTime) {
-      return new Date(dateObj.dateTime);
-    }
-    
-    return null;
-  };
-
-  const isMultiDayEvent = (event: CalendarEvent): boolean => {
-    const startDate = getSafeEventDate(event, false);
-    const endDate = getSafeEventDate(event, true);
-    
-    if (!startDate || !endDate) return false;
-    
-    let adjustedEndDate = new Date(endDate);
-    if (event.end?.date && !event.end?.dateTime) {
-      adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
-    }
-    
-    return startDate.toDateString() !== adjustedEndDate.toDateString();
-  };
-
-  const formatEventDateRange = (event: CalendarEvent): string => {
-    const startDate = getSafeEventDate(event, false);
-    const endDate = getSafeEventDate(event, true);
-    
-    if (!startDate) return '';
-    
-    const isAllDay = !event.start?.dateTime;
-    const isMultiDay = isMultiDayEvent(event);
-    
-    if (isMultiDay && endDate) {
-      let adjustedEndDate = new Date(endDate);
-      if (event.end?.date && !event.end?.dateTime) {
-        adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
-      }
-      
-      const startStr = startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-MY', {
-        month: 'short', day: 'numeric'
-      });
-      const endStr = adjustedEndDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-MY', {
-        month: 'short', day: 'numeric'
-      });
-      return `${startStr} - ${endStr}`;
-    } else if (isAllDay) {
-      return startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-MY', {
-        month: 'long', day: 'numeric', year: 'numeric'
-      });
-    } else {
-      return startDate.toLocaleDateString(language === 'zh' ? 'zh-CN' : 'en-MY', {
-        month: 'long', day: 'numeric', year: 'numeric'
-      }) + ` • ${startDate.toLocaleTimeString(language === 'zh' ? 'zh-CN' : 'en-MY', {
-        hour: 'numeric', minute: '2-digit', hour12: true
-      })}`;
-    }
-  };
-
   const localizedTestimonials = baseTestimonials.map((baseTest, index) => {
     const tName = t(`testimonials.testimonials.${index}.name`);
     const tRole = t(`testimonials.testimonials.${index}.title`);
     const tQuote = t(`testimonials.testimonials.${index}.quote`);
-
     const isValid = (val: any) => val && typeof val === 'string' && !val.includes('testimonials.testimonials');
 
     return {
@@ -229,13 +148,14 @@ const Hero = () => {
   const bannerScrollRefMobile = useRef<HTMLDivElement>(null);
   const bannerScrollRefDesktop = useRef<HTMLDivElement>(null);
 
-  const heroDescriptionRef = useRef<HTMLDivElement>(null);
-  const heroCompanyDescRef = useRef<HTMLDivElement>(null);
-  const heroProductImageRef = useRef<HTMLDivElement>(null);
+  // New Hero State
+  const [heroData, setHeroData] = useState<any>(null);
+  const heroSectionRef = useRef<HTMLElement>(null);
+  const heroMediaRef = useRef<HTMLDivElement>(null);
+  const heroTextRef = useRef<HTMLDivElement>(null);
+  const heroOverlayRef = useRef<HTMLDivElement>(null);
+  const heroShadeRef = useRef<HTMLDivElement>(null);
 
-  const scienceSectionRef = useRef<HTMLElement>(null);
-  const scienceBgRef = useRef<HTMLDivElement>(null);
-  const scienceContentRef = useRef<HTMLDivElement>(null);
   const productsSectionRef = useRef<HTMLElement>(null);
   const certsContainerRef = useRef<HTMLDivElement>(null);
   const eventsRef = useRef<HTMLElement>(null);
@@ -244,6 +164,69 @@ const Hero = () => {
   // ==========================
   // 3. LOGIC & EFFECTS
   // ==========================
+
+  // --- FETCH SANITY DATA ---
+  useEffect(() => {
+    async function fetchSanityData() {
+      try {
+        // Fetch Hero Video/Image
+        const heroFetch = await client.fetch(`*[_type == "heroVideo" && isActive == true] | order(_createdAt desc)[0] {
+          headline,
+          subheadline,
+          ctaText,
+          ctaLink,
+          "desktopUrl": desktopMedia.asset->url,
+          "desktopExtension": desktopMedia.asset->extension,
+          "mobileUrl": mobileMedia.asset->url,
+          "mobileExtension": mobileMedia.asset->extension
+        }`);
+        setHeroData(heroFetch);
+
+        // Fetch Banners[cite: 1]
+        const bannerData = await client.fetch(`*[_type == "banner" && isActive == true]`);
+        setBanners(bannerData || []);
+
+        // Fetch Events[cite: 1]
+        const eventsData = await client.fetch(`*[_type == "event" && startDate >= now()] | order(startDate asc)[0...6]`);
+        setEvents(eventsData || []);
+      } catch (err) {
+        console.error("Sanity fetch failed:", err);
+      }
+    }
+
+    fetchSanityData();
+  }, []);
+
+  // --- MEDIA RENDER HELPER ---
+  const isVideo = (ext: string) => ['mp4', 'webm', 'mov'].includes(ext?.toLowerCase());
+
+  const renderMedia = (url: string, ext: string, displayClass: string) => {
+    if (!url) return null;
+    if (isVideo(ext)) {
+      return (
+        <video
+          src={url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className={`absolute inset-0 w-full h-full object-cover ${displayClass}`}
+        />
+      );
+    }
+    return (
+      <Image
+        src={url}
+        alt="Hero Background"
+        fill
+        priority
+        unoptimized
+        className={`object-cover ${displayClass}`}
+      />
+    );
+  };
+
+  // --- TESTIMONIAL SCROLL LOGIC ---
   const updateCounter = () => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
@@ -326,23 +309,7 @@ const Hero = () => {
     };
   }, []);
 
-  useEffect(() => {
-    async function fetchSanityData() {
-      try {
-        const bannerData = await client.fetch(`*[_type == "banner" && isActive == true]`);
-        setBanners(bannerData || []);
-
-        const eventsData = await client.fetch(`*[_type == "event" && startDate >= now()] | order(startDate asc)[0...6]`);
-        setEvents(eventsData || []);
-      } catch (err) {
-        console.error("Sanity fetch failed:", err);
-      }
-    }
-
-    fetchSanityData();
-  }, []);
-
-  // --- NEW NATIVE BANNER SCROLL LOGIC ---
+  // --- BANNER SCROLL LOGIC ---[cite: 1]
   const handleBannerScroll = () => {
     const active = (ref: any) => ref && ref.current && ref.current.clientWidth > 0 ? ref.current : null;
     const container = active(bannerScrollRefMobile) || active(bannerScrollRefDesktop);
@@ -391,45 +358,49 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, [banners.length]);
 
-  // --- GSAP ANIMATIONS ---
+  // --- GSAP ANIMATIONS ---[cite: 1]
   useGSAP(() => {
-    if (heroDescriptionRef.current) {
-      gsap.fromTo(heroDescriptionRef.current, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
-    }
-    if (heroCompanyDescRef.current) {
-      gsap.fromTo(heroCompanyDescRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1.2, delay: 0.5, ease: "power3.out" });
+    // 1. Cinematic Hero Parallax Effect
+    if (heroMediaRef.current && heroSectionRef.current) {
+      // Makes the video scroll slower than the page (Parallax)
+      gsap.to(heroMediaRef.current, {
+        yPercent: 30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroSectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        }
+      });
     }
 
-    if (heroProductImageRef.current) {
-      gsap.fromTo(heroProductImageRef.current, 
-        { opacity: 0, x: -30 }, 
-        { opacity: 1, x: 0, duration: 1.2, ease: "power3.out" }
+    // Hero Text Fade In
+    if (heroTextRef.current) {
+      gsap.fromTo(heroTextRef.current, 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 1.5, delay: 0.2, ease: "power3.out" }
       );
     }
 
-    const heroLogos = document.querySelectorAll('.hero-logo');
-    if (heroLogos.length) {
-      gsap.fromTo(heroLogos, 
-        { opacity: 0, scale: 0.8, y: 10 }, 
-        { opacity: 1, scale: 1, y: 0, duration: 0.8, stagger: 0.15, delay: 0.8, ease: "back.out(1.7)" }
-      );
+    // hero shade: add solid black layer that darkens with scroll for a clearer effect
+    if (heroSectionRef.current && heroShadeRef.current) {
+      gsap.set(heroShadeRef.current, { opacity: 0 });
+      gsap.to(heroShadeRef.current, {
+        opacity: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: heroSectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.6,
+        }
+      });
+      // ensure ScrollTrigger measurements are up-to-date
+      try { ScrollTrigger.refresh(); } catch (e) { /* ignore */ }
     }
 
-    const sciSection = scienceSectionRef.current;
-    const sciBg = scienceBgRef.current;
-    const sciContent = scienceContentRef.current;
-    if (sciSection && sciBg && sciContent) {
-      gsap.fromTo('.gsap-reveal', 
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: sciSection, start: "top 70%", toggleActions: "play none none reverse" } }
-      );
-      const pinTimeline = gsap.timeline({ scrollTrigger: { trigger: sciSection, start: "top top", end: "+=300%", pin: true, scrub: 1, anticipatePin: 1 } });
-      pinTimeline
-        .to(sciContent, { y: -500, opacity: 0, scale: 0.80, duration: 0.8 }, 0)
-        .to(sciBg, { scale: 1.2, duration: 0.8 }, 0)
-        .to(sciBg, { scale: 1.2, duration: 2.2 }, 0.8);
-    }
-
+    // Products Animation
     if (productsSectionRef.current) {
       const cards = gsap.utils.toArray('.product-card');
       cards.forEach((card: any) => {
@@ -441,6 +412,7 @@ const Hero = () => {
       });
     }
 
+    // Certs Animation
     if (certsContainerRef.current) {
       const certItems = gsap.utils.toArray('.cert-item');
       gsap.fromTo(certItems, 
@@ -456,33 +428,9 @@ const Hero = () => {
         }
       );
     }
-  }, { scope: undefined });
+  }, { scope: undefined, dependencies: [heroData] });
 
-  const renderHighlightedSubtitle = () => {
-    const text = t('hero.subtitle');
-    const enHighlight = "Deuterium-Depleted Water (DDW)";
-    const zhHighlight = "低氘水（DDW）";
-
-    if (typeof text !== 'string') return text;
-
-    if (text.includes(enHighlight)) {
-      const parts = text.split(enHighlight);
-      return (
-        <>
-          {parts[0]}<span className="font-semibold text-[#009FE3]">{enHighlight}</span>{parts[1]}
-        </>
-      );
-    } else if (text.includes(zhHighlight)) {
-      const parts = text.split(zhHighlight);
-      return (
-        <>
-          {parts[0]}<span className="font-semibold text-[#009FE3]">{zhHighlight}</span>{parts[1]}
-        </>
-      );
-    }
-    
-    return text;
-  };
+  // NOTE: overlay animation is handled by GSAP ScrollTrigger below
 
   // ==========================
   // 4. RENDER
@@ -490,12 +438,75 @@ const Hero = () => {
   return (
     <div className="w-full flex flex-col font-sans text-gray-700 bg-white overflow-x-hidden">
       
-      {/* 1. PROMOTIONAL BANNERS (Native Horizontal Scroll) */}
-      {banners.length > 0 && (
-        <div className="w-full relative z-20">
+      {/* 1. CINEMATIC FULL-SCREEN HERO */}
+      <section 
+        ref={heroSectionRef} 
+        className="relative w-full h-[100vh] min-h-[600px] overflow-hidden bg-black flex items-center justify-center z-0"
+      >
+        {/* Background Media Container (Animated via GSAP Parallax) */}
+        <div ref={heroMediaRef} className="absolute inset-0 w-full h-[120%] -top-[10%] z-0">
+          {heroData && (
+            <>
+              {/* Render Desktop Media */}
+              {renderMedia(heroData.desktopUrl, heroData.desktopExtension, 'hidden md:block')}
+              {/* Render Mobile Media */}
+              {renderMedia(heroData.mobileUrl, heroData.mobileExtension, 'block md:hidden')}
+            </>
+          )}
+          {/* Subtle gradient overlay to make text readable (opacity controlled on scroll) */}
+          <div
+            ref={heroOverlayRef}
+            className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 z-10"
+            style={{ opacity: 0.70, transition: 'opacity 200ms linear' }}
+          />
+          {/* Solid shade layer for scroll-driven darkening (below text) */}
+          <div
+            ref={heroShadeRef}
+            className="absolute inset-0 bg-black z-[15] pointer-events-none"
+            style={{ opacity: 0, transition: 'opacity 200ms linear' }}
+          />
+        </div>
 
-          {/* Mobile-friendly banner: show full image (no crop) */}
-          <div className="block md:hidden w-full relative overflow-hidden bg-[#ffffff]">
+        {/* Hero Text Content overlay */}
+        {/* Centered static message overlay (always present) */}
+        <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+          <div className="text-center px-4" style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial' }}>
+            <h2 className="text-5xl md:text-7xl lg:text-8xl  text-white mb-3 drop-shadow-lg">{t('hero.tagline')}</h2>
+            <p className="text-md md:text-xl text-white/90">{t('hero.description')}</p>
+          </div>
+        </div>
+
+        {heroData && (heroData.headline || heroData.subheadline) && (
+          <div ref={heroTextRef} className="relative z-20 flex flex-col items-center text-center px-6 max-w-5xl mt-16" style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial' }}>
+            {heroData.headline && (
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 tracking-tight drop-shadow-lg">
+                {heroData.headline}
+              </h1>
+            )}
+            {heroData.subheadline && (
+              <p className="text-lg md:text-2xl text-white/90 font-medium mb-10 max-w-3xl drop-shadow-md">
+                {heroData.subheadline}
+              </p>
+            )}
+            {heroData.ctaText && heroData.ctaLink && (
+              <Link 
+                href={heroData.ctaLink} 
+                className="bg-white text-black font-bold px-8 py-4 rounded-full hover:scale-105 hover:bg-gray-100 transition-all duration-300 shadow-xl text-lg"
+              >
+                {heroData.ctaText}
+              </Link>
+            )}
+          </div>
+        )}
+
+       
+      </section>
+
+      {/* 2. PROMOTIONAL BANNERS (Moved below Hero) */}
+      {banners.length > 0 && (
+        <div className="w-full relative z-20 bg-white border-b border-gray-100 shadow-sm">
+          {/* Mobile-friendly banner */}
+          <div className="block md:hidden w-full relative overflow-hidden bg-white">
             <div
               ref={bannerScrollRefMobile}
               onScroll={handleBannerScroll}
@@ -538,9 +549,9 @@ const Hero = () => {
             )}
           </div>
 
-          {/* Desktop: original layout per your snippet (keep aspect ratio, not oversized) */}
-          <div className="hidden md:block w-full relative z-20 pt-2">
-            <div className="w-full relative aspect-[2/1] sm:aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-[#ffffff]">
+          {/* Desktop banner */}
+          <div className="hidden md:block w-full relative pt-2">
+            <div className="w-full relative aspect-[2/1] sm:aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-white">
               <div
                 ref={bannerScrollRefDesktop}
                 onScroll={handleBannerScroll}
@@ -581,104 +592,11 @@ const Hero = () => {
               )}
             </div>
           </div>
-
         </div>
       )}
 
-     {/* 2. HERO SECTION */}
-      <section className="w-full max-w-7xl mx-auto px-8 py-4 md:py-6 z-10 relative bg-gray-50/40 rounded-2xl mt-0">
-        <div className="text-center mb-6 md:mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-[#009FE3] mb-4">{t('hero.tagline')}</h1>
-          <p ref={heroDescriptionRef} className="text-lg md:text-2xl text-gray-600 font-medium">{t('hero.description')}</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          <div className="relative flex flex-row items-center justify-center gap-6 md:gap-8">
-            <div ref={heroProductImageRef} className="w-48 sm:w-64 md:w-96 lg:w-[400px]">
-              <Image 
-                src="/images/Hero DDW Products.png" 
-                alt="Deutronix Products" 
-                width={800} 
-                height={800} 
-                className="object-contain w-full h-auto" 
-                priority 
-              />
-            </div> 
-
-            <div className="flex flex-col gap-5">
-              <div className="hero-logo relative w-28 h-14 md:w-36 md:h-18 lg:w-40 lg:h-20">
-                <Image 
-                  src="/images/ddw-logo.png" 
-                  alt="DDW+" 
-                  width={180} 
-                  height={90} 
-                  className="object-contain w-full h-full"
-                />
-              </div>
-              <div className="hero-logo relative w-28 h-14 md:w-36 md:h-18 lg:w-40 lg:h-20">
-                <Image 
-                  src="/images/EasyMove-logo.png" 
-                  alt="EasyMove Gel" 
-                  width={180} 
-                  height={90} 
-                  className="object-contain w-full h-full"
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex flex-col space-y-6 md:space-y-8 text-center md:text-left">
-            <p ref={heroCompanyDescRef} className="text-gray-600 leading-relaxed text-lg text-justify md:text-left">
-              {renderHighlightedSubtitle()}
-            </p>
-            <div className="border-t border-b border-gray-200 py-4">
-              <p className="text-xs md:text-sm text-gray-400 uppercase tracking-widest text-center md:text-left">{t('hero.features')}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-     {/* 3. SCIENCE SECTION (Pinned & Reveal) */}
-      <section 
-        ref={scienceSectionRef}
-        className="relative w-full h-screen px-6 flex items-center justify-center overflow-hidden z-10"
-      >
-        <div ref={scienceBgRef} className="absolute inset-0 z-0 scale-100">
-          <Image src="/images/mountain01.jpg" alt="Altai Mountain" fill sizes="100vw" className="object-cover" priority />
-          <div className="absolute inset-0 bg-black/20"></div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-4xl flex flex-col items-center" ref={scienceContentRef}>
-          <h2 className="gsap-reveal text-4xl md:text-5xl font-extrabold text-white text-center mb-10 drop-shadow-lg">
-            {t('about.title')}
-          </h2>
-          <div className="gsap-reveal bg-white rounded-2xl shadow-2xl p-8 md:p-12 w-full">
-            <div className="gsap-reveal">
-              <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8">
-                {t('about.description')}
-                <br /><br />
-                {t('about.content')}
-              </p>
-            </div>
-            <div className="gsap-reveal flex justify-center">
-              <Link href="/science" className="inline-flex items-center bg-white text-[#009FE3] text-lg font-bold border border-gray-100 rounded-full px-8 py-3 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-lg transition-all duration-300 group">
-                <span className="border-b border-transparent hover:border-[#009FE3]">{t('about.learnMore')}</span>
-                <svg 
-                  className="w-5 h-5 ml-2 group-hover:translate-x-1.5 transition-transform" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. PRODUCTS SECTION */}
-      <section ref={productsSectionRef} className="relative z-20 w-full bg-white pt-24 pb-16 px-6">
+      {/* 3. PRODUCTS SECTION */}
+      <section ref={productsSectionRef} className="relative z-20 w-full bg-white pt-12 pb-16 px-6">
         <div className="max-w-7xl mx-auto">
           
           <div className="text-center ">
@@ -758,8 +676,8 @@ const Hero = () => {
         </div>
       </section>
 
-     {/* 5. SOURCE & STANDARDS */}
-      <section className="relative z-10 w-full bg-white py-20 px-6">
+      {/* 4. SOURCE & STANDARDS */}
+      <section className="relative z-20 w-full bg-white py-20 px-6">
         <div className="max-w-7xl mx-auto flex flex-col items-start">
           <div className="w-full mb-10">
             <h2 className="text-[32px] md:text-4xl font-bold text-[#009FE3] mb-4">{t('standards.title')}</h2>
@@ -797,8 +715,8 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* 6. TESTIMONIALS */}
-      <section className="relative z-10 w-full px-6 py-10 bg-white">
+      {/* 5. TESTIMONIALS */}
+      <section className="relative z-20 w-full px-6 py-10 bg-white">
         <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#009FE3] mb-12">
           {t('testimonials.title')}
@@ -849,15 +767,14 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* Upcoming events section */}
+      {/* 6. UPCOMING EVENTS */}
       <section
         id="upcoming-events"
         ref={eventsRef}
-        className="relative z-10 w-full bg-white py-20 px-6 border-t border-gray-100"
+        className="relative z-20 w-full bg-white py-20 px-6 border-t border-gray-100"
       >
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 lg:items-center">
           
-          {/* LEFT COLUMN: Text and Button */}
           <div className="w-full lg:w-1/3 flex flex-col items-center lg:items-start text-center lg:text-left">
             <h2 className="text-4xl md:text-5xl font-extrabold text-[#009FE3] mb-3 leading-tight">
               {t('events.title')}<br />
@@ -878,7 +795,6 @@ const Hero = () => {
             </Link>
           </div>
 
-          {/* RIGHT COLUMN: Scrolling Cards OR Empty State */}
           <div className="w-full lg:w-2/3">
             {events.length > 0 ? (
               <div
@@ -886,8 +802,6 @@ const Hero = () => {
                 className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide py-4"
               >
                 {events.map((event, index) => {
-                  // --- SANITY DATA MAPPING ---
-                  const isAllDay = false; 
                   const isMultiDay = event.endDate && new Date(event.startDate).toDateString() !== new Date(event.endDate).toDateString();
                   
                   const startDate = new Date(event.startDate);
@@ -947,7 +861,6 @@ const Hero = () => {
                     </div>
                   );
                 })}
-                {/* Dummy Card: Only shows if there is exactly 1 event */}
                 {events.length === 1 && (
                   <div className="w-[85vw] md:w-[360px] flex-shrink-0 snap-center bg-gray-50/50 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-200 p-8 text-center h-[auto] min-h-[400px]">
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm border border-gray-100">
@@ -972,121 +885,104 @@ const Hero = () => {
         </div>
       </section>
       
-      {/* 8. EVENT DETAILS MODAL */}
-{selectedEvent && (() => {
-  let modalImageUrl = "/images/mountain01.jpg";
-  let modalCleanDesc = selectedEvent.description || "";
+      {/* 7. EVENT DETAILS MODAL */}
+      {selectedEvent && (() => {
+        let modalImageUrl = "/images/mountain01.jpg";
+        let modalCleanDesc = selectedEvent.description || "";
 
-  if (selectedEvent.image) {
-    modalImageUrl = urlFor(selectedEvent.image).url();
-  }
+        if (selectedEvent.image) {
+          modalImageUrl = urlFor(selectedEvent.image).url();
+        }
 
-  const isDefaultImage = modalImageUrl === "/images/mountain01.jpg";
-  
-  // Get date information for modal
-  const startDate = selectedEvent.startDate ? new Date(selectedEvent.startDate) : null;
-  const endDate = selectedEvent.endDate ? new Date(selectedEvent.endDate) : null;
-  const isMultiDay = selectedEvent.endDate && new Date(selectedEvent.startDate).toDateString() !== new Date(selectedEvent.endDate).toDateString();
-  const isWebinar = selectedEvent.isWebinar === true;
+        const isDefaultImage = modalImageUrl === "/images/mountain01.jpg";
+        const startDate = selectedEvent.startDate ? new Date(selectedEvent.startDate) : null;
+        const endDate = selectedEvent.endDate ? new Date(selectedEvent.endDate) : null;
+        const isMultiDay = selectedEvent.endDate && new Date(selectedEvent.startDate).toDateString() !== new Date(selectedEvent.endDate).toDateString();
 
-  return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 pt-20 md:pt-24 bg-black/60 backdrop-blur-sm transition-opacity"
-      onClick={() => setSelectedEvent(null)}
-    >
-      <div 
-        className={`bg-white rounded-3xl w-full shadow-2xl relative max-h-[85vh] overflow-hidden flex ${
-          isDefaultImage 
-            ? 'max-w-2xl flex-col' 
-            : 'max-w-5xl md:min-h-[550px] flex-col-reverse md:flex-row'
-        }`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Move Close Button to modal wrapper so it stays fixed while content scrolls */}
-        <button 
-          onClick={() => setSelectedEvent(null)}
-          className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 bg-white/90 backdrop-blur-sm md:bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors z-50 shadow-md md:shadow-none"
-        >
-          ✕
-        </button>
-        
-        {/* IMAGE SECTION: 50% width on Desktop */}
-        {!isDefaultImage && (
-          <div className="w-full md:w-1/2 h-[35vh] md:h-auto min-h-[250px] relative bg-gray-50 flex-shrink-0 border-t md:border-t-0 md:border-r border-gray-100">
-            <Image 
-              src={modalImageUrl} 
-              alt={selectedEvent.title || 'Event'} 
-              fill 
-              className="object-contain p-4 md:p-8"
-              unoptimized
-            />
-          </div>
-        )}
+        return (
+          <div 
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-4 md:p-6 pt-20 md:pt-24 bg-black/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setSelectedEvent(null)}
+          >
+            <div 
+              className={`bg-white rounded-3xl w-full shadow-2xl relative max-h-[85vh] overflow-hidden flex ${
+                isDefaultImage 
+                  ? 'max-w-2xl flex-col' 
+                  : 'max-w-5xl md:min-h-[550px] flex-col-reverse md:flex-row'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setSelectedEvent(null)}
+                className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 bg-white/90 backdrop-blur-sm md:bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors z-50 shadow-md md:shadow-none"
+              >
+                ✕
+              </button>
+              
+              {!isDefaultImage && (
+                <div className="w-full md:w-1/2 h-[35vh] md:h-auto min-h-[250px] relative bg-gray-50 flex-shrink-0 border-t md:border-t-0 md:border-r border-gray-100">
+                  <Image src={modalImageUrl} alt={selectedEvent.title || 'Event'} fill className="object-contain p-4 md:p-8" unoptimized />
+                </div>
+              )}
 
-        {/* CONTENT SECTION: 50% width on Desktop */}
-        <div className={`w-full ${!isDefaultImage ? 'md:w-1/2' : ''} p-6 md:p-10 flex flex-col overflow-y-auto relative`}>
+              <div className={`w-full ${!isDefaultImage ? 'md:w-1/2' : ''} p-6 md:p-10 flex flex-col overflow-y-auto relative`}>
+                <h3 className={`font-extrabold text-[#009FE3] pr-12 mb-6 ${isDefaultImage ? 'text-3xl' : 'text-2xl md:text-3xl'}`}>
+                  {selectedEvent.title}
+                </h3>
 
-          <h3 className={`font-extrabold text-[#009FE3] pr-12 mb-6 ${isDefaultImage ? 'text-3xl' : 'text-2xl md:text-3xl'}`}>
-            {selectedEvent.title}
-          </h3>
+                <div className="flex flex-col gap-4 mb-6 bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">📅</span>
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                        {isMultiDay ? (t('events.modal.dateTime') || 'Date Time') : t('events.modal.dateTime')}
+                      </p>
+                      <p className="text-gray-800 font-medium text-sm md:text-base">
+                        {startDate ? startDate.toLocaleDateString(
+                          language === 'zh' ? 'zh-CN' : 'en-MY',
+                          { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+                        ) : t('events.modal.noDetails')}
+                        
+                        {isMultiDay && endDate && (
+                          <>
+                            <span className="mx-2 font-normal text-gray-400">→</span>
+                            {endDate.toLocaleDateString(
+                              language === 'zh' ? 'zh-CN' : 'en-MY',
+                              { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+                            )}
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </div>
 
-          <div className="flex flex-col gap-4 mb-6 bg-gray-50 p-5 rounded-2xl border border-gray-100">
-            <div className="flex items-start gap-3">
-              <span className="text-xl">📅</span>
-              <div>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  {isMultiDay ? (t('events.modal.dateTime') || 'Date Time') : t('events.modal.dateTime')}
-                </p>
-                <p className="text-gray-800 font-medium text-sm md:text-base">
-                  {startDate ? startDate.toLocaleDateString(
-                    language === 'zh' ? 'zh-CN' : 'en-MY',
-                    { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
-                  ) : t('events.modal.noDetails')}
-                  
-                  {isMultiDay && endDate && (
-                    <>
-                      <span className="mx-2 font-normal text-gray-400">→</span>
-                      {endDate.toLocaleDateString(
-                        language === 'zh' ? 'zh-CN' : 'en-MY',
-                        { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
-                      )}
-                    </>
+                  {selectedEvent.location && (
+                    <div className="flex items-start gap-3 mt-1">
+                      <span className="text-xl">📍</span>
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                          {t('events.modal.location')}
+                        </p>
+                        <p className="text-gray-800 font-medium text-sm md:text-base">{selectedEvent.location}</p>
+                      </div>
+                    </div>
                   )}
-                </p>
-              </div>
-            </div>
+                </div>
 
-            {selectedEvent.location && (
-              <div className="flex items-start gap-3 mt-1">
-                <span className="text-xl">📍</span>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
-                    {t('events.modal.location')}
+              <div>
+                  <h4 className="text-lg font-bold text-gray-800 mb-2">{t('events.modal.details')}</h4>
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm md:text-base">
+                    {modalCleanDesc || t('events.modal.noDetails')}
                   </p>
-                  <p className="text-gray-800 font-medium text-sm md:text-base">{selectedEvent.location}</p>
                 </div>
               </div>
-            )}
+            </div>
           </div>
+        );
+      })()}
 
-         <div>
-             <h4 className="text-lg font-bold text-gray-800 mb-2">
-               {t('events.modal.details')}
-             </h4>
-             <p className="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm md:text-base">
-               {modalCleanDesc || t('events.modal.noDetails')}
-             </p>
-          
-          </div>
-          
-        </div>
-      </div>
-    </div>
-  );
-})()}
-
-      {/* 9. ABOUT US SECTION */}
-      <section className="relative z-20 w-full bg-white px-6 py-12 md:py-24 overflow-visible">
+      {/* 8. ABOUT US SECTION */}
+      <section className="relative z-20 w-full bg-white px-6 py-12 md:py-24 overflow-visible border-t border-gray-100">
         <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10 md:gap-16">
           <div className="w-full lg:w-1/2 flex justify-center items-center relative">
             <Image 
@@ -1124,24 +1020,13 @@ const Hero = () => {
       {/* Floating Events Button */}
       <button
         onClick={scrollToEvents}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#009FE3] text-white shadow-xl hover:scale-110 hover:bg-[#0077B3] transition-all duration-300 flex items-center justify-center group"
+        className="fixed bottom-6 right-6 z-[99] w-14 h-14 rounded-full bg-[#009FE3] text-white shadow-xl hover:scale-110 hover:bg-[#0077B3] transition-all duration-300 flex items-center justify-center group"
         aria-label="Upcoming Events"
       >
-        <svg
-          className="w-7 h-7"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
 
-        {/* Tooltip */}
         <span className="absolute right-16 whitespace-nowrap bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
           {t('events.floatingButton')}
         </span>
