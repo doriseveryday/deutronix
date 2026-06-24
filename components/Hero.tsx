@@ -447,8 +447,8 @@ const Hero = () => {
 
         <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
           <div className="text-center px-4" style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial' }}>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl text-white mb-3 drop-shadow-lg whitespace-pre-line md:whitespace-normal">{t('hero.tagline')}</h2>
-            <p className="text-md md:text-xl text-white/90">{t('hero.description')}</p>
+            <h2 className="text-6xl md:text-7xl lg:text-8xl text-white mb-3 drop-shadow-lg whitespace-pre-line md:whitespace-normal">{t('hero.tagline')}</h2>
+            <p className="text-xl md:text-3xl text-white/90">{t('hero.description')}</p>
           </div>
         </div>
 
